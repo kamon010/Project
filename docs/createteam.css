@@ -1,0 +1,120 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    background-color: #282828; /* พื้นหลังสีม่วงอ่อน */
+}
+
+.sidebar {
+    width: 100px; /* ปรับขนาดแถบเมนู */
+    background-color: #3a3f47; /* สีเทาเข้ม */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    justify-content: space-between; /* กระจายพื้นที่ภายใน sidebar */
+    height: 100vh;
+    position: fixed; /* ตรึง Sidebar ไว้ที่ด้านซ้าย */
+}
+
+.sidebar-item {
+    margin: 20px 0;
+    text-align: center;
+    color: #bbb;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    transition: color 0.3s, background-color 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+    color: #ffffff;
+    background-color: #4b5162; /* สีที่เปลี่ยนเมื่อกดค้าง */
+    cursor: pointer;
+}
+
+.main-content {
+    flex-grow: 1;
+    background-color: #282828; /* พื้นหลังสีม่วงอ่อน */
+    color: #1e1e1e;
+    padding: 20px;
+    margin-left: 100px; /* ปรับให้ Main Content ไม่ทับกับ Sidebar */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #fff;
+}
+
+.main-content .content {
+    margin-top: 20px;
+    background-color: #3a3f47; /* สีพื้นหลังของฟอร์ม */
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    width: 100%;
+    max-width: 500px; /* กำหนดความกว้างสูงสุดของฟอร์ม */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 15px;
+    font-size: 14px;
+    background-color: #62667c;
+    color: white;
+    width: 100%;
+    box-sizing: border-box; /* เพื่อให้ input และ textarea ครอบคลุมความกว้างเต็ม */
+}
+
+button[type="submit"] {
+    background-color: #4b5162;
+    border: 1px solid #6b7184;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, border-color 0.3s;
+    width: 100%; /* ปุ่มเต็มความกว้างของฟอร์ม */
+}
+
+button[type="submit"]:hover {
+    background-color: #6b7184;
+    border-color: #8a90a1;
+}

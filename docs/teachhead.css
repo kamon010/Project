@@ -1,0 +1,136 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    background-color: #2c2c2c; /* พื้นหลังสีม่วงอ่อน */
+}
+
+.sidebar {
+    width: 100px; /* ปรับขนาดแถบเมนู */
+    background-color: #3a3f47; /* สีเทาเข้ม */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    justify-content: space-between; /* กระจายพื้นที่ภายใน sidebar */
+    height: 100vh;
+    position: fixed; /* ตรึง Sidebar ไว้ที่ด้านซ้าย */
+}
+
+
+.sidebar {
+    width: 100px; /* ปรับความกว้างตามต้องการ */
+    background-color: #333;
+    color: white;
+    display: flex;
+    flex-direction: column; /* เพิ่มเพื่อให้เรียงจากบนลงล่าง */
+    align-items: center;
+    padding: 20px 0;
+}
+
+.sidebar-item {
+    margin: 20px 0;
+    text-align: center;
+    color: #bbb;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    transition: color 0.3s, background-color 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.sidebar-item.active {
+    color: #ffffff;
+    background-color: #4b5162; /* สีที่เปลี่ยนเมื่อกดค้าง */
+}
+
+.sidebar-item:hover {
+    background-color: #5c6375; /* สีเทาอ่อนสำหรับ hover */
+    color: #ffffff;
+    cursor: pointer;
+}
+
+
+.main-content {
+    flex-grow: 1;
+    background-color: #282828; /* พื้นหลังสีม่วงอ่อน */
+    color: #1e1e1e;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 100px; /* ปรับให้ Main Content ไม่ทับกับ Sidebar */
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.search-bar input {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background-color: #d4d4d4; /* สีเทาอ่อน */
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.profile-icon {
+    font-size: 30px;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.user-name-placeholder {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.create-team-section {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.create-team-btn {
+    background-color: #4b5162; /* สีปุ่ม */
+    border: 1px solid #6b7184; /* ขอบปุ่มสีเข้ม */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, border-color 0.3s;
+    position: fixed; /* ตรึงปุ่มไว้ที่ด้านล่าง */
+    bottom: 20px;
+    width: 15%; /* ปรับขนาดปุ่มให้สอดคล้องกับ Sidebar */
+}
+
+.create-team-btn:hover {
+    background-color: #6b7184; /* สีที่เปลี่ยนเมื่อ hover ปุ่ม */
+    border-color: #8a90a1;
+}
+
+.create-team-btn .icon {
+    margin-right: 10px;
+}
