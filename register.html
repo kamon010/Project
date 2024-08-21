@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>หน้าเว็บเข้าสู่ระบบ</title>
+    <title>หน้าเว็บลงทะเบียน</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet">
+
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.min.js"></script>
 
     <style>
       /* CSS Styling */
@@ -78,6 +81,7 @@
       }
 
       input[type="text"],
+      input[type="email"],
       input[type="password"] {
         width: 100%;
         padding: 10px;
@@ -146,26 +150,30 @@
   <body>
     <div class="container">
       <div class="left-section">
-        <h2>Login System</h2>
-        <form id="loginForm">
+        <h2>Registration System</h2>
+        <form id="registerForm">
           <div class="input-group">
-            <label for="username">Email</label>
-            <input type="text" id="email" name="email" required />
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
           </div>
           <div class="input-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required />
           </div>
-          <button type="submit">Login</button>
+          <button type="submit">Confirm</button>
         </form>
       </div>
 
       <div class="right-section">
-        <h2>ยังไม่ได้เป็นสมาชิก?</h2>
+        <h2>เป็นสมาชิกแล้วใช่ไหม?</h2>
         <p>
-          ท่านสามารถลงทะเบียนเพื่อเป็นสมาชิกใหม่ได้อย่างง่ายดาย
+          ท่านสามารถเข้าสู่ระบบได้หากท่านทำการลงทะเบียนเป็นสมาชิกแล้ว
         </p>
-        <button type="button" onclick="window.location.href='register.html'">Register</button>
+        <button type="button" onclick="window.location.href='index.html'">Login</button>
       </div>
     </div>
 
@@ -189,34 +197,54 @@
       var db = firebase.firestore();
 
       document
-        .getElementById("loginForm")
+        .getElementById("registerForm")
         .addEventListener("submit", function (event) {
           event.preventDefault();
 
+          var username = document.getElementById("username").value;
           var email = document.getElementById("email").value;
           var password = document.getElementById("password").value;
 
-          // ตรวจสอบว่าอีเมลมีอยู่ในฐานข้อมูลหรือไม่
+          // ตรวจสอบว่าอีเมลนี้ถูกใช้แล้วหรือไม่
           db.collection("Student")
             .where("Email", "==", email)
             .get()
             .then(function (querySnapshot) {
-              if (querySnapshot.empty) {
-                // หากไม่มีอีเมลในฐานข้อมูล
-                alert("This email is not registered yet.");
+              if (!querySnapshot.empty) {
+                // อีเมลซ้ำ
+                alert(
+                  "This email is already used for registration. Please use another email."
+                );
               } else {
-                // มีอีเมลในฐานข้อมูล ตรวจสอบรหัสผ่าน
-                var userDoc = querySnapshot.docs[0]; // ถือว่ามีเพียง 1 ผลลัพธ์
-                if (userDoc.data().Password === password) {
-                  window.location.href = "studenthead.html"; // เปลี่ยนเส้นทางไปหน้า studenthead.html
-                } else {
-                  // รหัสผ่านไม่ถูกต้อง
-                  alert("Your password is incorrect.");
-                }
+                // อีเมลไม่ซ้ำ สามารถบันทึกข้อมูลได้
+                db.collection("Student")
+                  .add({
+                    Username: username,
+                    Email: email,
+                    Password: password,
+                    Time: firebase.firestore.FieldValue.serverTimestamp(),
+                  })
+                  .then(function (docRef) {
+                    // แสดงเอฟเฟคพลุ
+                    confetti({
+                      particleCount: 100,
+                      spread: 70,
+                      origin: { y: 0.6 }
+                    });
+
+                    alert(
+                      "Registration completed successfully! Your ID: " +
+                        docRef.id
+                    );
+                    console.log("Document written with ID: ", docRef.id);
+                  })
+                  .catch(function (error) {
+                    console.error("Error adding document: ", error);
+                    alert("Error adding document: " + error.message);
+                  });
               }
             })
             .catch(function (error) {
-              // ข้อผิดพลาดในการตรวจสอบ
               console.error("Error checking document: ", error);
               alert("Error checking document: " + error.message);
             });
