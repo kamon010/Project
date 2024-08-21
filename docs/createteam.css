@@ -13,7 +13,7 @@ body {
     background-color: #282828; /* พื้นหลังสีม่วงอ่อน */
 }
 
-.sidebar {
+.sidebar { 
     width: 100px; /* ปรับขนาดแถบเมนู */
     background-color: #3a3f47; /* สีเทาเข้ม */
     color: white;
