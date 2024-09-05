@@ -226,26 +226,23 @@
             .then(function (querySnapshot) {
               if (!querySnapshot.empty) {
                 // อีเมลซ้ำ
-                alert(
-                  "This email is already used for registration. Please use another email."
-                );
+                alert("อีเมลนี้ถูกใช้ลงทะเบียนแล้ว กรุณาใช้อีเมลอื่น.");
               } else {
                 // อีเมลไม่ซ้ำ สามารถบันทึกข้อมูลได้
                 var docData = {
                   Email: email,
                   Password: password,
+                  Role: role,
+                  Username: username,
+                  Time: new Date().toLocaleString("th-TH", {
+                    timeZone: "Asia/Bangkok",
+                  }), // เพิ่มฟิลด์เวลา
                 };
-                docData[
-                  role === "Teacher" ? "Username_teacher" : "Username_student"
-                ] = username;
 
                 db.collection(role)
                   .add(docData)
                   .then(function (docRef) {
-                    alert(
-                      "Registration completed successfully! Your ID: " +
-                        docRef.id
-                    );
+                    alert("การลงทะเบียนสำเร็จ! รหัส ID ของคุณ: " + docRef.id);
                     console.log("Document written with ID: ", docRef.id);
 
                     // รีเซ็ตฟอร์ม
@@ -265,3 +262,4 @@
     </script>
   </body>
 </html>
+message.txt 9 KB

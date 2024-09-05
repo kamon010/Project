@@ -6,9 +6,12 @@
     <title>หน้าเว็บเข้าสู่ระบบ</title>
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
       /* CSS Styling */
@@ -21,11 +24,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background: linear-gradient(
-          90deg,
-          #353535 0%,
-          #2c2c2c 100%
-        );
+        background: linear-gradient(90deg, #353535 0%, #2c2c2c 100%);
       }
 
       .container {
@@ -98,7 +97,7 @@
       }
 
       button:hover {
-        background-color: #6B2E39;
+        background-color: #6b2e39;
       }
 
       .right-section {
@@ -162,10 +161,10 @@
 
       <div class="right-section">
         <h2>ยังไม่ได้เป็นสมาชิก?</h2>
-        <p>
-          ท่านสามารถลงทะเบียนเพื่อเป็นสมาชิกใหม่ได้อย่างง่ายดาย
-        </p>
-        <button type="button" onclick="window.location.href='register.html'">Register</button>
+        <p>ท่านสามารถลงทะเบียนเพื่อเป็นสมาชิกใหม่ได้อย่างง่ายดาย</p>
+        <button type="button" onclick="window.location.href='register.html'">
+          Register
+        </button>
       </div>
     </div>
 
@@ -206,11 +205,13 @@
                 if (!querySnapshot.empty) {
                   var userDoc = querySnapshot.docs[0]; // Consider only one result
                   if (userDoc.data().Password === password) {
-                    // Redirect based on collection
+                    // Redirect based on collection and include the email as a query parameter
                     if (collection === "Teacher") {
-                      window.location.href = "teachhead.html";
+                      window.location.href =
+                        "teachhead.html?email=" + encodeURIComponent(email);
                     } else if (collection === "Student") {
-                      window.location.href = "studenthead.html";
+                      window.location.href =
+                        "studenthead.html?email=" + encodeURIComponent(email);
                     }
                   } else {
                     alert("Your password is incorrect.");
@@ -222,18 +223,22 @@
           }
 
           // Check both collections
-          checkCollectionAndRedirect("Teacher").then(function (foundInTeacher) {
-            if (!foundInTeacher) {
-              checkCollectionAndRedirect("Student").then(function (foundInStudent) {
-                if (!foundInStudent) {
-                  alert("This email is not registered yet.");
-                }
-              });
-            }
-          }).catch(function (error) {
-            console.error("Error checking document: ", error);
-            alert("Error checking document: " + error.message);
-          });
+          checkCollectionAndRedirect("Teacher")
+            .then(function (foundInTeacher) {
+              if (!foundInTeacher) {
+                checkCollectionAndRedirect("Student").then(function (
+                  foundInStudent
+                ) {
+                  if (!foundInStudent) {
+                    alert("This email is not registered yet.");
+                  }
+                });
+              }
+            })
+            .catch(function (error) {
+              console.error("Error checking document: ", error);
+              alert("Error checking document: " + error.message);
+            });
         });
     </script>
   </body>
