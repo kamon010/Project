@@ -19,5 +19,10 @@
         "react": {
             "version": "detect"
         }
+    },
+    "rules": {
+        "constructor-super": "off"
     }
+
+
 }
