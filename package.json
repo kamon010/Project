@@ -4,8 +4,7 @@
     "type": "module",
     "scripts": {
         "lint": "eslint .",
-        "test": "jest",
-        "integration-test": "mocha tests/integration/**/*.test.js"
+        "test": "jest"
     },
     "dependencies": {
         "express": "^4.17.1",
