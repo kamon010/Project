@@ -1,16 +1,16 @@
-import { ESLint } from 'eslint';
 import { createRequire } from 'module';
-
 const require = createRequire(
     import.meta.url);
 
+import { ESLint } from 'eslint';
+
 export default {
-    parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint'],
-    extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/recommended'
-    ],
+    languageOptions: {
+        parser: require.resolve('@typescript-eslint/parser'),
+    },
+    plugins: {
+        '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+    },
     rules: {
         // เพิ่มกฎที่ต้องการตามการใช้งานของคุณ
     },
