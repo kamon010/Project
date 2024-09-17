@@ -16,7 +16,7 @@
     },
     "scripts": {
         "lint": "eslint .",
-        "test": "mocha sample.test.jss"
+        "test": "npx mocha calculator.test.js"
     },
     "env": {
         "node": true,

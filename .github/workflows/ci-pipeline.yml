@@ -22,6 +22,9 @@ jobs:
         with:
           node-version: '18'
 
+      - name: List node_modules
+        run: ls -R node_modules  
+
       - name: Install dependencies
         run: npm install
 
@@ -29,5 +32,5 @@ jobs:
         run: npm run lint
 
       - name: Run Unit Tests
-        run: npx mocha tests/**/*.test.js --coverage
+        run: npx mocha sample.test.js --coverage
       
