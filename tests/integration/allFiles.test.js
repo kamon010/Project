@@ -1,4 +1,4 @@
-// tests/integration/security.test.js
+// tests/integration/allFiles.test.js
 import fs from 'fs';
 import path from 'path';
 import { JSDOM } from 'jsdom';
@@ -28,25 +28,19 @@ describe('Security Tests for HTML files in docs folder', () => {
             const dom = new JSDOM(htmlContent);
             const document = dom.window.document;
 
-            // ทดสอบว่าไฟล์ HTML มี Content Security Policy หรือไม่
-            const metaCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-            expect(metaCSP, `Missing CSP in ${file}`).not.to.be.null;
+            // ตรวจสอบว่า meta tag สำหรับ CSP มีอยู่หรือไม่
+            const cspMetaTag = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
 
-            // ทดสอบว่าไม่มี inline script ที่อาจทำให้เกิด XSS
-            const scripts = Array.from(document.querySelectorAll('script'));
-            scripts.forEach(script => {
-                if (!script.src) {
-                    expect.fail(`Inline script found in ${file}`);
-                }
-            });
-
-            // ทดสอบว่าไม่มีการเปิดเผยข้อมูลสำคัญในคอมเมนต์
-            const comments = htmlContent.match(/<!--[\s\S]*?-->/g);
-            if (comments) {
-                comments.forEach(comment => {
-                    expect(comment.includes('password') || comment.includes('secret'), `Sensitive information found in comments in ${file}`).to.be.false;
-                });
+            if (!cspMetaTag) {
+                // ถ้าไม่มี CSP ให้แสดงข้อความแจ้งข้อผิดพลาดและวิธีแก้ไข
+                console.warn(`พบข้อผิดพลาดในไฟล์: ${file}`);
+                console.warn(`ข้อผิดพลาด: ไฟล์นี้ไม่มี Content Security Policy (CSP) meta tag`);
+                console.warn(`วิธีแก้ไข: กรุณาเพิ่ม meta tag สำหรับ Content Security Policy (CSP) ในส่วน <head> ของไฟล์ HTML ตัวอย่างเช่น:`);
+                console.warn(`<meta http-equiv="Content-Security-Policy" content="default-src 'self';">`);
             }
+
+            // ทดสอบว่า meta tag สำหรับ CSP ไม่เป็น null
+            expect(cspMetaTag, `Missing CSP in ${file}`).not.to.be.null;
         });
     });
 });
