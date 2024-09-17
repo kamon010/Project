@@ -29,4 +29,5 @@ jobs:
         run: npm run lint
 
       - name: Run Unit Tests
-        run: npm test -- --coverage
+        run: npx mocha tests/**/*.test.js --coverage
+      
