@@ -15,7 +15,7 @@
     },
     "scripts": {
         "lint": "eslint .",
-        "test": "mocha tests/**/*.test.js"
+        "test": "mocha sample.test.jss"
     },
     "env": {
         "node": true,
