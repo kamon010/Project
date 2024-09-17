@@ -18,7 +18,7 @@ const files = fs.readdirSync(docsDir).filter(file => file.endsWith('.html'));
 // ทดสอบแต่ละไฟล์ในโฟลเดอร์ docs
 describe('Test HTML files in docs folder', () => {
     files.forEach(file => {
-        test(`Testing file: ${file}`, () => {
+        it(`Testing file: ${file}`, () => {
             // โหลดไฟล์ HTML
             const filePath = path.join(docsDir, file);
             const htmlContent = fs.readFileSync(filePath, 'utf8');
