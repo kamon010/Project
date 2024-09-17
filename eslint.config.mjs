@@ -3,10 +3,11 @@ const require = createRequire(
     import.meta.url);
 
 import { ESLint } from 'eslint';
+import parser from '@typescript-eslint/parser'; // แก้ไขส่วนนี้
 
 export default {
     languageOptions: {
-        parser: require.resolve('@typescript-eslint/parser'),
+        parser: parser, // ใช้ parser ที่ import มา
     },
     plugins: {
         '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
