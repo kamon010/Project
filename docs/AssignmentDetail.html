@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
+            background-color: #2f2f2f;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        #searchResults {
+            background-color: #4d4d4d;
+            color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 400px;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            top: 38px;
+        }
+        
+        #searchResults .result-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #555;
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+        }
+        
+        #searchResults .result-item:hover {
+            background-color: #555;
+        }
+        
+        #searchResults .result-item p {
+            margin: 0;
+            color: #fff;
+        }
+        
+        #searchResults .result-item span {
+            color: #727272;
+        }
+        
+        .assignments-topbar {
+            background-color: #272727;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 115px;
+            border-bottom: 1px solid #3d3d3d;
+        }
+        
+        .assignments-topbar .title-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .assignments-topbar .title-section i {
+            font-size: 24px;
+            color: white;
+            margin-right: 10px;
+        }
+        
+        .assignments-topbar .title-section h1 {
+            color: white;
+            font-size: 20px;
+            margin: 0;
+        }
+        
+        .assignments-topbar .icons-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: -100px;
+        }
+        
+        .assignments-topbar .icons-section i {
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        h1 i {
+            margin-right: 10px;
+            color: #ffffff;
+            font-size: 24px;
+        }
+        
+        .topbar {
+            background-color: #2e2e2e;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 2px 4px rgba(177, 177, 177, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .topbar .search-bar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-start;
+            position: relative;
+            padding-left: 480px;
+        }
+        
+        .topbar .search-bar input {
+            width: 400px;
+            padding: 5px 10px 5px 35px;
+            border-radius: 20px;
+            border: 1px solid #717171;
+            background-color: #333;
+            color: #fff;
+            font-size: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .topbar .search-bar .fas {
+            position: absolute;
+            left: 490px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            z-index: 2;
+        }
+        
+        .topbar .user-section {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        #user-email {
+            color: white;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        .user-icon {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-icon i {
+            font-size: 30px;
+            color: white;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .sidebar {
+            width: 100px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .menu-items {
+            margin-top: 40px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover {
+            background-color: #5f5f5f;
+            border-radius: 4px;
+            width: 80%;
+            text-align: center;
+        }
+        
+        .sidebar i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            padding-left: 120px;
+            background-color: #2f2f2f;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .assignment-detail {
+            width: 100%;
+            max-width: 1300px;
+            background-color: #3b3b3b;
+            padding: 20px;
+            border-radius: 8px;
+            position: fixed;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .back-btn i {
+            margin-right: 8px;
+        }
+        
+        .header-section {
+            display: flex;
+            color: white;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5;
+        }
+        
+        .header-section h2 {
+            color: white;
+            font-size: 24px;
+            margin: 0;
+        }
+        
+        .details-section {
+            margin-top: 20px;
+        }
+        
+        .details-section h3 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .details-section p {
+            font-size: 16px;
+            margin: 0;
+            color: #bbb;
+        }
+        
+        .my-work {
+            margin-top: 20px;
+        }
+        
+        .my-work .work-item {
+            display: flex;
+            align-items: center;
+            background-color: #4d4d4d;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .my-work .work-item i {
+            margin-right: 10px;
+        }
+        
+        .my-work .work-item span {
+            color: #fff;
+        }
+        
+        .work-item span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            max-width: 100%;
+            color: #fff;
+            vertical-align: middle;
+        }
+        
+        .right-section {
+            color: white;
+            text-align: right;
+        }
+        
+        .undo-btn {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .undo-btn:hover {
+            background-color: #878787;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            background-color: rgb(255, 157, 0);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .attach-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            /* ระยะห่างระหว่างปุ่ม Attach และไฟล์ */
+        }
+        
+        #file-list {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            background-color: #4d4d4d;
+            padding: 5px 10px;
+            border-radius: 5px;
+            min-width: 150px;
+            /* กำหนดความกว้างขั้นต่ำให้กล่อง */
+            max-width: 250px;
+            /* กำหนดความกว้างสูงสุด */
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            justify-content: space-between;
+            flex-grow: 1;
+            /* ให้กล่องขยายได้ */
+        }
+        
+        .custom-file-upload {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            color: #7e7e7e;
+            font-size: 16px;
+        }
+        
+        .custom-file-upload i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        #file-upload {
+            display: none;
+        }
+        
+        .file-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 16px;
+            max-width: 250px;
+            /* ปรับขนาดกว้าง */
+            width: 100%;
+            /* กำหนดให้แต่ละไฟล์มีความกว้างเท่ากัน */
+            display: inline-block;
+        }
+        
+        .file-extension {
+            margin-left: auto;
+            padding-left: 15px;
+            color: #7e7e7e;
+            font-size: 16px;
+        }
+        
+        .custom-file-upload:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
+            <div id="searchResults"></div>
+        </div>
+        <div class="user-section">
+            <div id="user-email"></div>
+            <div class="user-icon" id="userIcon">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#">Profile</a>
+                <a href="#">Log out</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignments topbar -->
+    <div class="assignments-topbar">
+        <div class="title-section">
+            <i class="fas fa-backpack"></i>
+            <h1><i class="fas fa-book"></i> Assignments</h1>
+        </div>
+        <div class="icons-section">
+            <i class="fas fa-expand"></i>
+            <i class="fas fa-sync-alt"></i>
+            <i class="fas fa-lock"></i>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="assignment-detail">
+            <div class="header-section">
+                <div>
+                    <h2 id="assignment-title">Loading assignment title...</h2>
+                    <p class="due-date">Due yesterday at 3:00 PM</p>
+                </div>
+                <div class="right-section">
+                    <button class="undo-btn">Turn in</button>
+                    <h3>Points</h3>
+                    <p>No points</p>
+                </div>
+            </div>
+            <div class="details-section instructions">
+                <h3>Instructions</h3>
+                <p>None</p>
+            </div>
+            <div class="details-section my-work">
+                <h3>My work</h3>
+                <div class="work-item">
+                    <i class="fas fa-file"></i>
+                    <span id="fileName">10.3878.whiteboard</span>
+                </div>
+            </div>
+            <div class="attach-button">
+                <label for="file-upload" class="custom-file-upload"><i class="fas fa-paperclip"></i> Attach</label
+          >
+          <input id="file-upload" type="file" multiple />
+          <div id="file-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="menu-items">
+        <a href="studenthead.html?email={{email}}"
+          ><i class="fa fa-chalkboard-teacher"></i><span>Classroom</span></a
+        >
+        <a href="Chat.html?email={{email}}"
+          ><i class="fa fa-comments"></i><span>Chat</span></a
+        >
+        <a
+          href="Notifications.html?email={{email}}"
+          id="notificationMenu"
+          style="position: relative">
+          <i class="fa fa-bell"></i><span>Notifications</span>
+          <span
+            class="notification-badge"
+            id="notificationBadge"
+            style="display: none"
+            >0</span
+          >
+        </a>
+        <a href="Assignment.html?email={{email}}"
+          ><i class="fa fa-tasks"></i><span>Assignment</span></a
+        >
+        <a href="Call.html?email={{email}}"
+          ><i class="fa fa-phone"></i><span>Call</span></a
+        >
+      </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
+        authDomain: "project-63a86.firebaseapp.com",
+        projectId: "team-1849c",
+        storageBucket: "team-1849c.appspot.com",
+        messagingSenderId: "448111875731",
+        appId: "1:448111875731:web:6180e0c46cc10593051f66",
+        measurementId: "G-SR4EFC2VFC",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const assignmentId = new URLSearchParams(window.location.search).get(
+        "assignmentId"
+      );
+      const email = urlParams.get("email");
+
+      if (email) {
+        document.getElementById("user-email").textContent = email;
+      } else {
+        document.getElementById("user-email").textContent =
+          "No email available";
+      }
+
+      document
+        .getElementById("file-upload")
+        .addEventListener("change", function (event) {
+          const fileList = event.target.files;
+          const fileDisplay = document.getElementById("file-list");
+          fileDisplay.innerHTML = ""; // ล้างไฟล์ก่อนหน้า
+
+          for (let i = 0; i < fileList.length; i++) {
+            const file = fileList[i];
+            const fileItem = document.createElement("div");
+            fileItem.classList.add("file-item");
+
+            const fileIcon = document.createElement("i");
+            fileIcon.classList.add("fas", "fa-file");
+
+            const fileNameElement = document.createElement("span");
+            fileNameElement.textContent = file.name;
+
+            fileItem.appendChild(fileIcon);
+            fileItem.appendChild(fileNameElement);
+            fileDisplay.appendChild(fileItem);
+          }
+        });
+
+      if (assignmentId) {
+        const assignmentRef = db.collection("Assignments").doc(assignmentId);
+
+        assignmentRef
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const data = doc.data();
+              console.log("Data retrieved from Firestore:", doc.data());
+              document.getElementById("assignment-title").textContent =
+                data.title || "No title available";
+              const dueDate = data.dueDate ? data.dueDate : "No due date"; // ใช้ string โดยตรง
+              const dueTime = data.dueTime ? data.dueTime : "No due time"; // ใช้ string โดยตรง
+              document.querySelector(
+                ".due-date"
+              ).textContent = `Due ${dueDate} at ${dueTime}`;
+              document.querySelector(
+                ".details-section.instructions p"
+              ).textContent = data.instructions || "None";
+              document.querySelector(".right-section p").textContent =
+                data.points || "No points";
+              if (data.fileUrl) {
+                displayFile(data.fileUrl);
+              }
+            } else {
+              console.error("No matching document found.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching assignment:", error);
+          });
+      }
+
+      function displayFile(fileUrl) {
+        const fileSection = document.querySelector(
+          ".details-section.my-work .work-item"
+        );
+        const fileName = getFileName(fileUrl);
+
+        if (isImageFile(fileUrl)) {
+          const imgElement = document.createElement("img");
+          imgElement.src = fileUrl;
+          imgElement.alt = fileName;
+          imgElement.style.maxWidth = "100%";
+          fileSection.innerHTML = "";
+          fileSection.appendChild(imgElement);
+          const fileNameElement = document.createElement("span");
+          fileNameElement.textContent = fileName;
+          fileNameElement.classList.add("file-name");
+          fileSection.appendChild(fileNameElement);
+        } else {
+          const fileLink = document.createElement("a");
+          fileLink.href = fileUrl;
+          fileLink.textContent = fileName;
+          fileLink.target = "_blank";
+          fileLink.style.color = "#fff";
+          fileLink.style.display = "inline-block";
+          fileLink.style.maxWidth = "100%";
+          fileLink.style.whiteSpace = "nowrap";
+          fileLink.style.overflow = "hidden";
+          fileLink.style.textOverflow = "ellipsis";
+          fileSection.innerHTML = "";
+          fileSection.appendChild(fileLink);
+        }
+      }
+
+      function getFileName(fileUrl) {
+        return fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+      }
+
+      function isImageFile(fileUrl) {
+        const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
+        const fileExtension = fileUrl.split(".").pop().toLowerCase();
+        return imageExtensions.includes(fileExtension);
+      }
+
+      function formatDate(dueDate) {
+        const dateObj = new Date(dueDate);
+        const options = {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        };
+        return dateObj.toLocaleDateString("th-TH", options);
+      }
+
+      function formatTime(dueTime) {
+        const timeObj = new Date(`1970-01-01T${dueTime}`);
+        const options = {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return timeObj.toLocaleTimeString("en-US", options);
+      }
+
+      document
+        .querySelector(".undo-btn")
+        .addEventListener("click", async function () {
+          const files = document.getElementById("file-upload").files;
+          const fileList = [];
+
+          for (let i = 0; i < files.length; i++) {
+            fileList.push(files[i].name);
+          }
+
+          if (assignmentId) {
+            const assignmentRef = db
+              .collection("Assignments")
+              .doc(assignmentId);
+
+            assignmentRef
+              .get()
+              .then((doc) => {
+                if (doc.exists && doc.id === assignmentId) {
+                  // ตรวจสอบว่า DocumentID ตรงกับ assignmentId
+                  const data = doc.data();
+                  console.log("Data retrieved from Firestore:", doc.data());
+                  document.getElementById("assignment-title").textContent =
+                    data.title || "No title available";
+
+                  // แสดงวันที่ Due Date เป็น วดป (วันเดือนปี)
+                  const dueDate = data.dueDate
+                    ? new Date(data.dueDate).toLocaleDateString("th-TH")
+                    : "No due date";
+                  const dueTime = data.dueTime ? data.dueTime : "No due time"; // ใช้ string โดยตรง
+                  document.querySelector(
+                    ".due-date"
+                  ).textContent = `Due ${dueDate} at ${dueTime}`;
+
+                  // แสดงคำสั่งงานหรือ Instructions
+                  document.querySelector(
+                    ".details-section.instructions p"
+                  ).textContent = data.instructions || "None";
+
+                  // แสดงคะแนน
+                  document.querySelector(".right-section p").textContent =
+                    data.points || "No points";
+
+                  // ถ้ามีไฟล์แนบ แสดงไฟล์แนบ
+                  if (data.fileUrl) {
+                    displayFile(data.fileUrl);
+                  }
+                } else {
+                  console.error("No matching document found.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching assignment:", error);
+              });
+          }
+        });
+
+      document
+        .getElementById("searchInput")
+        .addEventListener("keyup", (event) => {
+          const query = event.target.value.trim().toLowerCase();
+          const searchResults = document.getElementById("searchResults");
+          searchResults.innerHTML = "";
+
+          if (query !== "") {
+            searchInCollection("Student", query, searchResults);
+            searchInCollection("Teacher", query, searchResults);
+          }
+        });
+
+      function searchInCollection(collectionName, query, searchResults) {
+        db.collection(collectionName)
+          .get()
+          .then((querySnapshot) => {
+            let found = false;
+
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (
+                data &&
+                data.Email &&
+                data.Email.toLowerCase().startsWith(query)
+              ) {
+                found = true;
+                const resultItem = document.createElement("div");
+                resultItem.classList.add("result-item");
+
+                const name = document.createElement("p");
+                name.textContent = data.Username
+                  ? `${data.Username}`
+                  : "No Username";
+
+                const emailSpan = document.createElement("span");
+                emailSpan.textContent = `${data.Email}`;
+
+                resultItem.appendChild(name);
+                resultItem.appendChild(emailSpan);
+
+                searchResults.appendChild(resultItem);
+              }
+            });
+
+            if (!found) {
+              const noResultItem = document.createElement("div");
+              noResultItem.classList.add("result-item");
+              noResultItem.textContent = `No results found in ${collectionName}.`;
+              searchResults.appendChild(noResultItem);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              `Error getting documents from ${collectionName} collection: `,
+              error
+            );
+          });
+      }
+
+      let isSubmitted = false; // เริ่มต้นเป็น false เพื่อระบุว่ายังไม่ได้ส่งงาน
+
+      // ฟังก์ชันสำหรับการส่งงาน
+      async function submitAssignment(fileList) {
+        if (assignmentId && email) {
+          const SubmissionRef = db.collection("Submissions").doc(assignmentId);
+
+          // บันทึกข้อมูลไฟล์และสถานะการส่งงาน
+          await SubmissionRef.set({
+            SubmissionId: SubmissionRef.id,
+            assignmentId: assignmentId,
+            submittedBy: email || "Unknown",
+            submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            files: fileList.length > 0 ? fileList : ["No files uploaded"],
+            isSubmitted: true, // อัปเดตสถานะเป็น true
+          })
+            .then(() => {
+              console.log("Submission data has been saved.");
+              document.querySelector(".undo-btn").textContent = "Undo Turn in";
+              isSubmitted = true;
+
+              // เรียกฟังก์ชันเพื่อบันทึกการแจ้งเตือน
+              sendNotificationToTeacher(assignmentId, email, SubmissionRef.id);
+            })
+            .catch((error) => {
+              console.error("Error saving Submission: ", error);
+            });
+        }
+      }
+
+      // ฟังก์ชันสำหรับการยกเลิกการส่งงาน (Undo Turn in)
+      async function undoSubmission() {
+        if (assignmentId) {
+          const SubmissionRef = db.collection("Submissions").doc(assignmentId);
+
+          await SubmissionRef.update({
+            isSubmitted: false, // เปลี่ยนสถานะการส่งงานเป็น false
+          })
+            .then(() => {
+              console.log("Submission has been undone.");
+              document.querySelector(".undo-btn").textContent = "Turn in";
+              isSubmitted = false;
+            })
+            .catch((error) => {
+              console.error("Error undoing Submission: ", error);
+            });
+        }
+      }
+
+      // เมื่อหน้าเว็บโหลดเสร็จ
+      document.addEventListener("DOMContentLoaded", function () {
+        if (assignmentId) {
+          const SubmissionRef = db.collection("Submissions").doc(assignmentId);
+
+          SubmissionRef.get()
+            .then((doc) => {
+              if (doc.exists) {
+                const SubmissionData = doc.data();
+
+                // ตรวจสอบสถานะการส่งงาน
+                if (SubmissionData.isSubmitted) {
+                  document.querySelector(".undo-btn").textContent =
+                    "Undo Turn in";
+                  isSubmitted = true;
+                } else {
+                  document.querySelector(".undo-btn").textContent = "Turn in";
+                  isSubmitted = false;
+                }
+
+                // แสดงไฟล์ที่แนบ
+                if (SubmissionData.files && SubmissionData.files.length > 0) {
+                  displayFiles(SubmissionData.files);
+                }
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching Submission data: ", error);
+            });
+        }
+      });
+      function displayFiles(files) {
+        const fileDisplay = document.getElementById("file-list");
+        fileDisplay.innerHTML = ""; // ล้างไฟล์ก่อนหน้า
+
+        files.forEach((file) => {
+          const fileItem = document.createElement("div");
+          fileItem.classList.add("file-item");
+
+          const fileIcon = document.createElement("i");
+          fileIcon.classList.add("fas", "fa-file");
+
+          const fileNameElement = document.createElement("span");
+          fileNameElement.textContent = file;
+
+          fileItem.appendChild(fileIcon);
+          fileItem.appendChild(fileNameElement);
+          fileDisplay.appendChild(fileItem);
+        });
+      }
+
+      // จัดการการคลิกปุ่ม Turn in / Undo Turn in
+      document
+        .querySelector(".undo-btn")
+        .addEventListener("click", async function () {
+          const files = document.getElementById("file-upload").files;
+          const fileList = [];
+
+          for (let i = 0; i < files.length; i++) {
+            fileList.push(files[i].name); // เก็บชื่อไฟล์ที่แนบไว้ใน array
+          }
+
+          if (!isSubmitted) {
+            // ถ้ายังไม่ได้ส่งงาน
+            console.log("Submitting assignment...");
+            await submitAssignment(fileList); // เรียกฟังก์ชันส่งงาน
+          } else {
+            // ถ้าได้ส่งงานแล้ว ให้ Undo
+            console.log("Undoing submission...");
+            await undoSubmission(); // เรียกฟังก์ชัน undo
+          }
+        });
+
+      document
+        .getElementById("file-upload")
+        .addEventListener("change", function (event) {
+          const fileList = event.target.files;
+          const fileDisplay = document.getElementById("file-list");
+          fileDisplay.innerHTML = "";
+
+          for (let i = 0; i < fileList.length; i++) {
+            const file = fileList[i];
+            const fileItem = document.createElement("div");
+            fileItem.classList.add("file-item");
+
+            const fileIcon = document.createElement("i");
+            fileIcon.classList.add("fas", "fa-file");
+
+            const fileNameElement = document.createElement("span");
+            fileNameElement.textContent = file.name;
+
+            fileItem.appendChild(fileIcon);
+            fileItem.appendChild(fileNameElement);
+            fileDisplay.appendChild(fileItem);
+          }
+        });
+
+      function sendNotificationToTeacher(assignmentId, email, SubmissionId) {
+        // ดึงข้อมูล assignment เพื่อนำมาใช้ในการแจ้งเตือน
+        const assignmentRef = db.collection("Assignments").doc(assignmentId);
+
+        assignmentRef
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const assignmentData = doc.data();
+              const teacherEmail = assignmentData.createdBy || "Unknown"; // ใช้ createdBy เป็นผู้รับการแจ้งเตือน
+
+              // บันทึกการแจ้งเตือนใน Firestore
+              const notificationRef = db.collection("Notifications").doc();
+              notificationRef
+                .set({
+                  To: teacherEmail, // แจ้งเตือนคนที่สั่งงาน
+                  Message: `${email} has turned in the Assignment '${
+                    assignmentData.title || "Untitled"
+                  }'.`,
+                  CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  Type: "Submission",
+                  SubmissionId: SubmissionId, // เพิ่มค่า SubmissionID ในการแจ้งเตือน
+                  isRead: false, // สถานะการอ่านแจ้งเตือน
+                })
+                .then(() => {
+                  console.log("Notification has been sent to the teacher.");
+                })
+                .catch((error) => {
+                  console.error("Error sending notification: ", error);
+                });
+            } else {
+              console.error("No assignment data found.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching assignment data: ", error);
+          });
+      }
+    </script>
+  </body>
+</html>

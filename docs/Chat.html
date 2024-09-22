@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
@@ -9,618 +8,634 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
 
     <style>
-        body {
-            font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
-            background-color: #2f2f2f;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        
-        .topbar {
-            background-color: #2e2e2e;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0px 2px 4px rgba(177, 177, 177, 0.1);
-            position: fixed;
-            width: 98%;
-            /* กำหนดความกว้างให้เต็มจอ */
-            left: 0;
-            /* ทำให้เริ่มจากขอบซ้ายของจอ */
-            z-index: 2;
-        }
-        
-        .topbar .search-bar {
-            flex-grow: 1;
-            display: flex;
-            justify-content: flex-start;
-            position: relative;
-            padding-left: 480px;
-        }
-        
-        .topbar .search-bar input {
-            width: 400px;
-            padding: 5px 10px 5px 35px;
-            border-radius: 20px;
-            border: 1px solid #717171;
-            background-color: #333;
-            color: #fff;
-            font-size: 16px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .topbar .search-bar .fas {
-            position: absolute;
-            left: 490px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #fff;
-            z-index: 2;
-        }
-        
-        .topbar .user-section {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        
-        #user-email {
-            color: white;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        
-        .user-icon {
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .user-icon i {
-            font-size: 30px;
-            color: white;
-        }
-        
-        #searchResults {
-            background-color: #4d4d4d;
-            color: white;
-            position: absolute;
-            z-index: 10000;
-            /* เพิ่มค่า z-index ให้สูงพอที่จะอยู่บนสุด */
-            width: 400px;
-            border-radius: 5px;
-            max-height: 200px;
-            overflow-y: auto;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            top: 38px;
-        }
-        
-        #searchResults {
-            z-index: 9999;
-            /* ให้แน่ใจว่าอยู่เหนือทุกอย่าง */
-        }
-        
-        .chat-container {
-            z-index: 1;
-            /* ปรับค่าให้ต่ำลงหากจำเป็น */
-        }
-        
-        .chat-window {
-            z-index: 1;
-            /* ปรับค่าให้ต่ำลงหากจำเป็น */
-        }
-        
-        .chat-list {
-            z-index: 1;
-        }
-        
-        #searchResults .result-item {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #555;
-            display: flex;
-            flex-direction: column;
-            font-size: 14px;
-        }
-        
-        #searchResults .result-item:hover {
-            background-color: #555;
-        }
-        
-        #searchResults .result-item p {
-            margin: 0;
-            color: #fff;
-        }
-        
-        #searchResults .result-item span {
-            color: #727272;
-        }
-        
-        .sidebar {
-            width: 100px;
-            background-color: #333;
-            color: white;
-            height: 100vh;
-            padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            z-index: 1;
-        }
-        
-        .menu-items {
-            margin-top: 40px;
-        }
-        
-        .sidebar a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 12px;
-            text-align: center;
-        }
-        
-        .sidebar a:hover {
-            background-color: #5f5f5f;
-            border-radius: 4px;
-            width: 80%;
-            text-align: center;
-        }
-        
-        .sidebar i {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .chat-container {
-            display: flex;
-            flex-direction: row;
-            height: 100%;
-            margin-left: 100px;
-            background-color: #2f2f2f;
-        }
-        
-        .chat-window {
-            flex-grow: 1;
-            padding: 20px;
-            margin-top: 50px;
-            color: white;
-            overflow-y: auto;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            position: relative;
-            width: 1050px;
-            max-width: 1050px;
-        }
-        
-        .chat-toolbar {
-            background-color: #2f2f2f;
-            color: #fff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 10px 10px 0px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: absolute;
-            top: 0;
-            width: calc(100% - 20px);
-            margin-left: -20px;
-            z-index: 2;
-        }
-        
-        .chat-message-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            margin-bottom: 10px;
-            position: relative;
-        }
-        
-        .chat-message-wrapper.sent {
-            display: flex;
-            justify-content: flex-end;
-            margin-left: auto;
-            max-width: 85%;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .chat-message.received {
-            max-width: 100%;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            padding: 10px;
-            background-color: #f1f0f0;
-            border-radius: 10px 10px 10px 0;
-        }
-        
-        .chat-message-wrapper.received {
-            align-items: flex-start;
-        }
-        
-        .timestamp {
-            font-size: 12px;
-            color: #999;
-            margin-bottom: 5px;
-        }
-        
-        .chat-message {
-            display: inline-block;
-            align-items: center;
-            margin: 5px;
-            /* ปรับให้มีระยะห่างทุกด้าน */
-            padding: 5px;
-            /* เพิ่ม padding เพื่อให้ดูสวยงาม */
-            border-radius: 8px;
-            max-width: 100%;
-            word-wrap: break-word;
-            background-color: #f1f0f0;
-            color: #000;
-        }
-        
-        .chat-message img {
-            max-width: 100%;
-            /* กำหนดขนาดของรูปภาพให้เหมาะสมกับกรอบ */
-            height: auto;
-            border-radius: 10px;
-            /* ปรับให้รูปภาพมีขอบโค้งมน */
-            display: block;
-            margin: 5px 0;
-            /* เพิ่มระยะห่างด้านบนและล่าง */
-        }
-        
-        .chat-message.sent {
-            max-width: 100%;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            padding-left: 10px;
-            padding-right: 10px;
-            background-color: #ade5ff;
-            border-radius: 5px 5px 0 5px;
-            line-height: 1.5
-        }
-        
-        .chat-message.received {
-            align-self: flex-start;
-            background-color: #f1f0f0;
-            color: #000;
-            border-radius: 10px 10px 10px 0;
-            margin-right: auto;
-            margin-left: 5px;
-        }
-        
-        .no-messages {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 300px;
-            margin: auto;
-        }
-        
-        .no-messages img.chat-icon {
-            width: 200px;
-            height: 200px;
-            margin-bottom: 5px;
-        }
-        
-        .chat-input {
-            display: flex;
-            align-items: left;
-            border-top: 1px solid #444;
-            padding: 10px;
-            background-color: #2e2e2e;
-            position: fixed;
-            bottom: 0;
-            width: calc(80% - 135px);
-            box-sizing: border-box;
-            margin-left: -20px;
-            z-index: 1000;
-        }
-        
-        .chat-input input {
-            flex-grow: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 20px;
-            margin-right: 10px;
-            background-color: #333;
-            color: white;
-            outline: none;
-            font-size: 16px;
-        }
-        
-        .chat-input button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        
-        .chat-input button i {
-            font-size: 18px;
-            color: #0078d7;
-        }
-        
-        .toolbar {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-left: 10px;
-        }
-        
-        .toolbar i {
-            color: #fff;
-            cursor: pointer;
-            font-size: 25px;
-        }
-        
-        .current-chat {
-            font-weight: bold;
-            font-size: 20px;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-        
-        .emoji-icon {
-            display: inline-block;
-            background-color: white;
-            border-radius: 50%;
-            padding: 8px;
-            font-size: 30px;
-            width: 30px;
-            height: 30px;
-            text-align: center;
-            line-height: 1.1;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-        
-        #chatMessages {
-            flex-grow: 1;
-            overflow-y: auto;
-            max-height: calc(100vh - 150px);
-            padding: 10px;
-            padding-bottom: 50px;
-            padding-top: 55px;
-            background-color: #2f2f2f;
-        }
-        
-        .chat-item {
-            background-color: #333;
-            color: white;
-            padding: 8px;
-            margin-top: 8px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-        
-        .chat-item p {
-            margin: 0;
-        }
-        
-        .email {
-            font-weight: bold;
-            font-size: 16px;
-        }
-        
-        .message-preview {
-            font-size: 14px;
-            color: #999;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .chat-list-topbar {
-            background-color: #2e2e2e;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #444;
-            position: sticky;
-            width: 95%;
-            height: 6%;
-            z-index: 2;
-            padding: 10px;
-        }
-        
-        .chat-list {
-            padding-top: 0px;
-            margin-top: 0px;
-            overflow-y: auto;
-            max-height: calc(100vh);
-            width: 300px;
-            padding: 5px;
-            border-right: 1px solid #444;
-            overflow-y: auto;
-            margin-top: -9px;
-        }
-        
-        .chat-list-title {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        
-        .chat-list-icons i {
-            color: white;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        
-        .chat-list-icons i:hover {
-            color: #aaa;
-        }
-        
-        .chat-list {
-            padding-top: 60px;
-        }
-        
-        #filePreviewContainer {
-            display: none;
-            position: relative;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        #filePreviewContainer img {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-        
-        #filePreviewContainer .remove-preview {
-            position: absolute;
-            top: 5px;
-            right: -3px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        /* Notification badge styling */
-        
-        .notification-badge {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            background-color: rgb(255, 157, 0);
-            color: white;
-            border-radius: 50%;
-            padding: 2px 5px;
-            font-size: 12px;
-            display: none;
-            /* Initially hidden, will be shown dynamically */
-            z-index: 10;
-        }
-    </style>
-</head>
+      body {
+        font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
+        background-color: #2f2f2f;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-<body>
+      .topbar {
+        background-color: #2e2e2e;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px 2px 4px rgba(177, 177, 177, 0.1);
+        position: fixed;
+        width: 98%;
+        /* กำหนดความกว้างให้เต็มจอ */
+        left: 0;
+        /* ทำให้เริ่มจากขอบซ้ายของจอ */
+        z-index: 2;
+      }
+
+      .topbar .search-bar {
+        flex-grow: 1;
+        display: flex;
+        justify-content: flex-start;
+        position: relative;
+        padding-left: 480px;
+      }
+
+      .topbar .search-bar input {
+        width: 400px;
+        padding: 5px 10px 5px 35px;
+        border-radius: 20px;
+        border: 1px solid #717171;
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .topbar .search-bar .fas {
+        position: absolute;
+        left: 490px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #fff;
+        z-index: 2;
+      }
+
+      .topbar .user-section {
+        display: flex;
+        align-items: center;
+        position: relative;
+      }
+
+      #user-email {
+        color: white;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+
+      .user-icon {
+        cursor: pointer;
+        position: relative;
+      }
+
+      .user-icon i {
+        font-size: 30px;
+        color: white;
+      }
+
+      #searchResults {
+        background-color: #4d4d4d;
+        color: white;
+        position: absolute;
+        z-index: 10000;
+        /* เพิ่มค่า z-index ให้สูงพอที่จะอยู่บนสุด */
+        width: 400px;
+        border-radius: 5px;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        top: 38px;
+      }
+
+      #searchResults {
+        z-index: 9999;
+        /* ให้แน่ใจว่าอยู่เหนือทุกอย่าง */
+      }
+
+      .chat-container {
+        z-index: 1;
+        /* ปรับค่าให้ต่ำลงหากจำเป็น */
+      }
+
+      .chat-window {
+        z-index: 1;
+        /* ปรับค่าให้ต่ำลงหากจำเป็น */
+      }
+
+      .chat-list {
+        z-index: 1;
+      }
+
+      #searchResults .result-item {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #555;
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+      }
+
+      #searchResults .result-item:hover {
+        background-color: #555;
+      }
+
+      #searchResults .result-item p {
+        margin: 0;
+        color: #fff;
+      }
+
+      #searchResults .result-item span {
+        color: #727272;
+      }
+
+      .sidebar {
+        width: 100px;
+        background-color: #333;
+        color: white;
+        height: 100vh;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        z-index: 1;
+      }
+
+      .menu-items {
+        margin-top: 40px;
+      }
+
+      .sidebar a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        padding: 10px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .sidebar a:hover {
+        background-color: #5f5f5f;
+        border-radius: 4px;
+        width: 80%;
+        text-align: center;
+      }
+
+      .sidebar i {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .chat-container {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        margin-left: 100px;
+        background-color: #2f2f2f;
+      }
+
+      .chat-window {
+        flex-grow: 1;
+        padding: 20px;
+        margin-top: 50px;
+        color: white;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        position: relative;
+        width: 1050px;
+        max-width: 1050px;
+      }
+
+      .chat-toolbar {
+        background-color: #2f2f2f;
+        color: #fff;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        padding: 10px 10px 0px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        width: calc(100% - 20px);
+        margin-left: -20px;
+        z-index: 2;
+      }
+
+      .chat-message-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      .chat-message-wrapper.sent {
+        display: flex;
+        justify-content: flex-end;
+        margin-left: auto;
+        max-width: 85%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+
+      .chat-message.received {
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        padding: 10px;
+        background-color: #f1f0f0;
+        border-radius: 10px 10px 10px 0;
+      }
+
+      .chat-message-wrapper.received {
+        align-items: flex-start;
+      }
+
+      .timestamp {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 5px;
+      }
+
+      .chat-message {
+        display: inline-block;
+        align-items: center;
+        margin: 5px;
+        /* ปรับให้มีระยะห่างทุกด้าน */
+        padding: 5px;
+        /* เพิ่ม padding เพื่อให้ดูสวยงาม */
+        border-radius: 8px;
+        max-width: 100%;
+        word-wrap: break-word;
+        background-color: #f1f0f0;
+        color: #000;
+      }
+
+      .chat-message img {
+        max-width: 100%;
+        /* กำหนดขนาดของรูปภาพให้เหมาะสมกับกรอบ */
+        height: auto;
+        border-radius: 10px;
+        /* ปรับให้รูปภาพมีขอบโค้งมน */
+        display: block;
+        margin: 5px 0;
+        /* เพิ่มระยะห่างด้านบนและล่าง */
+      }
+
+      .chat-message.sent {
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: #ade5ff;
+        border-radius: 5px 5px 0 5px;
+        line-height: 1.5;
+      }
+
+      .chat-message.received {
+        align-self: flex-start;
+        background-color: #f1f0f0;
+        color: #000;
+        border-radius: 10px 10px 10px 0;
+        margin-right: auto;
+        margin-left: 5px;
+      }
+
+      .no-messages {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 300px;
+        margin: auto;
+      }
+
+      .no-messages img.chat-icon {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 5px;
+      }
+
+      .chat-input {
+        display: flex;
+        align-items: left;
+        border-top: 1px solid #444;
+        padding: 10px;
+        background-color: #2e2e2e;
+        position: fixed;
+        bottom: 0;
+        width: calc(80% - 135px);
+        box-sizing: border-box;
+        margin-left: -20px;
+        z-index: 1000;
+      }
+
+      .chat-input input {
+        flex-grow: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+        margin-right: 10px;
+        background-color: #333;
+        color: white;
+        outline: none;
+        font-size: 16px;
+      }
+
+      .chat-input button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      .chat-input button i {
+        font-size: 18px;
+        color: #0078d7;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-left: 10px;
+      }
+
+      .toolbar i {
+        color: #fff;
+        cursor: pointer;
+        font-size: 25px;
+      }
+
+      .current-chat {
+        font-weight: bold;
+        font-size: 20px;
+        color: #fff;
+        margin-bottom: 10px;
+      }
+
+      .emoji-icon {
+        display: inline-block;
+        background-color: white;
+        border-radius: 50%;
+        padding: 8px;
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 1.1;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+
+      #chatMessages {
+        flex-grow: 1;
+        overflow-y: auto;
+        max-height: calc(100vh - 150px);
+        padding: 10px;
+        padding-bottom: 50px;
+        padding-top: 55px;
+        background-color: #2f2f2f;
+      }
+
+      .chat-item {
+        background-color: #333;
+        color: white;
+        padding: 8px;
+        margin-top: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+      }
+
+      .chat-item p {
+        margin: 0;
+      }
+
+      .email {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .message-preview {
+        font-size: 14px;
+        color: #999;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .chat-list-topbar {
+        background-color: #2e2e2e;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #444;
+        position: sticky;
+        width: 95%;
+        height: 6%;
+        z-index: 2;
+        padding: 10px;
+      }
+
+      .chat-list {
+        padding-top: 0px;
+        margin-top: 0px;
+        overflow-y: auto;
+        max-height: calc(100vh);
+        width: 300px;
+        padding: 5px;
+        border-right: 1px solid #444;
+        overflow-y: auto;
+        margin-top: -9px;
+      }
+
+      .chat-list-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .chat-list-icons i {
+        color: white;
+        margin-left: 10px;
+        cursor: pointer;
+      }
+
+      .chat-list-icons i:hover {
+        color: #aaa;
+      }
+
+      .chat-list {
+        padding-top: 60px;
+      }
+
+      #filePreviewContainer {
+        display: none;
+        position: relative;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      #filePreviewContainer img {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+
+      #filePreviewContainer .remove-preview {
+        position: absolute;
+        top: 5px;
+        right: -3px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      /* Notification badge styling */
+
+      .notification-badge {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        background-color: rgb(255, 157, 0);
+        color: white;
+        border-radius: 50%;
+        padding: 2px 5px;
+        font-size: 12px;
+        display: none;
+        /* Initially hidden, will be shown dynamically */
+        z-index: 10;
+      }
+    </style>
+  </head>
+
+  <body>
     <div class="topbar">
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
-            <div id="searchResults"></div>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
+        <div id="searchResults"></div>
+      </div>
+      <div class="user-section">
+        <div id="user-email">wimolphatw64@gmail.com</div>
+        <div class="user-icon" id="userIcon">
+          <i class="fas fa-user-circle"></i>
         </div>
-        <div class="user-section">
-            <div id="user-email">wimolphatw64@gmail.com</div>
-            <div class="user-icon" id="userIcon">
-                <i class="fas fa-user-circle"></i>
-            </div>
-        </div>
+      </div>
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="menu-items">
-            <a href="studenthead.html?email={{email}}" class="menu-link">
-                <i class="fa fa-chalkboard-teacher"></i><span>Classroom</span>
-            </a>
-            <a href="Chat.html?email={{email}}" class="menu-link">
-                <i class="fa fa-comments"></i><span>Chat</span>
-            </a>
-            <a href="Notifications.html?email={{email}}" class="menu-link" id="notificationMenu" style="position: relative">
-                <i class="fa fa-bell"></i><span>Notifications</span>
-                <!-- Notification badge -->
-                <span class="notification-badge" id="notificationBadge">0</span>
-            </a>
-            <a href="Assignment.html?email={{email}}" class="menu-link">
-                <i class="fa fa-tasks"></i><span>Assignment</span>
-            </a>
-            <a href="Call.html?email={{email}}" class="menu-link">
-                <i class="fa fa-phone"></i><span>Call</span>
-            </a>
-        </div>
+      <div class="menu-items">
+        <a href="studenthead.html?email={{email}}" class="menu-link">
+          <i class="fa fa-chalkboard-teacher"></i><span>Classroom</span>
+        </a>
+        <a href="Chat.html?email={{email}}" class="menu-link">
+          <i class="fa fa-comments"></i><span>Chat</span>
+        </a>
+        <a
+          href="Notifications.html?email={{email}}"
+          class="menu-link"
+          id="notificationMenu"
+          style="position: relative"
+        >
+          <i class="fa fa-bell"></i><span>Notifications</span>
+          <!-- Notification badge -->
+          <span class="notification-badge" id="notificationBadge">0</span>
+        </a>
+        <a href="Assignment.html?email={{email}}" class="menu-link">
+          <i class="fa fa-tasks"></i><span>Assignment</span>
+        </a>
+        <a href="Call.html?email={{email}}" class="menu-link">
+          <i class="fa fa-phone"></i><span>Call</span>
+        </a>
+      </div>
     </div>
 
     <!-- Chat Content -->
     <div class="chat-container">
-        <div class="chat-list" id="chatList">
-            <div class="chat-list-topbar">
-                <div class="chat-list-title">Chat</div>
-                <div class="chat-list-icons">
-                    <i class="fas fa-ellipsis-h"></i>
-                    <i class="fas fa-filter"></i>
-                    <i class="fas fa-pen-square"></i>
-                </div>
-            </div>
+      <div class="chat-list" id="chatList">
+        <div class="chat-list-topbar">
+          <div class="chat-list-title">Chat</div>
+          <div class="chat-list-icons">
+            <i class="fas fa-ellipsis-h"></i>
+            <i class="fas fa-filter"></i>
+            <i class="fas fa-pen-square"></i>
+          </div>
         </div>
+      </div>
 
-        <!-- Chat Window -->
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-toolbar">
-                <div class="current-chat">
-                    <span class="emoji-icon">😊</span
+      <!-- Chat Window -->
+      <div class="chat-window" id="chatWindow">
+        <div class="chat-toolbar">
+          <div class="current-chat">
+            <span class="emoji-icon">😊</span
             ><span id="chatUserName">ไม่มี</span>
-                </div>
-                <div class="toolbar">
-                    <i class="fas fa-comments"></i>
-                    <i class="fas fa-file"></i>
-                </div>
-            </div>
-            <div id="chatMessages">
-                <!-- Chat messages will be appended here -->
-                <div class="no-messages" id="noMessages">
-                    <img src="images/iconchat.png" alt="Chat Icon" class="chat-icon" />
-                    <p><strong>คุณกำลังเริ่มต้นการสนทนาใหม่</strong></p>
-                    <p>พิมพ์ข้อความแรกของคุณด้านล่าง</p>
-                </div>
-            </div>
-            <!-- Chat input -->
-            <div class="chat-input">
-                <div id="filePreviewContainer"></div>
-                <!-- Container for image preview -->
-                <input type="text" placeholder="พิมพ์ข้อความ..." id="messageInput" />
-                <div class="toolbar">
-                    <i class="fas fa-pen"></i>
-                    <i class="fas fa-smile"></i>
-                    <i class="fas fa-plus" id="fileUploadButton"></i>
-                    <input type="file" id="fileInput" style="display:none;" accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-                    <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
+          </div>
+          <div class="toolbar">
+            <i class="fas fa-comments"></i>
+            <i class="fas fa-file"></i>
+          </div>
         </div>
+        <div id="chatMessages">
+          <!-- Chat messages will be appended here -->
+          <div class="no-messages" id="noMessages">
+            <img src="images/iconchat.png" alt="Chat Icon" class="chat-icon" />
+            <p><strong>คุณกำลังเริ่มต้นการสนทนาใหม่</strong></p>
+            <p>พิมพ์ข้อความแรกของคุณด้านล่าง</p>
+          </div>
+        </div>
+        <!-- Chat input -->
+        <div class="chat-input">
+          <div id="filePreviewContainer"></div>
+          <!-- Container for image preview -->
+          <input type="text" placeholder="พิมพ์ข้อความ..." id="messageInput" />
+          <div class="toolbar">
+            <i class="fas fa-pen"></i>
+            <i class="fas fa-smile"></i>
+            <i class="fas fa-plus" id="fileUploadButton"></i>
+            <input
+              type="file"
+              id="fileInput"
+              style="display: none"
+              accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            />
+            <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Firebase SDKs -->
@@ -629,473 +644,510 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        // Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
-            authDomain: "project-63a86.firebaseapp.com",
-            projectId: "team-1849c",
-            storageBucket: "team-1849c.appspot.com",
-            messagingSenderId: "448111875731",
-            appId: "1:448111875731:web:6180e0c46cc10593051f66",
-            measurementId: "G-SR4EFC2VFC",
-        };
+      // Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
+        authDomain: "project-63a86.firebaseapp.com",
+        projectId: "team-1849c",
+        storageBucket: "team-1849c.appspot.com",
+        messagingSenderId: "448111875731",
+        appId: "1:448111875731:web:6180e0c46cc10593051f66",
+        measurementId: "G-SR4EFC2VFC",
+      };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        var db = firebase.firestore();
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
 
-        // ดึงพารามิเตอร์จาก URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get("email");
+      // ดึงพารามิเตอร์จาก URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get("email");
 
-        let currentChatUser = null;
+      let currentChatUser = null;
 
-        if (!email || email.trim() === "") {
-            alert("Email parameter is missing or invalid.");
-        } else {
-            document.getElementById("user-email").textContent = email;
+      if (!email || email.trim() === "") {
+        alert("Email parameter is missing or invalid.");
+      } else {
+        document.getElementById("user-email").textContent = email;
 
-            document.querySelectorAll(".menu-items a").forEach((link) => {
-                const url = new URL(link.href);
-                url.searchParams.set("email", email);
-                link.href = url.toString();
-            });
+        document.querySelectorAll(".menu-items a").forEach((link) => {
+          const url = new URL(link.href);
+          url.searchParams.set("email", email);
+          link.href = url.toString();
+        });
 
-            // Call the function to load the notification count
-            loadNotificationsCount(email);
+        // Call the function to load the notification count
+        loadNotificationsCount(email);
 
-            // Load chat data
-            loadChats();
-        }
+        // Load chat data
+        loadChats();
+      }
 
-        // Function to search email or username in both Teacher and Student collections
-        document
-            .getElementById("searchInput")
-            .addEventListener("keyup", (event) => {
-                const query = event.target.value.trim().toLowerCase();
-                const searchResults = document.getElementById("searchResults");
-                searchResults.innerHTML = "";
+      // Function to search email or username in both Teacher and Student collections
+      document
+        .getElementById("searchInput")
+        .addEventListener("keyup", (event) => {
+          const query = event.target.value.trim().toLowerCase();
+          const searchResults = document.getElementById("searchResults");
+          searchResults.innerHTML = "";
 
-                if (query !== "") {
-                    searchInCollection("Student", query, searchResults);
-                    searchInCollection("Teacher", query, searchResults);
-                }
-            });
+          if (query !== "") {
+            searchInCollection("Student", query, searchResults);
+            searchInCollection("Teacher", query, searchResults);
+          }
+        });
 
-        function searchInCollection(collectionName, query, searchResults) {
-            db.collection(collectionName)
-                .get()
-                .then((querySnapshot) => {
-                    let found = false;
-                    querySnapshot.forEach((doc) => {
-                        const data = doc.data();
-                        if (data && data.Email) {
-                            if (
-                                data.Email.toLowerCase().startsWith(query) ||
-                                (data.Username &&
-                                    data.Username.toLowerCase().startsWith(query))
-                            ) {
-                                found = true;
-                                const resultItem = document.createElement("div");
-                                resultItem.classList.add("result-item");
+      function searchInCollection(collectionName, query, searchResults) {
+        db.collection(collectionName)
+          .get()
+          .then((querySnapshot) => {
+            let found = false;
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (data && data.Email) {
+                if (
+                  data.Email.toLowerCase().startsWith(query) ||
+                  (data.Username &&
+                    data.Username.toLowerCase().startsWith(query))
+                ) {
+                  found = true;
+                  const resultItem = document.createElement("div");
+                  resultItem.classList.add("result-item");
 
-                                const name = document.createElement("p");
-                                name.textContent = data.Username ?
-                                    data.Username :
-                                    "No Username";
-                                const emailSpan = document.createElement("span");
-                                emailSpan.textContent = data.Email;
+                  const name = document.createElement("p");
+                  name.textContent = data.Username
+                    ? data.Username
+                    : "No Username";
+                  const emailSpan = document.createElement("span");
+                  emailSpan.textContent = data.Email;
 
-                                resultItem.appendChild(name);
-                                resultItem.appendChild(emailSpan);
+                  resultItem.appendChild(name);
+                  resultItem.appendChild(emailSpan);
 
-                                resultItem.addEventListener("click", function() {
-                                    console.log("Item clicked:", data.Email);
-                                    openChatWithUser(data.Email);
-                                    document.getElementById("searchInput").value = "";
-                                    searchResults.innerHTML = "";
-                                    document.getElementById("chatUserName").textContent = `${
+                  resultItem.addEventListener("click", function () {
+                    console.log("Item clicked:", data.Email);
+                    openChatWithUser(data.Email);
+                    document.getElementById("searchInput").value = "";
+                    searchResults.innerHTML = "";
+                    document.getElementById("chatUserName").textContent = `${
                       data.Username || data.Email
                     }`;
 
-                                    currentChatUser = data.Email;
+                    currentChatUser = data.Email;
 
-                                    const noMessages = document.getElementById("noMessages");
-                                    if (noMessages) {
-                                        noMessages.style.display = "flex";
-                                    } else {
-                                        console.error("Element with ID 'noMessages' not found.");
-                                    }
-                                });
-
-                                searchResults.appendChild(resultItem);
-                            }
-                        }
-                    });
-
-                    if (!found) {
-                        const noResultItem = document.createElement("div");
-                        noResultItem.classList.add("result-item");
-                        noResultItem.textContent = `No results found in ${collectionName}.`;
-                        searchResults.appendChild(noResultItem);
+                    const noMessages = document.getElementById("noMessages");
+                    if (noMessages) {
+                      noMessages.style.display = "flex";
+                    } else {
+                      console.error("Element with ID 'noMessages' not found.");
                     }
-                })
-                .catch((error) => {
-                    console.error(
-                        `Error getting documents from ${collectionName} collection: `,
-                        error
-                    );
-                });
-        }
+                  });
 
-        // ฟังก์ชันสำหรับดึงรายการแชทแบบเรียลไทม์
-        function loadChats() {
-            const chatList = document.getElementById("chatList");
-            let uniqueChats = new Set();
-
-            db.collection("Chats")
-                .where("Participants", "array-contains", email)
-                .orderBy("CreatedAt", "desc")
-                .onSnapshot((snapshot) => {
-                    uniqueChats.clear();
-
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const otherUserEmail = data.Participants.find(
-                            (participant) => participant !== email
-                        );
-
-                        if (!uniqueChats.has(otherUserEmail)) {
-                            uniqueChats.add(otherUserEmail);
-
-                            let chatItem = document.querySelector(`[data-email="${otherUserEmail}"]`);
-
-                            if (!chatItem) {
-                                chatItem = document.createElement("div");
-                                chatItem.classList.add("chat-item");
-                                chatItem.setAttribute("data-email", otherUserEmail);
-
-                                const emailElement = document.createElement("p");
-                                emailElement.textContent = otherUserEmail;
-                                emailElement.classList.add("email");
-
-                                const messageElement = document.createElement("p");
-                                messageElement.classList.add("message-preview");
-
-                                chatItem.appendChild(emailElement);
-                                chatItem.appendChild(messageElement);
-
-                                chatItem.addEventListener("click", function() {
-                                    openChatWithUser(otherUserEmail);
-                                });
-
-                                chatList.appendChild(chatItem);
-                            }
-
-                            // Update the message preview
-                            const lastMessage = data.ImageUrl ? "Sent a picture" : (data.Message || "No message");
-                            const sender = data.From === email ? "You" : otherUserEmail;
-                            const messagePreview = chatItem.querySelector('.message-preview');
-                            messagePreview.textContent = `${sender}: ${lastMessage}`;
-                        }
-                    });
-                }, (error) => {
-                    console.error("Error loading chats: ", error);
-                });
-        }
-
-        // ฟังก์ชันส่งข้อความ
-        document.getElementById("sendButton").addEventListener("click", function() {
-            const messageInput = document.getElementById("messageInput");
-            const message = messageInput.value.trim();
-
-            if (message === "" || !currentChatUser) return;
-
-            db.collection("Chats").add({
-                Participants: [currentChatUser, email],
-                From: email,
-                To: currentChatUser,
-                Message: message,
-                CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  searchResults.appendChild(resultItem);
+                }
+              }
             });
 
-            messageInput.value = "";
+            if (!found) {
+              const noResultItem = document.createElement("div");
+              noResultItem.classList.add("result-item");
+              noResultItem.textContent = `No results found in ${collectionName}.`;
+              searchResults.appendChild(noResultItem);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              `Error getting documents from ${collectionName} collection: `,
+              error
+            );
+          });
+      }
+
+      // ฟังก์ชันสำหรับดึงรายการแชทแบบเรียลไทม์
+      function loadChats() {
+        const chatList = document.getElementById("chatList");
+        let uniqueChats = new Set();
+
+        db.collection("Chats")
+          .where("Participants", "array-contains", email)
+          .orderBy("CreatedAt", "desc")
+          .onSnapshot(
+            (snapshot) => {
+              uniqueChats.clear();
+
+              snapshot.forEach((doc) => {
+                const data = doc.data();
+                const otherUserEmail = data.Participants.find(
+                  (participant) => participant !== email
+                );
+
+                if (!uniqueChats.has(otherUserEmail)) {
+                  uniqueChats.add(otherUserEmail);
+
+                  let chatItem = document.querySelector(
+                    `[data-email="${otherUserEmail}"]`
+                  );
+
+                  if (!chatItem) {
+                    chatItem = document.createElement("div");
+                    chatItem.classList.add("chat-item");
+                    chatItem.setAttribute("data-email", otherUserEmail);
+
+                    const emailElement = document.createElement("p");
+                    emailElement.textContent = otherUserEmail;
+                    emailElement.classList.add("email");
+
+                    const messageElement = document.createElement("p");
+                    messageElement.classList.add("message-preview");
+
+                    chatItem.appendChild(emailElement);
+                    chatItem.appendChild(messageElement);
+
+                    chatItem.addEventListener("click", function () {
+                      openChatWithUser(otherUserEmail);
+                    });
+
+                    chatList.appendChild(chatItem);
+                  }
+
+                  // Update the message preview
+                  const lastMessage = data.ImageUrl
+                    ? "Sent a picture"
+                    : data.Message || "No message";
+                  const sender = data.From === email ? "You" : otherUserEmail;
+                  const messagePreview =
+                    chatItem.querySelector(".message-preview");
+                  messagePreview.textContent = `${sender}: ${lastMessage}`;
+                }
+              });
+            },
+            (error) => {
+              console.error("Error loading chats: ", error);
+            }
+          );
+      }
+
+      // ฟังก์ชันส่งข้อความ
+      document
+        .getElementById("sendButton")
+        .addEventListener("click", function () {
+          const messageInput = document.getElementById("messageInput");
+          const message = messageInput.value.trim();
+
+          if (message === "" || !currentChatUser) return;
+
+          db.collection("Chats").add({
+            Participants: [currentChatUser, email],
+            From: email,
+            To: currentChatUser,
+            Message: message,
+            CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+
+          messageInput.value = "";
         });
 
-        // ฟังก์ชันเปิดแชทเมื่อเลือกผู้ใช้
-        function openChatWithUser(userEmail) {
-            localStorage.setItem("lastChatUser", userEmail);
+      // ฟังก์ชันเปิดแชทเมื่อเลือกผู้ใช้
+      function openChatWithUser(userEmail) {
+        localStorage.setItem("lastChatUser", userEmail);
 
-            if (currentChatUser === userEmail) {
-                console.log("Already in chat with this user:", userEmail);
-                return;
-            }
+        if (currentChatUser === userEmail) {
+          console.log("Already in chat with this user:", userEmail);
+          return;
+        }
 
-            const chatMessages = document.getElementById("chatMessages");
-            currentChatUser = userEmail;
+        const chatMessages = document.getElementById("chatMessages");
+        currentChatUser = userEmail;
+        chatMessages.innerHTML = "";
+        document.getElementById("chatUserName").textContent = userEmail;
+
+        db.collection("Chats")
+          .where("Participants", "array-contains", currentChatUser)
+          .orderBy("CreatedAt", "asc")
+          .onSnapshot((snapshot) => {
             chatMessages.innerHTML = "";
-            document.getElementById("chatUserName").textContent = userEmail;
 
-            db.collection("Chats")
-                .where("Participants", "array-contains", currentChatUser)
-                .orderBy("CreatedAt", "asc")
-                .onSnapshot((snapshot) => {
-                    chatMessages.innerHTML = "";
-
-                    if (snapshot.empty) {
-                        chatMessages.innerHTML = "<p>No messages found in this chat.</p>";
-                    } else {
-                        snapshot.forEach((doc) => {
-                            const data = doc.data();
-                            const messageWrapper = document.createElement("div");
-                            messageWrapper.classList.add(
-                                "chat-message-wrapper",
-                                data.From === email ? "sent" : "received"
-                            );
-
-                            const timestamp = document.createElement("div");
-                            timestamp.classList.add("timestamp");
-
-                            if (data.CreatedAt && data.CreatedAt.toDate) {
-                                const timestampDate = data.CreatedAt.toDate();
-                                timestamp.textContent = timestampDate.toLocaleString('th-TH', {
-                                    timeZone: 'Asia/Bangkok'
-                                });
-                            } else {
-                                timestamp.textContent = "เวลาไม่ถูกต้อง";
-                            }
-
-                            messageWrapper.appendChild(timestamp);
-
-                            const messageItem = document.createElement("div");
-                            messageItem.classList.add(
-                                "chat-message",
-                                data.From === email ? "sent" : "received"
-                            );
-
-                            if (data.Message) {
-                                // ตรวจจับและแสดงลิงก์ตัวอย่าง
-                                if (data.Message.startsWith("http://") || data.Message.startsWith("https://")) {
-                                    if (data.Message.includes('youtube.com') || data.Message.includes('youtu.be')) {
-                                        // ฝัง YouTube วิดีโอ
-                                        const iframe = document.createElement('iframe');
-                                        iframe.src = `https://www.youtube.com/embed/${extractYoutubeId(data.Message)}`;
-                                        iframe.width = '450';
-                                        iframe.height = '260';
-                                        iframe.frameBorder = '0';
-                                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-                                        iframe.allowFullscreen = true;
-                                        messageItem.appendChild(iframe);
-                                    } else {
-                                        // แสดงตัวอย่างลิงก์ธรรมดา
-                                        const previewDiv = document.createElement('div');
-                                        previewDiv.classList.add('link-preview');
-
-                                        // ส่วนนี้สามารถใช้การฝังข้อมูลตัวอย่างของลิงก์
-                                        const link = document.createElement('a');
-                                        link.href = data.Message;
-                                        link.target = '_blank';
-                                        link.textContent = data.Message;
-                                        link.style.color = 'black';
-                                        previewDiv.appendChild(link);
-
-                                        messageItem.appendChild(previewDiv);
-                                    }
-                                } else {
-                                    const messageText = document.createElement("p");
-                                    messageText.textContent = data.Message;
-                                    messageItem.appendChild(messageText);
-                                }
-                            }
-
-                            if (data.ImageUrl) {
-                                const img = document.createElement("img");
-                                img.src = data.ImageUrl;
-                                img.style.maxWidth = "250px";
-                                img.style.borderRadius = "10px";
-                                img.style.marginTop = "10px";
-                                messageItem.appendChild(img);
-                            }
-
-                            // ตรวจสอบและแสดงลิงก์สำหรับไฟล์เอกสาร
-                            if (data.FileUrl) {
-                                const fileLink = document.createElement('a');
-                                fileLink.href = data.FileUrl;
-                                fileLink.target = '_blank';
-                                fileLink.textContent = `📎 ${data.FileName || 'Download File'}`;
-                                fileLink.style.color = 'black';
-                                messageItem.appendChild(fileLink);
-                            }
-
-                            messageWrapper.appendChild(messageItem);
-                            chatMessages.appendChild(messageWrapper);
-                        });
-
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
-                });
-        }
-
-        // ฟังก์ชันดึง YouTube ID จากลิงก์
-        function extractYoutubeId(url) {
-            const regExp = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:v\/|watch\?v=|.*\/)|youtu\.be\/)([^&\n?#]+)/;
-            const match = url.match(regExp);
-            return match ? match[1] : null;
-        }
-
-        // Send message functionality
-        document
-            .getElementById("sendButton")
-            .addEventListener("click", function() {
-                const messageInput = document.getElementById("messageInput");
-                const message = messageInput.value.trim();
-
-                if (message === "" || !currentChatUser) return;
-
-                const chatMessages = document.getElementById("chatMessages");
-
+            if (snapshot.empty) {
+              chatMessages.innerHTML = "<p>No messages found in this chat.</p>";
+            } else {
+              snapshot.forEach((doc) => {
+                const data = doc.data();
                 const messageWrapper = document.createElement("div");
-                messageWrapper.classList.add("chat-message-wrapper", "sent");
+                messageWrapper.classList.add(
+                  "chat-message-wrapper",
+                  data.From === email ? "sent" : "received"
+                );
 
                 const timestamp = document.createElement("div");
                 timestamp.classList.add("timestamp");
-                timestamp.textContent = new Date().toLocaleString();
+
+                if (data.CreatedAt && data.CreatedAt.toDate) {
+                  const timestampDate = data.CreatedAt.toDate();
+                  timestamp.textContent = timestampDate.toLocaleString(
+                    "th-TH",
+                    {
+                      timeZone: "Asia/Bangkok",
+                    }
+                  );
+                } else {
+                  timestamp.textContent = "เวลาไม่ถูกต้อง";
+                }
 
                 messageWrapper.appendChild(timestamp);
 
                 const messageItem = document.createElement("div");
-                messageItem.classList.add("chat-message", "sent");
+                messageItem.classList.add(
+                  "chat-message",
+                  data.From === email ? "sent" : "received"
+                );
 
-                const messageText = document.createElement("p");
-                messageText.textContent = message;
+                if (data.Message) {
+                  // ตรวจจับและแสดงลิงก์ตัวอย่าง
+                  if (
+                    data.Message.startsWith("http://") ||
+                    data.Message.startsWith("https://")
+                  ) {
+                    if (
+                      data.Message.includes("youtube.com") ||
+                      data.Message.includes("youtu.be")
+                    ) {
+                      // ฝัง YouTube วิดีโอ
+                      const iframe = document.createElement("iframe");
+                      iframe.src = `https://www.youtube.com/embed/${extractYoutubeId(
+                        data.Message
+                      )}`;
+                      iframe.width = "450";
+                      iframe.height = "260";
+                      iframe.frameBorder = "0";
+                      iframe.allow =
+                        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                      iframe.allowFullscreen = true;
+                      messageItem.appendChild(iframe);
+                    } else {
+                      // แสดงตัวอย่างลิงก์ธรรมดา
+                      const previewDiv = document.createElement("div");
+                      previewDiv.classList.add("link-preview");
 
-                messageItem.appendChild(messageText);
+                      // ส่วนนี้สามารถใช้การฝังข้อมูลตัวอย่างของลิงก์
+                      const link = document.createElement("a");
+                      link.href = data.Message;
+                      link.target = "_blank";
+                      link.textContent = data.Message;
+                      link.style.color = "black";
+                      previewDiv.appendChild(link);
+
+                      messageItem.appendChild(previewDiv);
+                    }
+                  } else {
+                    const messageText = document.createElement("p");
+                    messageText.textContent = data.Message;
+                    messageItem.appendChild(messageText);
+                  }
+                }
+
+                if (data.ImageUrl) {
+                  const img = document.createElement("img");
+                  img.src = data.ImageUrl;
+                  img.style.maxWidth = "250px";
+                  img.style.borderRadius = "10px";
+                  img.style.marginTop = "10px";
+                  messageItem.appendChild(img);
+                }
+
+                // ตรวจสอบและแสดงลิงก์สำหรับไฟล์เอกสาร
+                if (data.FileUrl) {
+                  const fileLink = document.createElement("a");
+                  fileLink.href = data.FileUrl;
+                  fileLink.target = "_blank";
+                  fileLink.textContent = `📎 ${
+                    data.FileName || "Download File"
+                  }`;
+                  fileLink.style.color = "black";
+                  messageItem.appendChild(fileLink);
+                }
+
                 messageWrapper.appendChild(messageItem);
                 chatMessages.appendChild(messageWrapper);
+              });
 
-                // เพิ่มข้อความลงใน Firebase
-                db.collection("Chats").add({
-                    Participants: [currentChatUser, email],
-                    From: email,
-                    To: currentChatUser,
-                    Message: message,
-                    CreatedAt: firebase.firestore.FieldValue.serverTimestamp(), // ใช้ serverTimestamp เพื่อความแม่นยำ
-                });
-
-                messageInput.value = ""; // Clear input
-                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
-            });
-        document.getElementById('fileUploadButton').addEventListener('click', function() {
-            document.getElementById('fileInput').click(); // Open file picker
-        });
-
-        document.getElementById('fileInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                // Clear previous preview
-                const previewContainer = document.getElementById('filePreviewContainer');
-                previewContainer.innerHTML = '';
-
-                // Create a preview based on file type
-                if (file.type.startsWith('image/')) {
-                    // Image file preview
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    previewContainer.appendChild(img);
-                } else {
-                    // Document file preview
-                    const docPreview = document.createElement('p');
-                    docPreview.textContent = `📎 ${file.name}`;
-                    previewContainer.appendChild(docPreview);
-                }
-
-                // Add a remove icon (X)
-                const removeBtn = document.createElement('span');
-                removeBtn.innerHTML = '&times;'; // Use "×" character for the icon
-                removeBtn.classList.add('remove-preview');
-                removeBtn.addEventListener('click', function() {
-                    previewContainer.innerHTML = ''; // Clear the preview
-                    document.getElementById('fileInput').value = ''; // Clear file input
-                    previewContainer.style.display = 'none'; // Hide the preview container
-                });
-                previewContainer.appendChild(removeBtn);
-
-                previewContainer.style.display = 'block'; // Show the preview container
+              chatMessages.scrollTop = chatMessages.scrollHeight;
             }
+          });
+      }
+
+      // ฟังก์ชันดึง YouTube ID จากลิงก์
+      function extractYoutubeId(url) {
+        const regExp =
+          /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:v\/|watch\?v=|.*\/)|youtu\.be\/)([^&\n?#]+)/;
+        const match = url.match(regExp);
+        return match ? match[1] : null;
+      }
+
+      // Send message functionality
+      document
+        .getElementById("sendButton")
+        .addEventListener("click", function () {
+          const messageInput = document.getElementById("messageInput");
+          const message = messageInput.value.trim();
+
+          if (message === "" || !currentChatUser) return;
+
+          const chatMessages = document.getElementById("chatMessages");
+
+          const messageWrapper = document.createElement("div");
+          messageWrapper.classList.add("chat-message-wrapper", "sent");
+
+          const timestamp = document.createElement("div");
+          timestamp.classList.add("timestamp");
+          timestamp.textContent = new Date().toLocaleString();
+
+          messageWrapper.appendChild(timestamp);
+
+          const messageItem = document.createElement("div");
+          messageItem.classList.add("chat-message", "sent");
+
+          const messageText = document.createElement("p");
+          messageText.textContent = message;
+
+          messageItem.appendChild(messageText);
+          messageWrapper.appendChild(messageItem);
+          chatMessages.appendChild(messageWrapper);
+
+          // เพิ่มข้อความลงใน Firebase
+          db.collection("Chats").add({
+            Participants: [currentChatUser, email],
+            From: email,
+            To: currentChatUser,
+            Message: message,
+            CreatedAt: firebase.firestore.FieldValue.serverTimestamp(), // ใช้ serverTimestamp เพื่อความแม่นยำ
+          });
+
+          messageInput.value = ""; // Clear input
+          chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        });
+      document
+        .getElementById("fileUploadButton")
+        .addEventListener("click", function () {
+          document.getElementById("fileInput").click(); // Open file picker
         });
 
-        // ฟังก์ชันส่งข้อความเมื่อมีการแนบไฟล์
-        document.getElementById('sendButton').addEventListener('click', function() {
-            const messageInput = document.getElementById('messageInput');
-            const message = messageInput.value.trim();
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", function (event) {
+          const file = event.target.files[0];
+          if (file) {
+            // Clear previous preview
+            const previewContainer = document.getElementById(
+              "filePreviewContainer"
+            );
+            previewContainer.innerHTML = "";
 
-            if (!currentChatUser) return;
-
-            if (file) {
-                const storageRef = firebase.storage().ref();
-                const fileRef = storageRef.child('chatFiles/' + file.name);
-
-                // อัปโหลดไฟล์ไปยัง Firebase Storage
-                fileRef.put(file).then(function(snapshot) {
-                    // รับ URL ของไฟล์ที่อัปโหลดมาใช้
-                    snapshot.ref.getDownloadURL().then(function(url) {
-                        // ตรวจสอบว่าไฟล์เป็นภาพหรือไม่
-                        if (file.type.startsWith('image/')) {
-                            sendMessageWithContent(url, message, null, null); // ส่งข้อความพร้อม URL ของภาพ
-                        } else {
-                            sendMessageWithContent(null, message, url, file.name); // ส่งข้อความพร้อม URL ของไฟล์เอกสาร
-                        }
-                    });
-                }).catch(function(error) {
-                    console.error("Error uploading file:", error);
-                });
+            // Create a preview based on file type
+            if (file.type.startsWith("image/")) {
+              // Image file preview
+              const img = document.createElement("img");
+              img.src = URL.createObjectURL(file);
+              previewContainer.appendChild(img);
             } else {
-                // ส่งข้อความ
-                if (message) {
-                    sendMessageWithContent(null, message);
-                }
+              // Document file preview
+              const docPreview = document.createElement("p");
+              docPreview.textContent = `📎 ${file.name}`;
+              previewContainer.appendChild(docPreview);
             }
 
-            // ล้างข้อมูลในอินพุตและการแสดงผลตัวอย่าง
-            messageInput.value = '';
-            document.getElementById('filePreviewContainer').innerHTML = '';
-            document.getElementById('filePreviewContainer').style.display = 'none';
-            fileInput.value = '';
+            // Add a remove icon (X)
+            const removeBtn = document.createElement("span");
+            removeBtn.innerHTML = "&times;"; // Use "×" character for the icon
+            removeBtn.classList.add("remove-preview");
+            removeBtn.addEventListener("click", function () {
+              previewContainer.innerHTML = ""; // Clear the preview
+              document.getElementById("fileInput").value = ""; // Clear file input
+              previewContainer.style.display = "none"; // Hide the preview container
+            });
+            previewContainer.appendChild(removeBtn);
+
+            previewContainer.style.display = "block"; // Show the preview container
+          }
         });
 
-        // ฟังก์ชันส่งข้อความพร้อม URL หรือข้อความ
-        function sendMessageWithContent(imageUrl, message, fileUrl, fileName) {
-            db.collection('Chats').add({
-                Participants: [currentChatUser, email],
-                From: email,
-                To: currentChatUser,
-                Message: message || (fileUrl ? "Sent a file" : "Sent a picture"),
-                ImageUrl: imageUrl || null,
-                FileUrl: fileUrl || null, // เพิ่ม FileUrl
-                FileName: fileName || null, // เพิ่ม FileName
-                CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-        }
-        // Function to load notifications count
-        function loadNotificationsCount(userEmail) {
-            db.collection("Notifications")
-                .where("To", "==", userEmail)
-                .where("isRead", "==", false) // Only unread notifications
-                .onSnapshot((snapshot) => {
-                    const unreadCount = snapshot.size; // Count the number of unread notifications
+      // ฟังก์ชันส่งข้อความเมื่อมีการแนบไฟล์
+      document
+        .getElementById("sendButton")
+        .addEventListener("click", function () {
+          const messageInput = document.getElementById("messageInput");
+          const message = messageInput.value.trim();
+          const fileInput = document.getElementById("fileInput");
+          const file = fileInput.files[0];
 
-                    const notificationBadge = document.getElementById("notificationBadge");
-                    if (unreadCount > 0) {
-                        notificationBadge.style.display = "block";
-                        notificationBadge.textContent = unreadCount;
-                    } else {
-                        notificationBadge.style.display = "none";
-                    }
+          if (!currentChatUser) return;
+
+          if (file) {
+            const storageRef = firebase.storage().ref();
+            const fileRef = storageRef.child("chatFiles/" + file.name);
+
+            // อัปโหลดไฟล์ไปยัง Firebase Storage
+            fileRef
+              .put(file)
+              .then(function (snapshot) {
+                // รับ URL ของไฟล์ที่อัปโหลดมาใช้
+                snapshot.ref.getDownloadURL().then(function (url) {
+                  // ตรวจสอบว่าไฟล์เป็นภาพหรือไม่
+                  if (file.type.startsWith("image/")) {
+                    sendMessageWithContent(url, message, null, null); // ส่งข้อความพร้อม URL ของภาพ
+                  } else {
+                    sendMessageWithContent(null, message, url, file.name); // ส่งข้อความพร้อม URL ของไฟล์เอกสาร
+                  }
                 });
-        }
-    </script>
-</body>
+              })
+              .catch(function (error) {
+                console.error("Error uploading file:", error);
+              });
+          } else {
+            // ส่งข้อความ
+            if (message) {
+              sendMessageWithContent(null, message);
+            }
+          }
 
+          // ล้างข้อมูลในอินพุตและการแสดงผลตัวอย่าง
+          messageInput.value = "";
+          document.getElementById("filePreviewContainer").innerHTML = "";
+          document.getElementById("filePreviewContainer").style.display =
+            "none";
+          fileInput.value = "";
+        });
+
+      // ฟังก์ชันส่งข้อความพร้อม URL หรือข้อความ
+      function sendMessageWithContent(imageUrl, message, fileUrl, fileName) {
+        db.collection("Chats").add({
+          Participants: [currentChatUser, email],
+          From: email,
+          To: currentChatUser,
+          Message: message || (fileUrl ? "Sent a file" : "Sent a picture"),
+          ImageUrl: imageUrl || null,
+          FileUrl: fileUrl || null, // เพิ่ม FileUrl
+          FileName: fileName || null, // เพิ่ม FileName
+          CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+      }
+      // Function to load notifications count
+      function loadNotificationsCount(userEmail) {
+        db.collection("Notifications")
+          .where("To", "==", userEmail)
+          .where("isRead", "==", false) // Only unread notifications
+          .onSnapshot((snapshot) => {
+            const unreadCount = snapshot.size; // Count the number of unread notifications
+
+            const notificationBadge =
+              document.getElementById("notificationBadge");
+            if (unreadCount > 0) {
+              notificationBadge.style.display = "block";
+              notificationBadge.textContent = unreadCount;
+            } else {
+              notificationBadge.style.display = "none";
+            }
+          });
+      }
+    </script>
+  </body>
 </html>

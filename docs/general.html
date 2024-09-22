@@ -542,6 +542,35 @@
             font-size: 12px;
             display: none;
         }
+        /* สไตล์สำหรับหน้าต่างที่เป็น Modal */
+        
+        .modal {
+            display: none;
+            /* ซ่อนโดยเริ่มต้น */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* สีพื้นหลังโปร่งใส */
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            text-align: center;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -604,7 +633,7 @@
         ><i class="fa fa-home"></i> Home page</a
       >
 
-      <a href="Orderwork.html?classroom={{classroom}}&email={{email}}"
+      <a href="Assignment.html?classroom={{classroom}}&email={{email}}&documentIdl={{documentId}}"
         ><i class="fa fa-book"></i> Assignments</a>
         </div>
     </div>
@@ -670,6 +699,30 @@
         var db = firebase.firestore();
 
         console.log("Firebase Loaded:", firebase.apps.length > 0); // ตรวจสอบการโหลด Firebase
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const documentIdInput = document.getElementById("documentId");
+            const assignmentsLink = document.querySelector('a[href*="Assignment.html"]'); // ดึง element ลิงก์
+
+            // ตรวจสอบว่ามี element หรือไม่
+            if (documentIdInput && assignmentsLink) {
+                const intervalId = setInterval(function() {
+                    if (documentIdInput.value) {
+                        console.log("Document ID value is:", documentIdInput.value);
+
+                        // กำหนดค่า documentId ลงใน href ของลิงก์ Assignments
+                        const classroom = new URLSearchParams(window.location.search).get("classroom");
+                        const email = new URLSearchParams(window.location.search).get("email");
+
+                        assignmentsLink.href = `Assignment.html?classroom=${classroom}&email=${email}&documentId=${documentIdInput.value}`;
+
+                        clearInterval(intervalId); // หยุดการตรวจสอบเมื่อพบค่า
+                    }
+                }, 100); // ตรวจสอบทุกๆ 100 มิลลิวินาที
+            } else {
+                console.log("Document ID input element or assignments link not found.");
+            }
+        });
 
         // Function to search email or username in both Teacher and Student collections
         document

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
+            background-color: #2f2f2f;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .topbar {
+            background-color: #2e2e2e;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 2px 4px rgba(177, 177, 177, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .topbar .search-bar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-start;
+            position: relative;
+            padding-left: 480px;
+        }
+        
+        .topbar .search-bar input {
+            width: 400px;
+            padding: 5px 10px 5px 35px;
+            border-radius: 20px;
+            border: 1px solid #717171;
+            background-color: #333;
+            color: #fff;
+            font-size: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .topbar .search-bar .fas {
+            position: absolute;
+            left: 490px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            z-index: 2;
+        }
+        
+        .topbar .user-section {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        #user-email {
+            color: white;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        .user-icon {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-icon i {
+            font-size: 30px;
+            color: white;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .sidebar {
+            width: 100px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .menu-items {
+            margin-top: 40px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .sidebar a:hover {
+            background-color: #5f5f5f;
+            border-radius: 4px;
+            width: 80%;
+            text-align: center;
+        }
+        
+        .sidebar i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        #searchResults {
+            background-color: #4d4d4d;
+            color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 400px;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            top: 38px;
+        }
+        
+        #searchResults .result-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #555;
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+        }
+        
+        #searchResults .result-item:hover {
+            background-color: #555;
+        }
+        
+        #searchResults .result-item p {
+            margin: 0;
+            color: #fff;
+        }
+        
+        #searchResults .result-item span {
+            color: #727272;
+        }
+        
+        .content {
+            margin-left: 80px;
+            padding: 20px;
+            flex-grow: 1;
+            background-color: #2f2f2f;
+            overflow-y: auto;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #444;
+            margin-bottom: 0px;
+            width: 100%;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            color: #bbb;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .tab.active {
+            color: #fff;
+            border-bottom: 2px solid #fff;
+        }
+        
+        .assignment-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .assignment-card {
+            background-color: #3b3b3b;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .assignment-card h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #fff;
+        }
+        
+        .assignment-card .submission-info {
+            font-size: 14px;
+            color: #bbb;
+            margin-top: 10px;
+        }
+        
+        .assignment-card .status {
+            color: #4caf50;
+            font-size: 14px;
+            text-align: right;
+            margin-top: 10px;
+        }
+        /* Styling for the Create button */
+        
+        .create-button {
+            background-color: #4d4d4d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            /* ลดค่าของ padding เพื่อลดขนาดปุ่ม */
+            border-radius: 5px;
+            /* ลดขนาดของมุมโค้ง */
+            cursor: pointer;
+            font-size: 14px;
+            /* ลดขนาดของฟอนต์ */
+            margin-top: 15px;
+            /* ขยับปุ่มลงมาจากด้านบน */
+            margin-left: 20px;
+            /* ขยับปุ่มไปทางขวา */
+            margin-bottom: 10px;
+            /* ลดระยะห่างด้านล่าง */
+            width: 100px;
+            /* กำหนดความกว้างของปุ่ม */
+            display: none;
+            /* ซ่อนไว้ตามค่าเริ่มต้น */
+        }
+        
+        .create-button:hover {
+            background-color: #979797;
+        }
+        /* โมดอล (popup) */
+        /* โมดอล (popup) */
+        
+        .modal {
+            display: none;
+            /* ซ่อนโมดอลเมื่อเริ่มต้น */
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: rgb(183, 183, 183);
+            width: 70%;
+            max-width: 800px;
+            /* กำหนดความกว้างสูงสุด */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            /* เว้นระยะห่างระหว่างชื่อหัวข้อกับปุ่ม */
+            align-items: center;
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            /* ระยะห่างระหว่างปุ่ม */
+            margin-left: auto;
+            /* ดันปุ่มทั้งหมดไปทางขวา */
+        }
+        
+        .header-buttons button {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+        }
+        
+        .modal-header .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .header-buttons button {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .discard-btn {
+            background-color: white;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        
+        .save-btn {
+            background-color: rgba(255, 108, 184, 0.816);
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        
+        .assign-btn {
+            background-color: #b64343;
+            color: white;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            margin-left: 15px;
+            /* เพิ่มระยะห่างทางซ้ายของกากบาท */
+        }
+        
+        .modal-body {
+            margin-top: 20px;
+        }
+        
+        .modal-body label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .modal-body input,
+        .modal-body textarea,
+        .modal-body select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1.5px solid #909090;
+            background-color: rgb(209, 209, 209);
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .modal-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        #createButton {
+            padding: 10px 20px;
+            background-color: #4d4d4d;
+            color: rgb(162, 162, 162);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        #createButton:hover {
+            background-color: #6d6d6d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
+            <div id="searchResults"></div>
+        </div>
+        <div class="user-section">
+            <div id="user-email"></div>
+            <div class="user-icon" id="userIcon">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#">Profile</a>
+                <a href="#">Log out</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="tabs" id="tabsContainer"></div>
+        <div class="assignment-container" id="assignmentContainer"></div>
+        <button id="createButton" class="create-button">Create</button>
+    </div>
+
+    <!-- โมดอลสำหรับการสร้าง Assignment ใหม่ -->
+    <!-- Modal for creating new assignment -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Assignment</h2>
+                <div class="header-buttons">
+                    <button class="discard-btn">Discard</button>
+                    <button class="save-btn">Save</button>
+                    <button class="assign-btn">Assign</button>
+                </div>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <label for="title">Title (required) :</label>
+                <input type="text" id="title" placeholder="Enter assignment title" />
+
+                <label for="instructions">Instructions :</label>
+                <textarea id="instructions" placeholder="Enter instructions"></textarea>
+
+                <label for="resources">Add resources :</label>
+                <input type="file" id="resources" />
+
+                <label for="points">Points :</label>
+                <input type="number" id="points" placeholder="Enter points" />
+
+                <label for="assignTo">Assign to :</label>
+                <select id="assignTo">
+            <option value="all">All students</option>
+            <option value="group1">Group 1</option>
+            <option value="group2">Group 2</option>
+          </select>
+
+                <label for="dueDate">Due Date :</label>
+                <input type="date" id="dueDate" />
+
+                <label for="dueTime">Time Due :</label>
+                <input type="time" id="dueTime" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="menu-items">
+            <a href="studenthead.html?email={{email}}"><i class="fa fa-chalkboard-teacher"></i><span>Classroom</span></a
+        >
+        <a href="Chat.html?email={{email}}"
+          ><i class="fa fa-comments"></i><span>Chat</span></a
+        >
+        <a href="Notifications.html?email={{email}}"
+          ><i class="fa fa-bell"></i><span>Notifications</span></a
+        >
+        <a href="Assignment.html?email={{email}}"
+          ><i class="fa fa-tasks"></i><span>Assignment</span></a
+        >
+        <a href="Call.html?email={{email}}"
+          ><i class="fa fa-phone"></i><span>Call</span></a
+        >
+      </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <!-- เพิ่ม SDK นี้เข้ามา -->
+
+    <script>
+      // Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
+        authDomain: "project-63a86.firebaseapp.com",
+        projectId: "team-1849c",
+        storageBucket: "team-1849c.appspot.com",
+        messagingSenderId: "448111875731",
+        appId: "1:448111875731:web:6180e0c46cc10593051f66",
+        measurementId: "G-SR4EFC2VFC",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+
+      // Load email from URL and set to user-email element
+      document.addEventListener("DOMContentLoaded", async function () {
+        const email = new URLSearchParams(window.location.search).get("email");
+        if (email) {
+          document.getElementById("user-email").textContent = email;
+          document.querySelectorAll(".menu-items a").forEach((link) => {
+            const url = new URL(link.href);
+            url.searchParams.set("email", email);
+            link.href = url.toString();
+          });
+
+          // Check role from localStorage first
+          const cachedRole = localStorage.getItem(`userRole_${email}`);
+          if (cachedRole) {
+            // If role is cached, use it directly
+            updateTabsBasedOnRole(cachedRole);
+          } else {
+            // If not cached, fetch from Firestore and store it in localStorage
+            await checkUserRole(email);
+          }
+        }
+      });
+
+      // Function to search email or username in both Teacher and Student collections
+      document
+        .getElementById("searchInput")
+        .addEventListener("keyup", (event) => {
+          const query = event.target.value.trim().toLowerCase();
+          const searchResults = document.getElementById("searchResults");
+          searchResults.innerHTML = ""; // Clear previous results
+
+          if (query !== "") {
+            // Search in Student collection
+            searchInCollection("Student", query, searchResults);
+            // Search in Teacher collection
+            searchInCollection("Teacher", query, searchResults);
+          }
+        });
+
+      function searchInCollection(collectionName, query, searchResults) {
+        db.collection(collectionName)
+          .get()
+          .then((querySnapshot) => {
+            let found = false;
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (data && data.Email) {
+                if (data.Email.toLowerCase().startsWith(query)) {
+                  found = true;
+                  const resultItem = document.createElement("div");
+                  resultItem.classList.add("result-item");
+
+                  const name = document.createElement("p");
+                  name.textContent = data.Username
+                    ? `${data.Username}`
+                    : "No Username";
+
+                  const emailSpan = document.createElement("span");
+                  emailSpan.textContent = `${data.Email}`;
+
+                  resultItem.appendChild(name);
+                  resultItem.appendChild(emailSpan);
+
+                  searchResults.appendChild(resultItem);
+                }
+              } else {
+                console.error(
+                  `Document missing required fields in ${collectionName} collection: `,
+                  doc.id
+                );
+              }
+            });
+
+            if (!found) {
+              const noResultItem = document.createElement("div");
+              noResultItem.classList.add("result-item");
+              noResultItem.textContent = `No results found in ${collectionName}.`;
+              searchResults.appendChild(noResultItem);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              `Error getting documents from ${collectionName} collection: `,
+              error
+            );
+          });
+      }
+
+      // Function to check user role asynchronously and store it in localStorage
+      async function checkUserRole(email) {
+        try {
+          const querySnapshot = await db
+            .collection("Subjects")
+            .where("CreatedBy.Email", "==", email)
+            .get();
+
+          let userRole = "member"; // Default role
+          if (!querySnapshot.empty) {
+            userRole = "creator";
+          }
+
+          // Store the role in localStorage
+          localStorage.setItem(`userRole_${email}`, userRole);
+
+          // Update tabs based on role
+          updateTabsBasedOnRole(userRole);
+        } catch (error) {
+          console.error("Error checking user role: ", error);
+        }
+      }
+      // Function to update tabs based on user role
+      function updateTabsBasedOnRole(role, documentId) {
+        const tabsContainer = document.getElementById("tabsContainer");
+        const createButton = document.getElementById("createButton"); // Get the create button
+        tabsContainer.innerHTML = ""; // Clear existing tabs
+
+        if (role === "creator") {
+          tabsContainer.innerHTML = `
+      <div class="tab active" id="assignmentTab">Assignment</div>
+      <div class="tab" id="returnAssignmentTab">Return Assignment</div>
+    `;
+
+          // แสดงปุ่ม Create เฉพาะเมื่อมี Document ID
+          if (documentId) {
+            createButton.style.display = "inline-block"; // Show the create button
+          } else {
+            createButton.style.display = "none"; // Hide the create button if no documentId
+          }
+        } else {
+          tabsContainer.innerHTML = `
+      <div class="tab active" id="upcomingTab">Upcoming</div>
+      <div class="tab" id="pastDueTab">Past due</div>
+      <div class="tab" id="completedTab">Completed</div>
+    `;
+          createButton.style.display = "none"; // Hide the create button for non-creators
+        }
+      }
+
+      // เปิดโมดอลเมื่อคลิกปุ่ม Create
+      document
+        .getElementById("createButton")
+        .addEventListener("click", function () {
+          const modal = document.getElementById("createModal");
+          modal.style.display = "flex"; // แสดงโมดอล
+          modal.style.justifyContent = "center";
+          modal.style.alignItems = "center";
+        });
+
+      // ปิดโมดอลเมื่อคลิกปุ่มปิด (x)
+      document.querySelector(".close").addEventListener("click", function () {
+        document.getElementById("createModal").style.display = "none";
+      });
+
+      // ปิดโมดอลเมื่อคลิกปุ่ม Discard
+      document
+        .querySelector(".discard-btn")
+        .addEventListener("click", function () {
+          document.getElementById("createModal").style.display = "none";
+        });
+
+      // ปิดโมดอลเมื่อคลิกนอกเนื้อหาของโมดอล
+      window.addEventListener("click", function (event) {
+        if (event.target == document.getElementById("createModal")) {
+          document.getElementById("createModal").style.display = "none";
+        }
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        // ฟังก์ชันในการดึงพารามิเตอร์จาก URL
+        function getQueryParameter(parameterName) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(parameterName);
+        }
+
+        // ดึงค่าต่างๆ จาก URL
+        const classroomName = getQueryParameter("classroom");
+        const email = getQueryParameter("email");
+
+        console.log("Classroom Name:", classroomName);
+        console.log("Email:", email);
+
+        const createButton = document.getElementById("createButton");
+
+        if (classroomName) {
+          // ค้นหา documentId โดยใช้ ClassroomName
+          db.collection("Subjects")
+            .where("ClassroomName", "==", classroomName)
+            .get()
+            .then(function (querySnapshot) {
+              if (!querySnapshot.empty) {
+                querySnapshot.forEach(function (doc) {
+                  const classroomDocumentId = doc.id; // ดึงค่า documentId จาก Firestore
+                  console.log("Document ID:", classroomDocumentId);
+
+                  // แสดงปุ่ม Create ถ้ามี Document ID
+                  if (classroomDocumentId) {
+                    createButton.style.display = "inline-block"; // Show the create button
+
+                    // บันทึก assignment เมื่อคลิกปุ่ม Assign
+                    document
+                      .querySelector(".assign-btn")
+                      .addEventListener("click", function () {
+                        saveAssignment(classroomDocumentId); // ส่ง classroomDocumentId ไปยังฟังก์ชัน saveAssignment
+                      });
+                  }
+                });
+              } else {
+                console.log("No matching ClassroomName found.");
+              }
+            })
+            .catch(function (error) {
+              console.log("Error getting documents:", error);
+            });
+        }
+      });
+
+      // Function to handle assignment submission
+      function saveAssignment(DocumentID) {
+        // Get form values
+        var title = document.getElementById("title").value;
+        var instructions = document.getElementById("instructions").value;
+        var points = document.getElementById("points").value;
+        var assignTo = document.getElementById("assignTo").value;
+        var dueDate = document.getElementById("dueDate").value;
+        var dueTime = document.getElementById("dueTime").value;
+        var fileInput = document.getElementById("resources").files[0];
+
+        if (!title) {
+          alert("Please fill the required title field.");
+          return;
+        }
+
+        // If file is selected, upload to Firebase Storage first
+        if (fileInput) {
+          var storageRef = firebase
+            .storage()
+            .ref("assignments/" + fileInput.name);
+          var uploadTask = storageRef.put(fileInput);
+
+          uploadTask.on(
+            "state_changed",
+            function (snapshot) {
+              // Progress handling (optional)
+            },
+            function (error) {
+              console.error("File upload error: ", error);
+              alert("Error uploading file. Please try again.");
+            },
+            function () {
+              // File upload complete, get download URL and save to Firestore
+              uploadTask.snapshot.ref
+                .getDownloadURL()
+                .then(function (downloadURL) {
+                  addAssignmentToFirestore(
+                    DocumentID, // ส่ง DocumentID ที่ได้จาก Firestore
+                    title,
+                    instructions,
+                    points,
+                    assignTo,
+                    dueDate,
+                    dueTime,
+                    downloadURL
+                  );
+                });
+            }
+          );
+        } else {
+          // If no file selected, save directly to Firestore
+          addAssignmentToFirestore(
+            DocumentID, // ส่ง DocumentID ที่ได้จาก Firestore
+            title,
+            instructions,
+            points,
+            assignTo,
+            dueDate,
+            dueTime,
+            ""
+          );
+        }
+      }
+
+      // After successfully adding the assignment to Firestore
+      function addAssignmentToFirestore(
+        DocumentID,
+        title,
+        instructions,
+        points,
+        assignTo,
+        dueDate,
+        dueTime,
+        fileUrl
+      ) {
+        db.collection("Assignments")
+          .add({
+            title: title,
+            instructions: instructions,
+            points: points,
+            assignTo: assignTo,
+            dueDate: dueDate,
+            dueTime: dueTime,
+            fileUrl: fileUrl,
+            createdBy: document.getElementById("user-email").textContent,
+            CreatedAt: firebase.firestore.Timestamp.fromDate(new Date()),
+            DocumentID: DocumentID, // บันทึก DocumentID
+          })
+          .then(function (docRef) {
+            console.log("Assignment added with ID: ", docRef.id);
+
+            // Now notify the members of the class
+            notifyMembersForAssignment(DocumentID, {
+              title: title,
+              instructions: instructions,
+              points: points,
+              assignTo: assignTo,
+              dueDate: dueDate,
+              dueTime: dueTime,
+              fileUrl: fileUrl,
+              createdBy: document.getElementById("user-email").textContent,
+              createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+              DocumentID: DocumentID,
+              AssignmentID: docRef.id, // เพิ่ม AssignmentID จาก docRef.id ที่ได้รับ
+            });
+
+            alert("Assignment saved successfully!");
+            resetForm();
+            document.getElementById("createModal").style.display = "none";
+          })
+          .catch(function (error) {
+            console.error("Error adding assignment: ", error);
+          });
+      }
+
+      // Notify all members of the assignment
+      function notifyMembersForAssignment(DocumentID, assignmentData) {
+        db.collection("Subjects")
+          .doc(DocumentID)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const members = doc.data().Members; // Get members array
+              const createdBy = doc.data().CreatedBy.Email; // Get class creator email
+
+              members.forEach((memberEmail) => {
+                // Add a notification for each member
+                db.collection("Notifications")
+                  .add({
+                    To: memberEmail,
+                    Message: `You have been assigned a new task`,
+                    Title: assignmentData.title,
+                    Type: "Assignment",
+                    instructions: assignmentData.instructions,
+                    points: assignmentData.points,
+                    assignTo: assignmentData.assignTo,
+                    dueDate: assignmentData.dueDate,
+                    dueTime: assignmentData.dueTime,
+                    fileUrl: assignmentData.fileUrl,
+                    createdBy: assignmentData.createdBy,
+                    CreatedAt: assignmentData.createdAt,
+                    DocumentID: assignmentData.DocumentID,
+                    AssignmentID: assignmentData.AssignmentID, // บันทึก AssignmentID ที่ได้มาจาก Firestore
+                    isRead: false, // Initially set to unread
+                  })
+                  .then(() => {
+                    console.log(`Notification sent to ${memberEmail}`);
+                  })
+                  .catch((error) => {
+                    console.error("Error sending notification: ", error);
+                  });
+              });
+            } else {
+              console.error(
+                "No such document for classroom with Document ID:",
+                DocumentID
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting classroom document:", error);
+          });
+      }
+
+      // Function to reset the form fields
+      function resetForm() {
+        document.getElementById("title").value = "";
+        document.getElementById("instructions").value = "";
+        document.getElementById("points").value = "";
+        document.getElementById("assignTo").value = "all";
+        document.getElementById("dueDate").value = "";
+        document.getElementById("dueTime").value = "";
+        document.getElementById("resources").value = ""; // Reset file input
+      }
+    </script>
+  </body>
+</html>
