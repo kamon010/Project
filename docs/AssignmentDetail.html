@@ -548,14 +548,21 @@
       firebase.initializeApp(firebaseConfig);
       var db = firebase.firestore();
 
+      // ดึงพารามิเตอร์จาก URL
       const urlParams = new URLSearchParams(window.location.search);
-      const assignmentId = new URLSearchParams(window.location.search).get(
-        "assignmentId"
-      );
+      const assignmentId = urlParams.get("assignmentId");
       const email = urlParams.get("email");
 
+      // ตรวจสอบและแสดงอีเมลที่มุมขวาบน
       if (email) {
         document.getElementById("user-email").textContent = email;
+
+        // อัปเดตลิงก์ใน Sidebar ด้วยอีเมล
+        document.querySelectorAll(".menu-items a").forEach((link) => {
+          const url = new URL(link.href);
+          url.searchParams.set("email", email); // เพิ่มพารามิเตอร์ email
+          link.href = url.toString(); // อัปเดตลิงก์
+        });
       } else {
         document.getElementById("user-email").textContent =
           "No email available";
@@ -803,6 +810,29 @@
       // ฟังก์ชันสำหรับการส่งงาน
       async function submitAssignment(fileList) {
         if (assignmentId && email) {
+          const submissionQuery = db
+            .collection("Submissions")
+            .where("assignmentId", "==", assignmentId)
+            .where("submittedBy", "==", email); // กรองด้วยอีเมลผู้ใช้ปัจจุบัน
+
+          submissionQuery
+            .get()
+            .then((querySnapshot) => {
+              if (!querySnapshot.empty) {
+                querySnapshot.forEach((doc) => {
+                  const submissionData = doc.data();
+                  // แสดงข้อมูลไฟล์ที่ส่งงานของผู้ใช้ปัจจุบัน
+                  if (submissionData.files && submissionData.files.length > 0) {
+                    displayFiles(submissionData.files); // ฟังก์ชันแสดงไฟล์
+                  }
+                });
+              } else {
+                console.log("No submissions found for this user.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching submissions: ", error);
+            });
           const SubmissionRef = db.collection("Submissions").doc(assignmentId);
 
           // บันทึกข้อมูลไฟล์และสถานะการส่งงาน
@@ -849,35 +879,48 @@
 
       // เมื่อหน้าเว็บโหลดเสร็จ
       document.addEventListener("DOMContentLoaded", function () {
+        const emailFromUrl = urlParams.get("email"); // อีเมลของผู้ใช้จาก URL
+
         if (assignmentId) {
-          const SubmissionRef = db.collection("Submissions").doc(assignmentId);
+          const submissionQuery = db
+            .collection("Submissions")
+            .where("assignmentId", "==", assignmentId)
+            .where("submittedBy", "==", emailFromUrl) // ตรวจสอบอีเมลของผู้ใช้ตรงกัน
+            .limit(1);
 
-          SubmissionRef.get()
-            .then((doc) => {
-              if (doc.exists) {
-                const SubmissionData = doc.data();
+          submissionQuery
+            .get()
+            .then((querySnapshot) => {
+              if (!querySnapshot.empty) {
+                querySnapshot.forEach((doc) => {
+                  const submissionData = doc.data();
 
-                // ตรวจสอบสถานะการส่งงาน
-                if (SubmissionData.isSubmitted) {
-                  document.querySelector(".undo-btn").textContent =
-                    "Undo Turn in";
-                  isSubmitted = true;
-                } else {
-                  document.querySelector(".undo-btn").textContent = "Turn in";
-                  isSubmitted = false;
-                }
+                  // ตรวจสอบสถานะการส่งงาน
+                  if (submissionData.isSubmitted) {
+                    document.querySelector(".undo-btn").textContent =
+                      "Undo Turn in";
+                    isSubmitted = true;
+                  } else {
+                    document.querySelector(".undo-btn").textContent = "Turn in";
+                    isSubmitted = false;
+                  }
 
-                // แสดงไฟล์ที่แนบ
-                if (SubmissionData.files && SubmissionData.files.length > 0) {
-                  displayFiles(SubmissionData.files);
-                }
+                  // แสดงไฟล์ที่แนบ
+                  if (submissionData.files && submissionData.files.length > 0) {
+                    displayFiles(submissionData.files);
+                  }
+                });
+              } else {
+                console.log("No submissions found for this user.");
+                resetPage(); // ถ้าไม่พบการส่งงานของผู้ใช้คนนี้
               }
             })
             .catch((error) => {
-              console.error("Error fetching Submission data: ", error);
+              console.error("Error fetching submissions: ", error);
             });
         }
       });
+
       function displayFiles(files) {
         const fileDisplay = document.getElementById("file-list");
         fileDisplay.innerHTML = ""; // ล้างไฟล์ก่อนหน้า
@@ -896,6 +939,10 @@
           fileItem.appendChild(fileNameElement);
           fileDisplay.appendChild(fileItem);
         });
+      }
+
+      function resetPage() {
+        document.getElementById("file-list").innerHTML = ""; // ซ่อนการแสดงไฟล์
       }
 
       // จัดการการคลิกปุ่ม Turn in / Undo Turn in
