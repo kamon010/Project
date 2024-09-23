@@ -833,11 +833,12 @@
             .catch((error) => {
               console.error("Error fetching submissions: ", error);
             });
-          const SubmissionRef = db.collection("Submissions").doc(assignmentId);
+
+          const SubmissionRef = db.collection("Submissions").doc(); // Firebase จะสร้าง ID ใหม่อัตโนมัติ
 
           // บันทึกข้อมูลไฟล์และสถานะการส่งงาน
           await SubmissionRef.set({
-            SubmissionId: SubmissionRef.id,
+            SubmissionId: SubmissionRef.id, // ใช้ ID ที่ Firebase สร้างให้อัตโนมัติ
             assignmentId: assignmentId,
             submittedBy: email || "Unknown",
             submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -850,7 +851,7 @@
               isSubmitted = true;
 
               // เรียกฟังก์ชันเพื่อบันทึกการแจ้งเตือน
-              sendNotificationToTeacher(assignmentId, email, SubmissionRef.id);
+              sendNotificationToTeacher(assignmentId, email, SubmissionRef.id); // ใช้ ID ที่สร้างขึ้นใหม่นี้
             })
             .catch((error) => {
               console.error("Error saving Submission: ", error);
