@@ -815,102 +815,138 @@
             .where("assignmentId", "==", assignmentId)
             .where("submittedBy", "==", email); // กรองด้วยอีเมลของผู้ใช้ปัจจุบัน
 
-          submissionQuery.get().then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-              querySnapshot.forEach((doc) => {
-                const submissionRef = db.collection("Submissions").doc(doc.id); // ใช้ SubmissionId เดิม
+          const querySnapshot = await submissionQuery.get();
 
-                // อัปเดตข้อมูลไฟล์และสถานะการส่งงาน
-                submissionRef
-                  .update({
-                    files:
-                      fileList.length > 0 ? fileList : ["No files uploaded"],
-                    submittedAt:
-                      firebase.firestore.FieldValue.serverTimestamp(),
-                    isSubmitted: true, // อัปเดตสถานะเป็น true
-                  })
-                  .then(() => {
-                    console.log("Submission data has been updated.");
-                    document.querySelector(".undo-btn").textContent =
-                      "Undo Turn in";
-                    isSubmitted = true;
+          if (!querySnapshot.empty) {
+            // อัปเดต Submission ที่มีอยู่
+            querySnapshot.forEach(async (doc) => {
+              const submissionRef = db.collection("Submissions").doc(doc.id); // ใช้ SubmissionId เดิม
 
-                    // บันทึกการแจ้งเตือนให้กับครู
-                    sendNotificationToTeacher(
-                      assignmentId,
-                      email,
-                      submissionRef.id
-                    ); // ใช้ SubmissionId เดิม
-                    // หลังจากการส่งงานสำเร็จ ให้รีเฟรชหน้าเว็บ
-                    location.reload(); // รีเฟรชหน้าเว็บ
-                  })
-                  .catch((error) => {
-                    console.error("Error updating Submission: ", error);
-                  });
-              });
-            } else {
-              // ถ้าไม่มี submission เดิม ให้สร้างใหม่
-              const SubmissionRef = db.collection("Submissions").doc(); // สร้าง ID ใหม่
-              SubmissionRef.set({
-                SubmissionId: SubmissionRef.id,
-                assignmentId: assignmentId,
-                submittedBy: email || "Unknown",
-                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              await submissionRef.update({
                 files: fileList.length > 0 ? fileList : ["No files uploaded"],
-                isSubmitted: true,
-              })
-                .then(() => {
-                  console.log("Submission data has been saved.");
-                  document.querySelector(".undo-btn").textContent =
-                    "Undo Turn in";
-                  isSubmitted = true;
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                isSubmitted: true, // อัปเดตสถานะเป็น true
+              });
 
-                  // ส่งแจ้งเตือนให้ครู
-                  sendNotificationToTeacher(
-                    assignmentId,
-                    email,
-                    SubmissionRef.id
-                  );
-                  // หลังจากการส่งงานสำเร็จ ให้รีเฟรชหน้าเว็บ
-                  location.reload(); // รีเฟรชหน้าเว็บ
-                })
-                .catch((error) => {
-                  console.error("Error saving Submission: ", error);
-                });
-            }
-          });
+              console.log("Submission data has been updated.");
+              document.querySelector(".undo-btn").textContent = "Undo Turn in";
+              isSubmitted = true;
+
+              // บันทึกการแจ้งเตือนให้ครู
+              await sendNotificationToTeacher(
+                assignmentId,
+                email,
+                submissionRef.id
+              );
+            });
+          } else {
+            // ถ้าไม่มี submission เดิม ให้สร้างใหม่
+            const SubmissionRef = db.collection("Submissions").doc(); // สร้าง ID ใหม่
+            await SubmissionRef.set({
+              SubmissionId: SubmissionRef.id,
+              assignmentId: assignmentId,
+              submittedBy: email || "Unknown",
+              submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              files: fileList.length > 0 ? fileList : ["No files uploaded"],
+              isSubmitted: true,
+            });
+
+            console.log("Submission data has been saved.");
+            document.querySelector(".undo-btn").textContent = "Undo Turn in";
+            isSubmitted = true;
+
+            // ส่งแจ้งเตือนให้ครู
+            await sendNotificationToTeacher(
+              assignmentId,
+              email,
+              SubmissionRef.id
+            );
+          }
         }
       }
 
-      // ฟังก์ชันสำหรับการยกเลิกการส่งงาน (Undo Turn in)
+      async function sendNotificationToTeacher(
+        assignmentId,
+        email,
+        SubmissionId
+      ) {
+        // ดึงข้อมูล assignment เพื่อนำมาใช้ในการแจ้งเตือน
+        const assignmentRef = db.collection("Assignments").doc(assignmentId);
+
+        const doc = await assignmentRef.get();
+        if (doc.exists) {
+          const assignmentData = doc.data();
+          const teacherEmail = assignmentData.createdBy || "Unknown"; // ใช้ createdBy เป็นผู้รับการแจ้งเตือน
+
+          // Query หาแจ้งเตือนที่มี SubmissionId และอีเมลของครู (To field)
+          const notificationQuery = db
+            .collection("Notifications")
+            .where("SubmissionId", "==", SubmissionId)
+            .where("To", "==", teacherEmail); // ตรวจสอบว่ามีการแจ้งเตือนอยู่แล้วหรือไม่
+
+          const querySnapshot = await notificationQuery.get();
+
+          if (!querySnapshot.empty) {
+            // ถ้ามีการแจ้งเตือนที่เกี่ยวข้องอยู่แล้ว ให้ทำการอัปเดต
+            querySnapshot.forEach(async (doc) => {
+              const notificationRef = db
+                .collection("Notifications")
+                .doc(doc.id);
+              await notificationRef.update({
+                CreatedAt: firebase.firestore.FieldValue.serverTimestamp(), // อัปเดตวันที่
+                Message: `${email} has turned in the Assignment again.`, // อัปเดตข้อความ
+                isRead: false, // กำหนดให้เป็นสถานะยังไม่ได้อ่าน
+              });
+              console.log("Update existing notifications.");
+              // รีเฟรชหน้าเว็บหลังจากสร้างการแจ้งเตือนใหม่สำเร็จ
+            location.reload();
+            });
+          } else {
+            // ถ้าไม่มีการแจ้งเตือน ให้สร้างการแจ้งเตือนใหม่
+            const notificationRef = db.collection("Notifications").doc(); // สร้าง ID ใหม่
+            await notificationRef.set({
+              To: teacherEmail, // แจ้งเตือนคนที่สั่งงาน
+              Message: `${email} has turned in the Assignment again.`,
+              CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              Type: "Submission",
+              SubmissionId: SubmissionId, // เก็บค่า SubmissionId สำหรับแจ้งเตือน
+              isRead: false, // กำหนดให้เป็นสถานะยังไม่ได้อ่าน
+            });
+            console.log("Create a new alert.");
+            // รีเฟรชหน้าเว็บหลังจากสร้างการแจ้งเตือนใหม่สำเร็จ
+            location.reload();
+          }
+        } else {
+          console.error("No assignment data found.");
+        }
+      }
       async function undoSubmission() {
-        if (assignmentId) {
+        if (assignmentId && email) {
           const submissionQuery = db
             .collection("Submissions")
             .where("assignmentId", "==", assignmentId)
             .where("submittedBy", "==", email);
 
-          submissionQuery.get().then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-              querySnapshot.forEach((doc) => {
-                const submissionRef = db.collection("Submissions").doc(doc.id);
+          const querySnapshot = await submissionQuery.get();
 
-                // อัปเดตสถานะให้เป็น false
-                submissionRef
-                  .update({
-                    isSubmitted: false,
-                  })
-                  .then(() => {
-                    console.log("Submission has been undone.");
-                    document.querySelector(".undo-btn").textContent = "Turn in";
-                    isSubmitted = false;
-                  })
-                  .catch((error) => {
-                    console.error("Error undoing submission: ", error);
-                  });
+          if (!querySnapshot.empty) {
+            // ถ้ามีการส่งงานอยู่ ให้ทำการยกเลิก
+            querySnapshot.forEach(async (doc) => {
+              const submissionRef = db.collection("Submissions").doc(doc.id);
+
+              await submissionRef.update({
+                isSubmitted: false, // อัปเดตสถานะการส่งงานเป็น false
               });
-            }
-          });
+
+              console.log("The submission has been successfully canceled.");
+              document.querySelector(".undo-btn").textContent = "Turn in";
+              isSubmitted = false;
+            });
+          } else {
+            console.error("ไม่พบการส่งงานเพื่อยกเลิก.");
+          }
+        } else {
+          console.error("ไม่พบ assignmentId หรือ email.");
         }
       }
 
@@ -1166,45 +1202,6 @@
             );
           }
         });
-
-      function sendNotificationToTeacher(assignmentId, email, SubmissionId) {
-        // ดึงข้อมูล assignment เพื่อนำมาใช้ในการแจ้งเตือน
-        const assignmentRef = db.collection("Assignments").doc(assignmentId);
-
-        assignmentRef
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              const assignmentData = doc.data();
-              const teacherEmail = assignmentData.createdBy || "Unknown"; // ใช้ createdBy เป็นผู้รับการแจ้งเตือน
-
-              // บันทึกการแจ้งเตือนใน Firestore
-              const notificationRef = db.collection("Notifications").doc();
-              notificationRef
-                .set({
-                  To: teacherEmail, // แจ้งเตือนคนที่สั่งงาน
-                  Message: `${email} has turned in the Assignment '${
-                    assignmentData.title || "Untitled"
-                  }'.`,
-                  CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                  Type: "Submission",
-                  SubmissionId: SubmissionId, // เพิ่มค่า SubmissionID ในการแจ้งเตือน
-                  isRead: false, // สถานะการอ่านแจ้งเตือน
-                })
-                .then(() => {
-                  console.log("Notification has been sent to the teacher.");
-                })
-                .catch((error) => {
-                  console.error("Error sending notification: ", error);
-                });
-            } else {
-              console.error("No assignment data found.");
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching assignment data: ", error);
-          });
-      }
     </script>
   </body>
 </html>
