@@ -813,68 +813,104 @@
           const submissionQuery = db
             .collection("Submissions")
             .where("assignmentId", "==", assignmentId)
-            .where("submittedBy", "==", email); // กรองด้วยอีเมลผู้ใช้ปัจจุบัน
+            .where("submittedBy", "==", email); // กรองด้วยอีเมลของผู้ใช้ปัจจุบัน
 
-          submissionQuery
-            .get()
-            .then((querySnapshot) => {
-              if (!querySnapshot.empty) {
-                querySnapshot.forEach((doc) => {
-                  const submissionData = doc.data();
-                  // แสดงข้อมูลไฟล์ที่ส่งงานของผู้ใช้ปัจจุบัน
-                  if (submissionData.files && submissionData.files.length > 0) {
-                    displayFiles(submissionData.files); // ฟังก์ชันแสดงไฟล์
-                  }
+          submissionQuery.get().then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+              querySnapshot.forEach((doc) => {
+                const submissionRef = db.collection("Submissions").doc(doc.id); // ใช้ SubmissionId เดิม
+
+                // อัปเดตข้อมูลไฟล์และสถานะการส่งงาน
+                submissionRef
+                  .update({
+                    files:
+                      fileList.length > 0 ? fileList : ["No files uploaded"],
+                    submittedAt:
+                      firebase.firestore.FieldValue.serverTimestamp(),
+                    isSubmitted: true, // อัปเดตสถานะเป็น true
+                  })
+                  .then(() => {
+                    console.log("Submission data has been updated.");
+                    document.querySelector(".undo-btn").textContent =
+                      "Undo Turn in";
+                    isSubmitted = true;
+
+                    // บันทึกการแจ้งเตือนให้กับครู
+                    sendNotificationToTeacher(
+                      assignmentId,
+                      email,
+                      submissionRef.id
+                    ); // ใช้ SubmissionId เดิม
+                    // หลังจากการส่งงานสำเร็จ ให้รีเฟรชหน้าเว็บ
+                    location.reload(); // รีเฟรชหน้าเว็บ
+                  })
+                  .catch((error) => {
+                    console.error("Error updating Submission: ", error);
+                  });
+              });
+            } else {
+              // ถ้าไม่มี submission เดิม ให้สร้างใหม่
+              const SubmissionRef = db.collection("Submissions").doc(); // สร้าง ID ใหม่
+              SubmissionRef.set({
+                SubmissionId: SubmissionRef.id,
+                assignmentId: assignmentId,
+                submittedBy: email || "Unknown",
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                files: fileList.length > 0 ? fileList : ["No files uploaded"],
+                isSubmitted: true,
+              })
+                .then(() => {
+                  console.log("Submission data has been saved.");
+                  document.querySelector(".undo-btn").textContent =
+                    "Undo Turn in";
+                  isSubmitted = true;
+
+                  // ส่งแจ้งเตือนให้ครู
+                  sendNotificationToTeacher(
+                    assignmentId,
+                    email,
+                    SubmissionRef.id
+                  );
+                  // หลังจากการส่งงานสำเร็จ ให้รีเฟรชหน้าเว็บ
+                  location.reload(); // รีเฟรชหน้าเว็บ
+                })
+                .catch((error) => {
+                  console.error("Error saving Submission: ", error);
                 });
-              } else {
-                console.log("No submissions found for this user.");
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching submissions: ", error);
-            });
-
-          const SubmissionRef = db.collection("Submissions").doc(); // Firebase จะสร้าง ID ใหม่อัตโนมัติ
-
-          // บันทึกข้อมูลไฟล์และสถานะการส่งงาน
-          await SubmissionRef.set({
-            SubmissionId: SubmissionRef.id, // ใช้ ID ที่ Firebase สร้างให้อัตโนมัติ
-            assignmentId: assignmentId,
-            submittedBy: email || "Unknown",
-            submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            files: fileList.length > 0 ? fileList : ["No files uploaded"],
-            isSubmitted: true, // อัปเดตสถานะเป็น true
-          })
-            .then(() => {
-              console.log("Submission data has been saved.");
-              document.querySelector(".undo-btn").textContent = "Undo Turn in";
-              isSubmitted = true;
-
-              // เรียกฟังก์ชันเพื่อบันทึกการแจ้งเตือน
-              sendNotificationToTeacher(assignmentId, email, SubmissionRef.id); // ใช้ ID ที่สร้างขึ้นใหม่นี้
-            })
-            .catch((error) => {
-              console.error("Error saving Submission: ", error);
-            });
+            }
+          });
         }
       }
 
       // ฟังก์ชันสำหรับการยกเลิกการส่งงาน (Undo Turn in)
       async function undoSubmission() {
         if (assignmentId) {
-          const SubmissionRef = db.collection("Submissions").doc(assignmentId);
+          const submissionQuery = db
+            .collection("Submissions")
+            .where("assignmentId", "==", assignmentId)
+            .where("submittedBy", "==", email);
 
-          await SubmissionRef.update({
-            isSubmitted: false, // เปลี่ยนสถานะการส่งงานเป็น false
-          })
-            .then(() => {
-              console.log("Submission has been undone.");
-              document.querySelector(".undo-btn").textContent = "Turn in";
-              isSubmitted = false;
-            })
-            .catch((error) => {
-              console.error("Error undoing Submission: ", error);
-            });
+          submissionQuery.get().then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+              querySnapshot.forEach((doc) => {
+                const submissionRef = db.collection("Submissions").doc(doc.id);
+
+                // อัปเดตสถานะให้เป็น false
+                submissionRef
+                  .update({
+                    isSubmitted: false,
+                  })
+                  .then(() => {
+                    console.log("Submission has been undone.");
+                    document.querySelector(".undo-btn").textContent = "Turn in";
+                    isSubmitted = false;
+                  })
+                  .catch((error) => {
+                    console.error("Error undoing submission: ", error);
+                  });
+              });
+            }
+          });
         }
       }
 
@@ -922,25 +958,106 @@
         }
       });
 
+      // ฟังก์ชันแสดงไฟล์ที่ถูกบันทึกใน Firestore
       function displayFiles(files) {
-        const fileDisplay = document.getElementById("file-list");
-        fileDisplay.innerHTML = ""; // ล้างไฟล์ก่อนหน้า
+        const fileListElement = document.getElementById("file-list");
+        fileListElement.innerHTML = ""; // ล้างรายการไฟล์เก่าก่อน
 
-        files.forEach((file) => {
-          const fileItem = document.createElement("div");
-          fileItem.classList.add("file-item");
+        // วนลูปผ่านรายการไฟล์ที่บันทึกไว้และสร้างลิงก์ให้แต่ละไฟล์
+        files.forEach((fileUrl) => {
+          const fileElement = document.createElement("a");
+          fileElement.href = fileUrl;
+          fileElement.target = "_blank"; // เปิดในแท็บใหม่
+          fileElement.textContent = getFileName(fileUrl);
+          fileElement.style.color = "#fff"; // ทำให้ลิงก์เป็นสีขาว
+          fileElement.style.display = "block"; // ให้แสดงผลในบรรทัดใหม่
 
-          const fileIcon = document.createElement("i");
-          fileIcon.classList.add("fas", "fa-file");
+          // CSS สำหรับจำกัดความยาวของชื่อไฟล์
+          fileElement.style.maxWidth = "300px"; // จำกัดความกว้างที่ 100px
+          fileElement.style.whiteSpace = "nowrap"; // ไม่ให้ขึ้นบรรทัดใหม่
+          fileElement.style.overflow = "hidden"; // ซ่อนข้อความที่เกินขอบ
+          fileElement.style.textOverflow = "ellipsis"; // แสดง ... เมื่อข้อความยาวเกิน
 
-          const fileNameElement = document.createElement("span");
-          fileNameElement.textContent = file;
+          fileElement.addEventListener("click", function (event) {
+            event.preventDefault(); // ป้องกันการดาวน์โหลดอัตโนมัติ
+            window.open(fileUrl, "_blank"); // เปิดในแท็บใหม่
+          });
 
-          fileItem.appendChild(fileIcon);
-          fileItem.appendChild(fileNameElement);
-          fileDisplay.appendChild(fileItem);
+          fileListElement.appendChild(fileElement); // เพิ่มลิงก์ไฟล์ในรายการ
         });
       }
+
+      // ฟังก์ชันช่วยดึงชื่อไฟล์จาก URL
+      function getFileName(fileUrl) {
+        return decodeURIComponent(
+          fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
+        );
+      }
+
+      function uploadFile(file, assignmentId) {
+        const storageRef = firebase
+          .storage()
+          .ref(`SubmitAssignment/${file.name}`);
+        const uploadTask = storageRef.put(file);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // ดำเนินการในขณะที่ไฟล์กำลังอัพโหลด
+          },
+          (error) => {
+            console.error("Error uploading file:", error);
+          },
+          () => {
+            // อัพโหลดสำเร็จ
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+              console.log("File available at", downloadURL);
+
+              // บันทึก URL ไฟล์ลงใน Firestore
+              db.collection("Submissions")
+                .doc(assignmentId)
+                .update({
+                  files: firebase.firestore.FieldValue.arrayUnion(downloadURL),
+                })
+                .then(() => {
+                  console.log("File URL successfully updated in Firestore!");
+                })
+                .catch((error) => {
+                  console.error("Error updating file URL:", error);
+                });
+            });
+          }
+        );
+      }
+
+      // เรียกฟังก์ชันเมื่อหน้าเว็บโหลด
+      document.addEventListener("DOMContentLoaded", function () {
+        const assignmentId = urlParams.get("assignmentId"); // ดึง assignmentId จาก URL
+        if (assignmentId) {
+          const submissionQuery = db
+            .collection("Submissions")
+            .where("assignmentId", "==", assignmentId)
+            .where("submittedBy", "==", email);
+
+          submissionQuery
+            .get()
+            .then((querySnapshot) => {
+              if (!querySnapshot.empty) {
+                querySnapshot.forEach((doc) => {
+                  const submissionData = doc.data();
+
+                  // เรียกฟังก์ชันแสดงไฟล์
+                  if (submissionData.files && submissionData.files.length > 0) {
+                    displayFiles(submissionData.files);
+                  }
+                });
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching submissions:", error);
+            });
+        }
+      });
 
       function resetPage() {
         document.getElementById("file-list").innerHTML = ""; // ซ่อนการแสดงไฟล์
@@ -953,14 +1070,46 @@
           const files = document.getElementById("file-upload").files;
           const fileList = [];
 
-          for (let i = 0; i < files.length; i++) {
-            fileList.push(files[i].name); // เก็บชื่อไฟล์ที่แนบไว้ใน array
-          }
+          // สร้างอ้างอิง Firebase Storage
+          const storageRef = firebase.storage().ref();
 
           if (!isSubmitted) {
             // ถ้ายังไม่ได้ส่งงาน
             console.log("Submitting assignment...");
-            await submitAssignment(fileList); // เรียกฟังก์ชันส่งงาน
+
+            // อัปโหลดไฟล์แต่ละไฟล์ไปที่ Firebase Storage
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              const uploadTask = storageRef
+                .child("SubmitAssignment/" + file.name)
+                .put(file);
+
+              uploadTask.on(
+                "state_changed",
+                function (snapshot) {
+                  // ความคืบหน้าการอัปโหลด (ถ้าต้องการแสดง)
+                },
+                function (error) {
+                  console.error("Error uploading file:", error);
+                },
+                function () {
+                  // เมื่ออัปโหลดเสร็จสิ้น
+                  uploadTask.snapshot.ref
+                    .getDownloadURL()
+                    .then(function (downloadURL) {
+                      console.log("File available at", downloadURL); // แสดง URL ในคอนโซล
+
+                      // บันทึก URL ของไฟล์ใน fileList
+                      fileList.push(downloadURL);
+
+                      // เมื่ออัปโหลดเสร็จสิ้นทั้งหมด ให้เรียกฟังก์ชัน submitAssignment เพื่อบันทึกข้อมูล
+                      if (fileList.length === files.length) {
+                        submitAssignment(fileList);
+                      }
+                    });
+                }
+              );
+            }
           } else {
             // ถ้าได้ส่งงานแล้ว ให้ Undo
             console.log("Undoing submission...");
@@ -973,7 +1122,10 @@
         .addEventListener("change", function (event) {
           const fileList = event.target.files;
           const fileDisplay = document.getElementById("file-list");
-          fileDisplay.innerHTML = "";
+          fileDisplay.innerHTML = ""; // ล้างไฟล์ก่อนหน้า
+
+          // สร้างอ้างอิง Firebase Storage
+          const storageRef = firebase.storage().ref();
 
           for (let i = 0; i < fileList.length; i++) {
             const file = fileList[i];
@@ -989,6 +1141,29 @@
             fileItem.appendChild(fileIcon);
             fileItem.appendChild(fileNameElement);
             fileDisplay.appendChild(fileItem);
+
+            // อัปโหลดไฟล์ไปที่ Firebase Storage
+            const uploadTask = storageRef
+              .child("uploads/" + file.name)
+              .put(file);
+
+            uploadTask.on(
+              "state_changed",
+              function (snapshot) {
+                // ความคืบหน้าการอัปโหลด (ถ้าต้องการแสดง)
+              },
+              function (error) {
+                console.error("Error uploading file:", error);
+              },
+              function () {
+                // เมื่ออัปโหลดเสร็จสิ้น
+                uploadTask.snapshot.ref
+                  .getDownloadURL()
+                  .then(function (downloadURL) {
+                    console.log("File available at", downloadURL); // แสดง URL ในคอนโซล
+                  });
+              }
+            );
           }
         });
 
