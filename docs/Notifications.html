@@ -401,8 +401,13 @@
           <p class="due-date">Due Date: ${dueDate} ${dueTime}</p>
         </div>
         <div class="notification-body">
-          <p>${data.Message} <span class="created-at">${new Date(data.CreatedAt.seconds * 1000).toLocaleString("th-TH")}</span></p>
-        </div>             
+          <p>
+            ${data.Message}
+            <span class="created-at"
+              >${new Date(data.CreatedAt.seconds *
+              1000).toLocaleString("th-TH")}</span
+            >
+          </p>
         </div>
       </div>
     </div>
@@ -426,7 +431,7 @@
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       var db = firebase.firestore();
-      
+
       // ดึงพารามิเตอร์จาก URL
       const urlParams = new URLSearchParams(window.location.search);
       const email = urlParams.get("email");
@@ -442,18 +447,18 @@
           link.href = url.toString();
         });
       }
-    
+
       // Load email from URL and set to user-email element
-      document.addEventListener("DOMContentLoaded", function() {
+      document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
         const assignmentId = urlParams.get("assignmentId");
         const email = urlParams.get("email");
-    
+
         console.log("Assignment ID:", assignmentId);
         console.log("Email:", email);
-    
+
         // ทำงานตาม AssignmentID และ email ที่ได้รับ
-      });    
+      });
 
       // Function to search email or username in both Teacher and Student collections
       document
@@ -755,62 +760,90 @@
       function goToAssignmentDetail(documentId) {
         const email = new URLSearchParams(window.location.search).get("email");
         window.location.href = `AssignmentDetail.html?assignmentId=${documentId}&email=${email}`;
-      }        
+      }
       // Load notifications when the page loads
       window.onload = loadNotifications;
 
       function showNotificationDetails(data, docId) {
-        const notificationDetails = document.getElementById("notificationDetails");
+        const notificationDetails = document.getElementById(
+          "notificationDetails"
+        );
         notificationDetails.style.display = "block"; // แสดงกล่องเมื่อคลิกที่รายการแจ้งเตือน
-    
+
+        if (data && data.Type === "Submission") {
+          // ตรวจสอบว่ามี Type เป็น Submission หรือไม่
+          const email = new URLSearchParams(window.location.search).get(
+            "email"
+          );
+
+          // เปลี่ยนเส้นทางไปยังหน้า AssignmentDetail.html โดยส่ง email และ assignmentId
+          window.location.href = `AssignmentDetail.html?SubmissionId=${data.SubmissionId}&email=${email}`;
+        } else {
+          // แสดงรายละเอียดการแจ้งเตือนอื่นๆ ตามปกติ
+          const notificationDetails = document.getElementById(
+            "notificationDetails"
+          );
+          notificationDetails.style.display = "block"; // แสดงกล่องเมื่อคลิกที่รายการแจ้งเตือน
+        }
+
         if (data && data.Message) {
-            let title = data.Title || "No Title"; // แสดง Title ถ้ามี
-            let dueDate = data.dueDate ? data.dueDate : "No Due Date"; // ใช้ string ของ dueDate โดยตรง
-    
-            // ตรวจสอบประเภทการแจ้งเตือน
-            if (data.Type === "Assignment") {
-                // แสดง Title และ dueDate สำหรับ Assignment
-                notificationDetails.innerHTML = `
+          let title = data.Title || "No Title"; // แสดง Title ถ้ามี
+          let dueDate = data.dueDate ? data.dueDate : "No Due Date"; // ใช้ string ของ dueDate โดยตรง
+
+          // ตรวจสอบประเภทการแจ้งเตือน
+          if (data.Type === "Assignment") {
+            // แสดง Title และ dueDate สำหรับ Assignment
+            notificationDetails.innerHTML = `
                   <div class="notification-body">
-                    <p>${data.Message} <span class="created-at">${new Date(data.CreatedAt.seconds * 1000).toLocaleString("th-TH")} น.</span></p>
+                    <p>${data.Message} <span class="created-at">${new Date(
+              data.CreatedAt.seconds * 1000
+            ).toLocaleString("th-TH")} น.</span></p>
                   </div>
                   <div class="notification-header">
                     <h2 class="notification-title">${title}</h2>
-                    <p class="due-date">Due Date : ${new Date(dueDate).toLocaleDateString("th-TH", {
+                    <p class="due-date">Due Date : ${new Date(
+                      dueDate
+                    ).toLocaleDateString("th-TH", {
                       day: "numeric",
                       month: "numeric",
                       year: "numeric",
                     })}</p>
-                   <button class="view-details-btn" onclick="goToAssignmentDetail('${data.AssignmentID}')">ดูรายละเอียดงาน</button>
+                   <button class="view-details-btn" onclick="goToAssignmentDetail('${
+                     data.AssignmentID
+                   }')">ดูรายละเอียดงาน</button>
                 `;
-            } else {
-                // แสดงเฉพาะข้อความถ้าไม่ใช่ Assignment
-                notificationDetails.innerHTML = `
+          } else {
+            // แสดงเฉพาะข้อความถ้าไม่ใช่ Assignment
+            notificationDetails.innerHTML = `
                   <h2>${data.Message}</h2>
-                  <p>${new Date(data.CreatedAt.seconds * 1000).toLocaleString("th-TH")}</p>
+                  <p>${new Date(data.CreatedAt.seconds * 1000).toLocaleString(
+                    "th-TH"
+                  )}</p>
                 `;
-            }
-    
-            // การทำเครื่องหมายว่าอ่านแล้ว
-            db.collection("Notifications")
-              .doc(docId)
-              .update({
-                isRead: true,
-              })
-              .then(() => {
-                const notificationItem = document.querySelector(`.notification-item[data-id='${docId}']`);
-                if (notificationItem) {
-                    notificationItem.classList.remove("unread");
-                    notificationItem.classList.add("read");
-                }
-              })
-              .catch((error) => {
-                console.error("Error marking notification as read: ", error);
-              });
+          }
+
+          // การทำเครื่องหมายว่าอ่านแล้ว
+          db.collection("Notifications")
+            .doc(docId)
+            .update({
+              isRead: true,
+            })
+            .then(() => {
+              const notificationItem = document.querySelector(
+                `.notification-item[data-id='${docId}']`
+              );
+              if (notificationItem) {
+                notificationItem.classList.remove("unread");
+                notificationItem.classList.add("read");
+              }
+            })
+            .catch((error) => {
+              console.error("Error marking notification as read: ", error);
+            });
         } else {
-            window.location.href = `AssignmentDetail.html?assignmentId=${data.AssignmentID}`;
+          window.location.href = `AssignmentDetail.html?assignmentId=${data.AssignmentID}`;
         }
-    }
+      }
 
       // Load notifications when the page loads
       window.onload = loadNotifications;
