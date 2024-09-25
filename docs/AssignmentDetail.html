@@ -698,11 +698,7 @@
               document.querySelector(
                 ".due-date"
               ).textContent = `Due ${dueDate} at ${dueTime}`;
-              document.querySelector(
-                ".details-section.instructions p"
-              ).textContent = data.instructions || "None";
-              document.querySelector(".right-section p").textContent =
-                data.points || "No points";
+              document.querySelector(".details-section.instructions p");
               if (data.fileUrl) {
                 displayFile(data.fileUrl);
               }
@@ -807,13 +803,24 @@
       document
         .querySelector(".undo-btn")
         .addEventListener("click", async function () {
+          const buttonLabel = this.textContent.trim(); // ตรวจสอบข้อความของปุ่มปัจจุบัน
           const files = document.getElementById("file-upload").files;
-          const fileList = [];
 
-          for (let i = 0; i < files.length; i++) {
-            fileList.push(files[i].name);
+          // ตรวจสอบก่อนว่ามีการแนบไฟล์หรือไม่ ถ้าไม่มีไฟล์ให้ข้ามส่วนนี้
+          if (files.length > 0) {
+            const fileList = [];
+
+            for (let i = 0; i < files.length; i++) {
+              fileList.push(files[i].name);
+            }
+
+            console.log("Files attached:", fileList);
+            // ที่นี่คุณสามารถเพิ่มโค้ดสำหรับการจัดการไฟล์ที่แนบได้
+            // เช่น การอัปโหลดไปยัง Firebase Storage หรือที่อื่น
+            return; // ข้ามส่วนที่เกี่ยวกับ Firestore และข้อมูล assignment
           }
 
+          // ถ้ามี assignmentId และไม่ได้แนบไฟล์ ให้ทำงานส่วนดึงข้อมูล
           if (assignmentId) {
             const assignmentRef = db
               .collection("Assignments")
@@ -839,13 +846,7 @@
                   ).textContent = `Due ${dueDate} at ${dueTime}`;
 
                   // แสดงคำสั่งงานหรือ Instructions
-                  document.querySelector(
-                    ".details-section.instructions p"
-                  ).textContent = data.instructions || "None";
-
-                  // แสดงคะแนน
-                  document.querySelector(".right-section p").textContent =
-                    data.points || "No points";
+                  document.querySelector(".details-section.instructions p");
 
                   // ถ้ามีไฟล์แนบ แสดงไฟล์แนบ
                   if (data.fileUrl) {
@@ -860,6 +861,26 @@
               });
           }
         });
+      document.addEventListener("DOMContentLoaded", function () {
+        const buttonLabel = document
+          .querySelector(".undo-btn")
+          .textContent.trim(); // ตรวจสอบข้อความของปุ่มปัจจุบัน
+        const attachButton = document.querySelector(".custom-file-upload"); // ปุ่มแนบไฟล์
+        const fileInput = document.getElementById("file-upload"); // input ไฟล์
+
+        // ตรวจสอบสถานะของปุ่ม Undo/Turn in เพื่อปิดการใช้งาน Attach
+        if (buttonLabel === "Turn in") {
+          // เปิดการใช้งานปุ่มแนบไฟล์เมื่อเป็น "Turn in"
+          attachButton.style.pointerEvents = "auto";
+          attachButton.style.opacity = "1"; // แสดงปุ่มปกติ
+          fileInput.disabled = false;
+        } else {
+          // ปิดการใช้งานปุ่มแนบไฟล์เมื่อเป็น "Undo Turn in" หรือ "Give credit mark"
+          attachButton.style.pointerEvents = "none";
+          attachButton.style.opacity = "0.5"; // ทำให้ปุ่มดูไม่สามารถคลิกได้
+          fileInput.disabled = true;
+        }
+      });
 
       document
         .getElementById("searchInput")
@@ -967,9 +988,7 @@
                         ).textContent = `Due ${dueDate} at ${dueTime}`;
                         document.querySelector(
                           ".details-section.instructions p"
-                        ).textContent = assignmentData.instructions || "None";
-                        document.querySelector(".right-section p").textContent =
-                          assignmentData.points || "No points";
+                        );
 
                         // ถ้ามีไฟล์แนบ แสดงไฟล์แนบ
                         if (assignmentData.fileUrl) {
@@ -1481,32 +1500,62 @@
         }
       });
 
-      // ฟังก์ชันแสดงไฟล์ที่ถูกบันทึกใน Firestore
+      // ฟังก์ชันสำหรับโหลดไฟล์จาก Firebase และแสดงบนหน้าเว็บ
+      async function loadSubmissionFiles(submissionId) {
+        if (submissionId) {
+          try {
+            const submissionDoc = await db
+              .collection("Submissions")
+              .doc(submissionId)
+              .get();
+
+            if (submissionDoc.exists) {
+              const submissionData = submissionDoc.data();
+              const fileList = submissionData.files || [];
+
+              // ถ้ามีไฟล์แนบ ให้แสดงไฟล์
+              if (fileList.length > 0) {
+                displayFiles(fileList);
+              } else {
+                console.log("No files found in this submission.");
+              }
+            } else {
+              console.error("No matching submission document found.");
+            }
+          } catch (error) {
+            console.error("Error fetching submission data:", error);
+          }
+        } else {
+          console.error("SubmissionId not found.");
+        }
+      }
+
+      // ฟังก์ชันสำหรับการแสดงไฟล์ทุกประเภทที่ถูกอัปโหลด
       function displayFiles(files) {
         const fileListElement = document.getElementById("file-list");
-        fileListElement.innerHTML = ""; // ล้างรายการไฟล์เก่าก่อน
+        fileListElement.innerHTML = ""; // ล้างรายการไฟล์เก่า
 
-        // วนลูปผ่านรายการไฟล์ที่บันทึกไว้และสร้างลิงก์ให้แต่ละไฟล์
         files.forEach((fileUrl) => {
           const fileElement = document.createElement("a");
           fileElement.href = fileUrl;
-          fileElement.target = "_blank"; // เปิดในแท็บใหม่
-          fileElement.textContent = getFileName(fileUrl);
-          fileElement.style.color = "#fff"; // ทำให้ลิงก์เป็นสีขาว
-          fileElement.style.display = "block"; // ให้แสดงผลในบรรทัดใหม่
+          fileElement.target = "_blank"; // เปิดไฟล์ในแท็บใหม่
+          fileElement.textContent = getFileName(fileUrl); // ดึงชื่อไฟล์จาก URL
+          fileElement.style.color = "#fff";
+          fileElement.style.display = "block"; // แสดงไฟล์แต่ละไฟล์ในบรรทัดใหม่
 
-          // CSS สำหรับจำกัดความยาวของชื่อไฟล์
-          fileElement.style.maxWidth = "300px"; // จำกัดความกว้างที่ 100px
-          fileElement.style.whiteSpace = "nowrap"; // ไม่ให้ขึ้นบรรทัดใหม่
-          fileElement.style.overflow = "hidden"; // ซ่อนข้อความที่เกินขอบ
-          fileElement.style.textOverflow = "ellipsis"; // แสดง ... เมื่อข้อความยาวเกิน
+          // จำกัดความยาวของชื่อไฟล์เพื่อไม่ให้ล้นออกนอกกล่อง
+          fileElement.style.maxWidth = "300px";
+          fileElement.style.whiteSpace = "nowrap";
+          fileElement.style.overflow = "hidden";
+          fileElement.style.textOverflow = "ellipsis";
 
+          // เพิ่มตัวจัดการเหตุการณ์เมื่อคลิกที่ไฟล์ เพื่อเปิดไฟล์ในแท็บใหม่
           fileElement.addEventListener("click", function (event) {
-            event.preventDefault(); // ป้องกันการดาวน์โหลดอัตโนมัติ
-            window.open(fileUrl, "_blank"); // เปิดในแท็บใหม่
+            event.preventDefault();
+            window.open(fileUrl, "_blank");
           });
 
-          fileListElement.appendChild(fileElement); // เพิ่มลิงก์ไฟล์ในรายการ
+          fileListElement.appendChild(fileElement); // เพิ่มไฟล์ที่แสดงในรายการ
         });
       }
 
@@ -1516,6 +1565,186 @@
           fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
         );
       }
+
+      // เมื่อหน้าเว็บโหลดสำเร็จ ให้เรียกฟังก์ชันเพื่อแสดงไฟล์ที่อัปโหลด
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const submissionId = urlParams.get("SubmissionId"); // ดึง SubmissionId จาก URL
+
+        if (submissionId) {
+          loadSubmissionFiles(submissionId); // เรียกฟังก์ชันสำหรับโหลดและแสดงไฟล์ที่แนบ
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        // ตรวจสอบพารามิเตอร์ assignmentId, email และ submissionId จาก URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const assignmentId = urlParams.get("assignmentId");
+        const email = urlParams.get("email");
+        const submissionIdFromUrl = urlParams.get("SubmissionId"); // ดึง SubmissionId จาก URL
+
+        // แสดง points เริ่มต้น
+        if (assignmentId) {
+          const scoreElement = document.querySelector(".right-section p");
+          scoreElement.textContent = "No points"; // แสดง points เริ่มต้น
+        }
+
+        // ตรวจสอบ SubmissionId ใน URL ถ้ามีให้ใช้ SubmissionId นี้ในการตรวจสอบ
+        if (submissionIdFromUrl) {
+          console.log("SubmissionId from URL:", submissionIdFromUrl);
+
+          try {
+            // ค้นหา Submission จาก SubmissionId
+            const submissionRef = db
+              .collection("Submissions")
+              .doc(submissionIdFromUrl);
+            const submissionDoc = await submissionRef.get();
+
+            if (submissionDoc.exists) {
+              const submissionData = submissionDoc.data();
+              const assignmentId = submissionData.assignmentId; // ดึง AssignmentId จากข้อมูล Submission
+              console.log("AssignmentId from Submission:", assignmentId);
+
+              // ตรวจสอบ Score โดยใช้ SubmissionId
+              const scoreQuery = await db
+                .collection("Score")
+                .where("SubmissionId", "==", submissionIdFromUrl)
+                .limit(1)
+                .get();
+
+              if (!scoreQuery.empty) {
+                const scoreDoc = scoreQuery.docs[0];
+                const scoreData = scoreDoc.data();
+                console.log("Score data found:", scoreData);
+
+                // แสดงคะแนนที่ได้
+                const scoreElement = document.querySelector(".right-section p");
+                scoreElement.textContent = `Points : ${scoreData.ScoreObtained}/${scoreData.points}`;
+              } else {
+                console.log(
+                  "No matching score document found for SubmissionId:",
+                  submissionIdFromUrl
+                );
+
+                // ถ้าไม่มีข้อมูล Score ให้ดึงข้อมูลจาก Assignment แทน
+                if (assignmentId) {
+                  const assignmentRef = db
+                    .collection("Assignments")
+                    .doc(assignmentId);
+                  const assignmentDoc = await assignmentRef.get();
+
+                  if (assignmentDoc.exists) {
+                    const assignmentData = assignmentDoc.data();
+                    console.log("Assignment data found:", assignmentData);
+
+                    // แสดงคะแนนจาก Assignment
+                    const scoreElement =
+                      document.querySelector(".right-section p");
+                    scoreElement.textContent = `Points : ${assignmentData.points}`;
+                  } else {
+                    console.log(
+                      "No matching assignment document found for AssignmentId:",
+                      assignmentId
+                    );
+                  }
+                }
+              }
+            } else {
+              console.log(
+                "No matching submission document found for SubmissionId:",
+                submissionIdFromUrl
+              );
+            }
+          } catch (error) {
+            console.error("Error fetching submission or score data:", error);
+          }
+        } else if (email && assignmentId) {
+          // ตรวจสอบ email ใน collection Submissions
+          try {
+            const submissionsQuery = await db
+              .collection("Submissions")
+              .where("assignmentId", "==", assignmentId)
+              .where("submittedBy", "==", email)
+              .limit(1) // จำกัดให้ดึงเฉพาะรายการแรก
+              .get();
+
+            if (!submissionsQuery.empty) {
+              // ถ้ามีเอกสารที่ตรงกัน ให้ดึง SubmissionId จากเอกสารนั้น
+              const submissionDoc = submissionsQuery.docs[0];
+              const submissionId = submissionDoc.id;
+
+              console.log("SubmissionId found:", submissionId);
+
+              // ตรวจสอบ SubmissionId ใน collection Score
+              const scoreQuery = await db
+                .collection("Score")
+                .where("SubmissionId", "==", submissionId)
+                .limit(1) // จำกัดให้ดึงเฉพาะรายการแรก
+                .get();
+
+              if (!scoreQuery.empty) {
+                // ถ้ามีเอกสารที่ตรงกัน ให้ดึงข้อมูลจากเอกสารนั้น
+                const scoreDoc = scoreQuery.docs[0];
+                const scoreData = scoreDoc.data();
+
+                console.log("Score data found:", scoreData);
+
+                // แสดงคะแนนในรูปแบบ คะแนนที่ได้/คะแนนเต็ม
+                const scoreElement = document.querySelector(".right-section p");
+                scoreElement.textContent = `Points : ${scoreData.ScoreObtained}/${scoreData.points}`;
+              } else {
+                console.log(
+                  "No matching score document found for SubmissionId:",
+                  submissionId
+                );
+
+                // ถ้าไม่มีข้อมูลใน Score ให้ดึงข้อมูลจาก Assignments มาแสดงแทน
+                const assignmentRef = await db
+                  .collection("Assignments")
+                  .doc(assignmentId)
+                  .get();
+                if (assignmentRef.exists) {
+                  const assignmentData = assignmentRef.data();
+                  console.log("Assignment data found:", assignmentData);
+
+                  // แสดงคะแนนจาก Assignments
+                  const scoreElement =
+                    document.querySelector(".right-section p");
+                  scoreElement.textContent = `Points : ${assignmentData.points}`;
+                } else {
+                  console.log(
+                    "No matching assignment document found for assignmentId:",
+                    assignmentId
+                  );
+                }
+              }
+            } else {
+              console.log("No matching submission found for email:", email);
+
+              // ถ้าไม่พบ email ใน Submissions ให้ดึงข้อมูลจาก Assignments มาแสดงแทน
+              const assignmentRef = await db
+                .collection("Assignments")
+                .doc(assignmentId)
+                .get();
+              if (assignmentRef.exists) {
+                const assignmentData = assignmentRef.data();
+                console.log("Assignment data found:", assignmentData);
+
+                // แสดงคะแนนจาก Assignments
+                const scoreElement = document.querySelector(".right-section p");
+                scoreElement.textContent = `Points : ${assignmentData.points}`;
+              } else {
+                console.log(
+                  "No matching assignment document found for assignmentId:",
+                  assignmentId
+                );
+              }
+            }
+          } catch (error) {
+            console.error("Error fetching submissions or score:", error);
+          }
+        }
+      });
 
       function uploadFile(file, assignmentId) {
         const storageRef = firebase
@@ -1716,6 +1945,44 @@
             );
           }
         });
+
+      // ฟังก์ชันสำหรับติดตามการอัปเดตคะแนนแบบเรียลไทม์
+      function listenForScoreUpdates(submissionId) {
+        if (submissionId) {
+          const scoreRef = db
+            .collection("Score")
+            .where("SubmissionId", "==", submissionId);
+
+          scoreRef.onSnapshot((querySnapshot) => {
+            if (!querySnapshot.empty) {
+              querySnapshot.forEach((doc) => {
+                const scoreData = doc.data();
+                console.log("Score data updated:", scoreData);
+
+                // อัปเดตคะแนนที่แสดงบนหน้าเว็บเมื่อคะแนนเปลี่ยนแปลงแบบเรียลไทม์
+                const scoreElement = document.querySelector(".right-section p");
+                scoreElement.textContent = `Points : ${scoreData.ScoreObtained}/${scoreData.points}`;
+              });
+            } else {
+              console.log("No saved score found for this submission.");
+              const scoreElement = document.querySelector(".right-section p");
+              scoreElement.textContent = "No points";
+            }
+          });
+        } else {
+          console.error("SubmissionId is not provided.");
+        }
+      }
+
+      // เมื่อหน้าเว็บโหลด ให้เริ่มติดตามการอัปเดตคะแนนแบบเรียลไทม์
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const submissionId = urlParams.get("SubmissionId"); // ดึง SubmissionId จาก URL
+
+        if (submissionId) {
+          listenForScoreUpdates(submissionId); // เริ่มติดตามการอัปเดตคะแนนแบบเรียลไทม์
+        }
+      });
     </script>
   </body>
 </html>
