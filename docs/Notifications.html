@@ -622,25 +622,26 @@
           if (data.Type === "Assignment") {
             // แสดง Title และ dueDate สำหรับ Assignment
             notificationDetails.innerHTML = `
-                  <div class="notification-body">
-                    <p>${data.Message} <span class="created-at">${new Date(
+                    <div class="notification-body">
+                        <p>${data.Message} <span class="created-at">${new Date(
               data.CreatedAt.seconds * 1000
             ).toLocaleString("th-TH")} น.</span></p>
-                  </div>
-                  <div class="notification-header">
-                    <h2 class="notification-title">${title}</h2>
-                    <p class="due-date">Due Date : ${new Date(
-                      dueDate
-                    ).toLocaleDateString("th-TH", {
-                      day: "numeric",
-                      month: "numeric",
-                      year: "numeric",
-                    })}</p>
-                   <button class="view-details-btn" onclick="goToAssignmentDetail('${
-                     data.AssignmentID
-                   }')">ดูรายละเอียดงาน</button>
+                    </div>
+                    <div class="notification-header">
+                        <h2 class="notification-title">${title}</h2>
+                        <p class="due-date">Due Date : ${new Date(
+                          dueDate
+                        ).toLocaleDateString("th-TH", {
+                          day: "numeric",
+                          month: "numeric",
+                          year: "numeric",
+                        })}</p>
+                        <button class="view-details-btn" onclick="goToAssignmentDetail('${
+                          data.AssignmentID
+                        }')">ดูรายละเอียดงาน</button>
+                    </div>
                 `;
-          } else if (data && data.Type === "JoinRequest") {
+          } else if (data.Type === "JoinRequest" || data.Type === "Joined") {
             // โหลด JoinRequest ตาม JoinRequestId ที่แจ้งเตือนมี
             db.collection("JoinRequests")
               .doc(data.JoinRequestId)
@@ -660,110 +661,109 @@
                 );
 
                 // ตรวจสอบสถานะของคำขอเข้าร่วม
-                if (joinData.Status === "Accepted") {
+                if (data.Type === "Joined") {
+                  // แสดงรายละเอียดการแจ้งเตือนเมื่อผู้ใช้ถูกอนุญาตเข้าห้องเรียน
                   notificationDetails.innerHTML = `
-                    <div class="notification-header">
-                        <h2 class="notification-title"> ${data.Message}</h2>
-                        <p class="created-at">${new Date(
-                          data.CreatedAt.seconds * 1000
-                        ).toLocaleString("th-TH")} น.</p>
-                    </div>
-                    <div class="notification-body">
-                        <p>You have approved the classroom join request.</p>
-                    </div>
-                  `;
+                          <div class="notification-header">
+                              <h2 class="notification-title"> ${
+                                data.Message
+                              }</h2>
+                              <p class="created-at">${new Date(
+                                data.CreatedAt.seconds * 1000
+                              ).toLocaleString("th-TH")} น.</p>
+                          </div>
+                          <div class="notification-body">
+                              <p>You have been accepted into the classroom.</p>
+                          </div>
+                      `;
                   if (notificationButtons) {
                     notificationButtons.classList.add("hidden");
                   }
                 } else if (joinData.Status === "Refused") {
+                  // กรณีถูกปฏิเสธการเข้าร่วม
                   notificationDetails.innerHTML = `
-                    <div class="notification-header">
-                        <h2 class="notification-title"> ${data.Message}</h2>
-                        <p class="created-at">${new Date(
-                          data.CreatedAt.seconds * 1000
-                        ).toLocaleString("th-TH")} น.</p>
-                    </div>
-                    <div class="notification-body">
-                        <p>You have declined your classroom entry request.</p>
-                    </div>
-                  `;
+                        <div class="notification-header">
+                            <h2 class="notification-title"> ${data.Message}</h2>
+                            <p class="created-at">${new Date(
+                              data.CreatedAt.seconds * 1000
+                            ).toLocaleString("th-TH")} น.</p>
+                        </div>
+                        <div class="notification-body">
+                        </div>
+                      `;
                   if (notificationButtons) {
                     notificationButtons.classList.add("hidden");
                   }
                 } else {
                   // ถ้าสถานะยังไม่มี (pending) ให้แสดงปุ่ม
                   notificationDetails.innerHTML = `
-                    <div class="notification-header">
-                        <h2 class="notification-title"> ${data.Message}</h2>
-                        <p class="created-at">${new Date(
-                          data.CreatedAt.seconds * 1000
-                        ).toLocaleString("th-TH")} น.</p>
-                    </div>
-                    <div class="notification-body">
-                        <p>Do you want to allow this user to join your classroom?</p>
-                        <div class="notification-buttons">
-                            <button class="accept" onclick="handleJoinRequest('${docId}', true)">Accept</button>
-                            <button class="refuse" onclick="handleJoinRequest('${docId}', false)">Refuse</button>
+                        <div class="notification-header">
+                            <h2 class="notification-title"> ${data.Message}</h2>
+                            <p class="created-at">${new Date(
+                              data.CreatedAt.seconds * 1000
+                            ).toLocaleString("th-TH")} น.</p>
                         </div>
-                    </div>
-                  `;
+                        <div class="notification-body">
+                            <p>Do you want to allow this user to join your classroom?</p>
+                            <div class="notification-buttons">
+                                <button class="accept" onclick="handleJoinRequest('${docId}', true)">Accept</button>
+                                <button class="refuse" onclick="handleJoinRequest('${docId}', false)">Refuse</button>
+                            </div>
+                        </div>
+                      `;
                 }
               })
               .catch((error) => {
                 console.error("Error fetching join request: ", error);
               });
-          } else if (data && data.Type === "Post") {
+          } else if (data.Type === "Post") {
             // ถ้าเป็นประเภท Post
             notificationDetails.innerHTML = `
-              <div class="notification-body">
-                <p>${data.Message} <span class="created-at">${new Date(
-              data.CreatedAt.seconds * 400
+                  <div class="notification-body">
+                    <p>${data.Message} <span class="created-at">${new Date(
+              data.CreatedAt.seconds * 1000
             ).toLocaleString("th-TH")} น.</span></p>
-              </div>
-            `;
+                  </div>
+                `;
 
             // ตรวจสอบว่ามีภาพหรือไม่
             if (data.PostContent) {
               notificationDetails.innerHTML += `
-                <div class="notification-image">
-                  <img src="${data.PostContent}" alt="Post Image" style="max-width: 40%; border-radius: 10px; margin-top: 10px;" />
-                </div>
-              `;
+                    <div class="notification-image">
+                      <img src="${data.PostContent}" alt="Post Image" style="max-width: 40%; border-radius: 10px; margin-top: 10px;" />
+                    </div>
+                  `;
             } else {
               // แสดงการแจ้งเตือนทั่วไปที่ไม่ใช่ Assignment
               notificationDetails.innerHTML = `
-                  <div class="notification-header">
-                      <h2 class="notification-title">รายละเอียดการแจ้งเตือน</h2>
-                      <div class="notification-body">
-                          <p>${Message}</p>
-                          <p class="created-at">${CreatedAt}</p>
+                      <div class="notification-header">
+                          <h2 class="notification-title">รายละเอียดการแจ้งเตือน</h2>
+                          <div class="notification-body">
+                              <p>${Message}</p>
+                              <p class="created-at">${CreatedAt}</p>
+                          </div>
                       </div>
-                  </div>
-              `;
+                  `;
             }
           }
-
-          // การทำเครื่องหมายว่าอ่านแล้ว
-          db.collection("Notifications")
-            .doc(docId)
-            .update({
-              isRead: true,
-            })
-            .then(() => {
-              const notificationItem = document.querySelector(
-                `.notification-item[data-id='${docId}']`
-              );
-              if (notificationItem) {
-                notificationItem.classList.remove("unread");
-                notificationItem.classList.add("read");
-              }
-            })
-            .catch((error) => {
-              console.error("Error marking notification as read: ", error);
-            });
-        } else {
-          window.location.href = `AssignmentDetail.html?assignmentId=${data.AssignmentID}`;
         }
+
+        // ทำเครื่องหมายว่าแจ้งเตือนนี้ได้อ่านแล้ว
+        db.collection("Notifications")
+          .doc(docId)
+          .update({ isRead: true })
+          .then(() => {
+            const notificationItem = document.querySelector(
+              `.notification-item[data-id='${docId}']`
+            );
+            if (notificationItem) {
+              notificationItem.classList.remove("unread");
+              notificationItem.classList.add("read");
+            }
+          })
+          .catch((error) => {
+            console.error("Error marking notification as read: ", error);
+          });
       }
 
       function handleJoinRequest(notificationId, isAccepted) {
