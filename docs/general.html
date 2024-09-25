@@ -1,601 +1,805 @@
 <!DOCTYPE html>
 <html lang="th">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Classroom General</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap"
+      rel="stylesheet" />
     <style>
-        body {
-            font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
-            background-color: #2f2f2f;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        
-        .topbar {
-            background-color: #2e2e2e;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0px 2px 4px rgba(177, 177, 177, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-        
-        .topbar .search-bar {
-            flex-grow: 1;
-            display: flex;
-            justify-content: flex-start;
-            position: relative;
-            padding-left: 480px;
-        }
-        
-        .topbar .search-bar input {
-            width: 400px;
-            padding: 5px 10px 5px 35px;
-            border-radius: 20px;
-            border: 1px solid #717171;
-            background-color: #333;
-            color: #979797;
-            font-size: 16px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .topbar .search-bar .fas {
-            position: absolute;
-            left: 490px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #979797;
-            z-index: 2;
-        }
-        
-        .topbar .user-section {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        
-        #user-email {
-            color: white;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        
-        .user-icon {
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .user-icon i {
-            font-size: 30px;
-            color: white;
-        }
-        
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 50px;
-            background-color: #fff;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
-            z-index: 1000;
-        }
-        
-        .dropdown-menu a {
-            display: block;
-            padding: 10px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .sidebar {
-            width: 100px;
-            background-color: #333;
-            color: white;
-            height: 100vh;
-            padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            z-index: 1;
-        }
-        
-        .menu-items {
-            margin-top: 40px;
-        }
-        
-        .sidebar a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 12px;
-            text-align: center;
-        }
-        
-        .sidebar a:hover {
-            background-color: #5f5f5f;
-            border-radius: 4px;
-            width: 80%;
-            text-align: center;
-        }
-        
-        .sidebar i {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .main-sidebar {
-            width: 180px;
-            background-color: #333;
-            padding: 10px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            margin-left: 100px;
-            position: fixed;
-            top: 40px;
-            bottom: 0;
-        }
-        
-        .main-sidebar a {
-            display: flex;
-            align-items: center;
-            color: #ccc;
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .main-sidebar a i {
-            margin-right: 8px;
-            font-size: 18px;
-        }
-        
-        .main-sidebar a:hover {
-            background-color: #444;
-            color: #fff;
-        }
-        
-        .main-sidebar a.active {
-            background-color: #9c0909;
-            color: #b51d1d;
-        }
-        
-        .main-sidebar .main-channel {
-            margin-top: 15px;
-        }
-        
-        .main-sidebar .main-channel a {
-            padding-left: 20px;
-            font-size: 12px;
-        }
-        
-        .course-name {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: #fff;
-            background-color: #444;
-            margin-bottom: 10px;
-        }
-        
-        .course-name i {
-            margin-right: 10px;
-        }
-        
-        #searchResults {
-            background-color: rgb(86, 86, 86);
-            color: black;
-            position: absolute;
-            z-index: 1000;
-            width: 400px;
-            border-radius: 5px;
-            max-height: 400px;
-            overflow-y: auto;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            top: 38px;
-        }
-        
-        #searchResults .result-item {
-            padding: 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #a3a3a3;
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-        }
-        
-        #searchResults .result-item:hover {
-            background-color: #989898;
-        }
-        
-        .search-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .search-info span {
-            font-size: 14px;
-            color: #b2b2b2;
-        }
-        
-        .search-info p {
-            margin: 0;
-            font-size: 16px;
-            color: #b2b2b2;
-        }
-        
-        .content {
-            flex-grow: 1;
-            background-color: #2c2c2c;
-            display: flex;
-            flex-direction: column;
-            margin-left: 280px;
-            padding-top: 0px;
-        }
-        
-        .content-header {
-            background-color: #202020;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-            font-family: "Comfortaa", Arial, sans-serif;
-        }
-        
-        .content-header h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-        
-        .content-header .header-options {
-            display: flex;
-            align-items: center;
-        }
-        
-        .content-header .header-options a {
-            margin-right: 15px;
-            color: #ccc;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .content-header .header-options a:hover {
-            color: #fff;
-        }
-        
-        .content-body {
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .document-id-section {
-            margin-top: 20px;
-            padding: 10px;
-            color: #fff;
-        }
-        
-        .document-id-section label {
-            color: #ccc;
-        }
-        
-        .document-id-section input {
-            width: 150px;
-            padding: 5px;
-            margin-right: 10px;
-        }
-        
-        .document-id-section button {
-            padding: 5px 10px;
-            background-color: #2e3956;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .document-id-section button:hover {
-            background-color: #6b2e39;
-        }
-        
-        .post {
-            background-color: #3b3b3b;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        .post-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-family: "Comfortaa", Arial, sans-serif;
-        }
-        
-        .post-header h3 {
-            margin: 0;
-            font-size: 16px;
-        }
-        
-        .post-header .post-date {
-            font-size: 12px;
-            color: #bbb;
-        }
-        
-        .post-content {
-            font-size: 14px;
-            color: #ddd;
-        }
-        
-        .reply-section {
-            margin-top: 10px;
-            border-top: 1px solid #444;
-            padding-top: 10px;
-        }
-        
-        .reply {
-            background-color: #2c2c2c;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        
-        .reply p {
-            margin: 0;
-            font-size: 14px;
-            color: #bbb;
-        }
-        
-        .reply .reply-author {
-            font-size: 12px;
-            color: #888;
-        }
-        
-        .start-post {
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        .start-post button {
-            background-color: #2e3956;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .start-post button:hover {
-            background-color: #6b2e39;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 400px;
-            color: black;
-        }
-        
-        .modal-content textarea {
-            width: 100%;
-            height: 100px;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-            resize: none;
-        }
-        
-        .modal-content .attachments {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        
-        .modal-content .attachments i {
-            cursor: pointer;
-            font-size: 20px;
-            color: #333;
-        }
-        
-        .modal-content .attachments i:hover {
-            color: #555;
-        }
-        
-        .modal-content button {
-            background-color: #2e3956;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            float: right;
-        }
-        
-        .modal-content button:hover {
-            background-color: #6b2e39;
-        }
-        
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        
-        #fileContainer {
-            padding: 10px;
-            border: 1px dashed #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            color: #333;
-            margin-top: 10px;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-            font-size: 14px;
-            display: none;
-        }
-        
-        #fileContainer a {
-            color: #4caf50;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        #fileContainer a:hover {
-            text-decoration: underline;
-        }
-        
-        .file-link {
-            background-color: #403f3f;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .file-link:hover {
-            background-color: #6b2e39;
-        }
-        
-        .youtube-iframe {
-            border-radius: 8px;
-            margin: 10px 0;
-        }
-        
-        .external-link {
-            color: #f7f7f7;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 8px;
-            display: inline-block;
-        }
-        
-        .external-link:hover {
-            background-color: #6b2e39;
-            border-radius: 8px;
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            background-color: rgb(255, 157, 0);
-            color: white;
-            border-radius: 50%;
-            padding: 2px 5px;
-            font-size: 12px;
-            display: none;
-        }
-        /* สไตล์สำหรับหน้าต่างที่เป็น Modal */
-        
-        .modal {
-            display: none;
-            /* ซ่อนโดยเริ่มต้น */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            /* สีพื้นหลังโปร่งใส */
-        }
-        
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 300px;
-            text-align: center;
-        }
-        
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 24px;
-            cursor: pointer;
-        }
-    </style>
-</head>
+      body {
+        font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
+        background-color: #2f2f2f;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-<body>
+      .topbar {
+        background-color: #2e2e2e;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        /* ใช้ fixed เพื่อไม่ให้เลื่อน */
+        top: 0;
+        /* ให้อยู่ที่ด้านบนสุด */
+        width: 100%;
+        /* ให้ครอบคลุมเต็มความกว้าง */
+        z-index: 999;
+        /* ให้แน่ใจว่าอยู่เหนือองค์ประกอบอื่นๆ */
+        box-sizing: border-box;
+        /* เพื่อให้ padding และ border รวมอยู่ในขนาดขององค์ประกอบ */
+      }
+
+      .topbar .search-bar {
+        flex-grow: 1;
+        display: flex;
+        justify-content: flex-start;
+        position: relative;
+        /* ปรับ position ของ content-header */
+        padding-left: 480px;
+      }
+
+      .topbar .search-bar input {
+        width: 400px;
+        padding: 5px 10px 5px 35px;
+        border-radius: 20px;
+        border: 1px solid #717171;
+        background-color: #333;
+        color: #979797;
+        font-size: 16px;
+        z-index: 1;
+      }
+
+      .topbar .search-bar .fas {
+        position: absolute;
+        left: 490px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #979797;
+        z-index: 2;
+      }
+
+      .topbar .user-section {
+        display: flex;
+        align-items: center;
+      }
+
+      #user-email {
+        color: white;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+
+      .user-icon {
+        cursor: pointer;
+      }
+
+      .user-icon i {
+        font-size: 30px;
+        color: white;
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 50px;
+        background-color: #fff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+        z-index: 1000;
+      }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .dropdown-menu a:hover {
+        background-color: #f0f0f0;
+      }
+
+      .sidebar {
+        width: 100px;
+        background-color: #333;
+        color: white;
+        height: 100vh;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        z-index: 1;
+      }
+
+      .menu-items {
+        margin-top: 40px;
+      }
+
+      .sidebar a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        padding: 10px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .sidebar a:hover {
+        background-color: #5f5f5f;
+        border-radius: 4px;
+        width: 80%;
+        text-align: center;
+      }
+
+      .sidebar i {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .main-sidebar {
+        width: 180px;
+        background-color: #333;
+        padding: 10px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        margin-left: 100px;
+        position: fixed;
+        top: 40px;
+        bottom: 0;
+      }
+
+      .main-sidebar a {
+        display: flex;
+        align-items: center;
+        color: #ccc;
+        padding: 10px 15px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .main-sidebar a i {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+
+      .main-sidebar a:hover {
+        background-color: #444;
+        color: #fff;
+      }
+
+      .main-sidebar a.active {
+        background-color: #9c0909;
+        color: #b51d1d;
+      }
+
+      .main-sidebar .main-channel {
+        margin-top: 15px;
+      }
+
+      .main-sidebar .main-channel a {
+        padding-left: 20px;
+        font-size: 12px;
+      }
+
+      .course-name {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        color: #fff;
+        background-color: #444;
+        margin-bottom: 10px;
+      }
+
+      .course-name i {
+        margin-right: 10px;
+      }
+
+      label[for="documentId"] {
+        color: white;
+        /* กำหนดสีของข้อความให้เป็นสีขาว */
+        font-size: 14px;
+        /* สามารถปรับขนาดฟอนต์ได้ตามต้องการ */
+      }
+
+      #documentId {
+        width: 130px;
+        /* กำหนดความกว้างที่ต้องการ */
+        padding: 5px;
+        /* เพิ่ม padding เพื่อให้มีพื้นที่รอบๆ ข้อความ */
+        border-radius: 5px;
+        /* ทำมุมโค้งมน */
+        border: 1px solid #717171;
+        /* ขอบเส้นบางๆ สีเทา */
+        background-color: #333;
+        /* สีพื้นหลัง */
+        color: white;
+        /* สีตัวอักษร */
+        font-size: 12px;
+        /* ขนาดฟอนต์ */
+        text-align: center;
+        /* จัดให้อยู่ตรงกลาง */
+      }
+
+      #searchResults {
+        background-color: #4d4d4d;
+        color: white;
+        position: absolute;
+        z-index: 10001;
+        /* เพิ่ม z-index ให้สูงกว่า content-header */
+        width: 400px;
+        border-radius: 5px;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        top: 38px;
+      }
+
+      #searchResults {
+        z-index: 9999;
+        /* ให้แน่ใจว่าอยู่เหนือทุกอย่าง */
+      }
+
+      #searchResults .result-item {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #555;
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+      }
+
+      #searchResults .result-item:hover {
+        background-color: #555;
+      }
+
+      #searchResults .result-item p {
+        margin: 0;
+        color: #fff;
+      }
+
+      #searchResults .result-item span {
+        color: #727272;
+      }
+
+      #searchResults .result-item:hover {
+        background-color: #989898;
+      }
+
+      .search-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .search-info span {
+        font-size: 14px;
+        color: #b2b2b2;
+      }
+
+      .search-info p {
+        margin: 0;
+        font-size: 16px;
+        color: #b2b2b2;
+      }
+
+      .content {
+        flex-grow: 1;
+        background-color: #2c2c2c;
+        display: flex;
+        flex-direction: column;
+        margin-left: 280px;
+        padding-top: 0px;
+      }
+
+      .content-header {
+        background-color: #202020;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        font-family: "Comfortaa", Arial, sans-serif;
+        color: white;
+        position: fixed;
+        top: 50px;
+        left: 60%;
+        /* ใช้ 50% เพื่อให้ขยับไปด้านขวา */
+        transform: translateX(-50%);
+        /* เลื่อนส่วนนี้กลับมาที่กึ่งกลาง */
+        width: 78%;
+        /* กำหนดความกว้างเป็น 80% ของหน้าจอ */
+        z-index: 1;
+      }
+
+      .content-header h2 {
+        margin: 0;
+        font-size: 25px;
+      }
+
+      .content-header .header-options {
+        display: flex;
+        align-items: center;
+      }
+
+      .content-header .header-options a {
+        margin-right: 15px;
+        color: #ccc;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .content-header .header-options a:hover {
+        color: #fff;
+      }
+
+      .content-body {
+        padding: 20px;
+        margin-top: 100px;
+        overflow-y: auto;
+      }
+
+      .post {
+        background-color: #3b3b3b;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .post-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-family: "Comfortaa", Arial, sans-serif;
+        position: relative;
+        /* เพื่อให้สามารถใช้ตำแหน่ง absolute ภายในได้ */
+      }
+
+      .three-dots-menu {
+        cursor: pointer;
+        font-size: 20px;
+        color: white;
+      }
+
+      .menu-dropdown {
+        display: none;
+        position: absolute;
+        font-size: 12px;
+        /* ปรับขนาดตัวอักษร */
+        right: 0;
+        background-color: #3b3b3b;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 100;
+      }
+
+      .menu-dropdown a {
+        color: white;
+        padding: 10px;
+        display: block;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+      }
+
+      .menu-dropdown a.disabled {
+        color: gray;
+        cursor: not-allowed;
+      }
+
+      .menu-dropdown a:hover {
+        background-color: #505050;
+      }
+
+      .post-header h3 {
+        margin: 0;
+        font-size: 16px;
+        color: white;
+      }
+
+      .post-header .post-date {
+        font-size: 12px;
+        color: #bbb;
+      }
+
+      .post-content {
+        font-size: 14px;
+        color: #ddd;
+      }
+
+      .post-content img {
+        width: 300px;
+        /* กำหนดความกว้างคงที่ */
+        height: auto;
+        /* ให้รักษาอัตราส่วนเดิม */
+        border-radius: 10px;
+      }
+
+      .reply-section {
+        margin-top: 10px;
+        border-top: 1px solid #444;
+        padding-top: 10px;
+      }
+
+      .reply {
+        background-color: #2c2c2c;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      .reply p {
+        margin: 0;
+        font-size: 14px;
+        color: #bbb;
+      }
+
+      .reply .reply-author {
+        font-size: 12px;
+        color: #888;
+      }
+
+      .start-post {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .start-post button {
+        background-color: #2e3956;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .start-post button:hover {
+        background-color: #6b2e39;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 100%;
+        /* ปรับขนาดความกว้างเป็นเปอร์เซ็นต์ของหน้าจอ */
+        max-width: 350px;
+        /* กำหนดความกว้างสูงสุด */
+        color: black;
+        margin: auto;
+        /* จัดให้อยู่กึ่งกลาง */
+      }
+
+      .modal-content textarea {
+        width: 92%;
+        height: 100px;
+        /* ปรับความสูง */
+        margin-bottom: 15px;
+        /* เพิ่มระยะห่างด้านล่าง */
+        padding: 15px;
+        /* เพิ่ม padding เพื่อให้มีพื้นที่รอบๆ ตัวอักษร */
+        border-radius: 10px;
+        /* ทำมุมโค้งมน */
+        border: 1px solid #ccc;
+        /* ขอบสีเทา */
+        background-color: #f9f9f9;
+        /* สีพื้นหลังอ่อน */
+        font-size: 14px;
+        /* ขนาดฟอนต์ */
+        font-family: "Comfortaa", sans-serif;
+        /* ใช้ฟอนต์สวยๆ */
+        color: #333;
+        /* สีตัวอักษร */
+        resize: none;
+        /* ปิดการขยาย */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        /* เงา */
+        transition: border-color 0.3s, box-shadow 0.3s;
+        /* เพิ่ม transition เพื่อทำให้การเปลี่ยนขอบมีความลื่นไหล */
+      }
+
+      .modal-content .attachments {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+
+      .modal-content .attachments i {
+        cursor: pointer;
+        font-size: 20px;
+        color: #333;
+      }
+
+      .modal-content .attachments i:hover {
+        color: #555;
+      }
+
+      .modal-content button {
+        background-color: #2e3956;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      .modal-content button:hover {
+        background-color: #6b2e39;
+      }
+
+      .attachments {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-top: 10px;
+      }
+
+      .attachments i {
+        font-size: 24px;
+        color: #333;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+
+      .attachments i:hover {
+        color: #6b2e39;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      #fileContainer {
+        padding: 10px;
+        border: 1px dashed #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        color: #333;
+        margin-top: 10px;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        font-size: 14px;
+        display: none;
+      }
+
+      #fileContainer a {
+        color: #4caf50;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      #fileContainer a:hover {
+        text-decoration: underline;
+      }
+
+      .file-link {
+        background-color: #000000;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 8px;
+        display: inline-block;
+        /* ปรับให้เป็น inline-block เพื่อให้ขนาดไม่เกินพอดี */
+        max-width: 80%;
+        /* จำกัดความกว้างสูงสุด */
+        text-align: center;
+        /* จัดข้อความให้อยู่กลาง */
+        margin-top: 10px;
+        /* เพิ่มช่องว่างระหว่างไฟล์ที่แนบกับองค์ประกอบอื่น */
+      }
+
+      .file-link:hover {
+        background-color: #6b2e39;
+      }
+
+      .youtube-iframe {
+        border-radius: 8px;
+        margin: 10px 0;
+      }
+
+      .external-link {
+        color: #f7f7f7;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 8px;
+        display: inline-block;
+      }
+
+      .external-link:hover {
+        background-color: #6b2e39;
+        border-radius: 8px;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        background-color: rgb(255, 157, 0);
+        color: white;
+        border-radius: 50%;
+        padding: 2px 5px;
+        font-size: 12px;
+        display: none;
+      }
+
+      .comment-section {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+        margin-top: 0;
+        gap: 10px;
+      }
+
+      .comment-input {
+        flex-grow: 1;
+        padding: 8px;
+        background-color: #3b3b3b;
+        border: 1px solid #666;
+        border-radius: 8px;
+        color: #ddd;
+      }
+
+      .comment-button {
+        padding: 8px 16px;
+        background-color: #6b2e39;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .comment-button:hover {
+        background-color: #b53f51;
+      }
+
+      .attachment-icons {
+        display: flex;
+        gap: 10px;
+        margin-left: 10px;
+      }
+
+      .attachment-icons i {
+        cursor: pointer;
+        font-size: 20px;
+        color: #ccc;
+      }
+
+      .attachment-icons i:hover {
+        color: #fff;
+      }
+
+      .file-preview {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .file-preview p {
+        margin: 0;
+        flex-grow: 1;
+        padding-right: 10px;
+      }
+
+      .file-preview button {
+        background-color: #ff4c4c;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .file-preview button:hover {
+        background-color: #ff1a1a;
+      }
+
+      .comment-comment {
+        background: none;
+        /* ไม่มีสีพื้นหลัง */
+        color: #808080;
+        /* กำหนดสีเทา */
+        border: none;
+        /* ไม่มีเส้นขอบ */
+        font-size: 16px;
+        /* ขนาดตัวหนังสือ */
+        text-decoration: underline;
+        /* เพิ่มเส้นใต้ */
+        cursor: pointer;
+        /* เปลี่ยนรูปเคอร์เซอร์เป็นรูปมือ */
+        padding: 10px;
+        /* ลบ padding */
+      }
+
+      .comment-commet:hover {
+        color: #505050;
+        /* เปลี่ยนเป็นสีเทาเข้มขึ้นเมื่อ hover */
+      }
+    </style>
+  </head>
+
+  <body>
     <div class="topbar">
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
-            <div id="searchResults"></div>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
+        <div id="searchResults"></div>
+      </div>
+      <div class="user-section">
+        <div id="user-email"></div>
+        <div class="user-icon" id="userIcon">
+          <i class="fas fa-user-circle"></i>
         </div>
-        <div class="user-section">
-            <div id="user-email"></div>
-            <div class="user-icon" id="userIcon">
-                <i class="fas fa-user-circle"></i>
-            </div>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="#">Profile</a>
-                <a href="#">Log out</a>
-            </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="#">Profile</a>
+          <a href="#">Log out</a>
         </div>
+      </div>
     </div>
 
     <div class="sidebar">
-        <div class="menu-items">
-            <a href="studenthead.html?email="><i class="fa fa-chalkboard-teacher"></i><span>Classroom</span></a
+      <div class="menu-items">
+        <a href="studenthead.html?email="
+          ><i class="fa fa-chalkboard-teacher"></i><span>Classroom</span></a
         >
         <a href="Chat.html?email="
           ><i class="fa fa-comments"></i><span>Chat</span></a
@@ -603,14 +807,14 @@
         <a
           href="Notifications.html?email="
           id="notificationMenu"
-          style="position: relative"
-        >
+          style="position: relative">
           <i class="fa fa-bell"></i>
           <span>Notifications</span>
           <!-- Badge สำหรับการแจ้งเตือน -->
           <span class="notification-badge" id="notificationBadge">0</span>
         </a>
-            <a href="Assignment.html?email="><i class="fa fa-tasks"></i><span>Assignment</span></a
+        <a href="Assignment.html?email="
+          ><i class="fa fa-tasks"></i><span>Assignment</span></a
         >
         <a href="Call.html?email="
           ><i class="fa fa-phone"></i><span>Call</span></a
@@ -625,57 +829,59 @@
         <i class="fas fa-users"></i>
       </div>
       <div class="document-id-section">
-        <label for="documentId">Document ID:</label>
-        <input type="text" id="documentId" readonly />
-        <button onclick="copyDocumentId()">Copy</button>
+        <label for="documentId">ID:</label>
+        <input
+          type="text"
+          id="documentId"
+          readonly
+          onclick="copyDocumentId()" />
       </div>
       <a href="general.html?classroom={{classroom}}&email={{email}}"
         ><i class="fa fa-home"></i> Home page</a
       >
-
-      <a href="Assignment.html?classroom={{classroom}}&email={{email}}&documentIdl={{documentId}}"
-        ><i class="fa fa-book"></i> Assignments</a>
-        </div>
+      <a
+        href="Assignment.html?classroom={{classroom}}&email={{email}}&documentIdl={{documentId}}"
+        ><i class="fa fa-book"></i> Assignments</a
+      >
     </div>
 
     <div class="content">
-        <div class="content-header">
-            <h2>General</h2>
-            <div class="header-options">
-                <a href="#">Posts</a>
-                <a href="#">Files</a>
-            </div>
+      <div class="content-header">
+        <h2>General</h2>
+        <div class="header-options">
+          <a href="#" onclick="filterPostsByFileType()">Files</a>
         </div>
-        <div class="content-body">
-            <div id="postContainer">
-                <!-- Posts will be dynamically inserted here -->
-            </div>
-            <div class="start-post">
-                <button onclick="openModal()">Start a post</button>
-            </div>
+      </div>
+      <div class="content-body">
+        <div id="postContainer">
+          <!-- Posts will be dynamically inserted here -->
         </div>
+        <div class="start-post">
+          <button onclick="openModal()">Start a post</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Modal for Creating Post -->
+    <div id="commentImageContainer"></div>
+    <div id="commentFileContainer" style="display: none"></div>
+    <div id="commentImageContainer"></div>
+    <div id="linkContainer" style="display: none"></div>
+
     <div id="postModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>New Post</h2>
-            <textarea id="postMessage" placeholder="Type a message"></textarea>
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>New Post</h2>
+        <textarea id="postMessage" placeholder="Type a message"></textarea>
 
-            <!-- แสดงตัวอย่างภาพ -->
-            <div id="imageContainer"></div>
-
-            <!-- แสดงชื่อไฟล์ -->
-            <div id="fileContainer" style="margin-top: 10px"></div>
-
-            <div class="attachments">
-                <i class="fas fa-paperclip" onclick="attachFile()"></i>
-                <i class="fas fa-link" onclick="attachLink()"></i>
-                <i class="fas fa-image" onclick="attachImage()"></i>
-            </div>
-            <button onclick="submitPost()">Post</button>
+        <div id="imageContainer"></div>
+        <div id="fileContainer" style="margin-top: 10px"></div>
+        <div class="attachments">
+          <i class="fas fa-paperclip" onclick="attachFile()"></i>
+          <i class="fas fa-link" onclick="attachLink()"></i>
+          <i class="fas fa-image" onclick="attachImage()"></i>
         </div>
+        <button onclick="submitPost()">Post</button>
+      </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -683,724 +889,1261 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-        // Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
-            authDomain: "project-63a86.firebaseapp.com",
-            projectId: "team-1849c",
-            storageBucket: "team-1849c.appspot.com",
-            messagingSenderId: "448111875731",
-            appId: "1:448111875731:web:6180e0c46cc10593051f66",
-            measurementId: "G-SR4EFC2VFC",
-        };
+      // Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
+        authDomain: "project-63a86.firebaseapp.com",
+        projectId: "team-1849c",
+        storageBucket: "team-1849c.appspot.com",
+        messagingSenderId: "448111875731",
+        appId: "1:448111875731:web:6180e0c46cc10593051f66",
+        measurementId: "G-SR4EFC2VFC",
+      };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        var db = firebase.firestore();
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
 
-        console.log("Firebase Loaded:", firebase.apps.length > 0); // ตรวจสอบการโหลด Firebase
+      console.log("Firebase Loaded:", firebase.apps.length > 0); // ตรวจสอบการโหลด Firebase
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const documentIdInput = document.getElementById("documentId");
-            const assignmentsLink = document.querySelector('a[href*="Assignment.html"]'); // ดึง element ลิงก์
+      // Function to search email or username in both Teacher and Student collections
+      document
+        .getElementById("searchInput")
+        .addEventListener("keyup", (event) => {
+          const query = event.target.value.trim().toLowerCase();
+          const searchResults = document.getElementById("searchResults");
+          searchResults.innerHTML = "";
 
-            // ตรวจสอบว่ามี element หรือไม่
-            if (documentIdInput && assignmentsLink) {
-                const intervalId = setInterval(function() {
-                    if (documentIdInput.value) {
-                        console.log("Document ID value is:", documentIdInput.value);
-
-                        // กำหนดค่า documentId ลงใน href ของลิงก์ Assignments
-                        const classroom = new URLSearchParams(window.location.search).get("classroom");
-                        const email = new URLSearchParams(window.location.search).get("email");
-
-                        assignmentsLink.href = `Assignment.html?classroom=${classroom}&email=${email}&documentId=${documentIdInput.value}`;
-
-                        clearInterval(intervalId); // หยุดการตรวจสอบเมื่อพบค่า
-                    }
-                }, 100); // ตรวจสอบทุกๆ 100 มิลลิวินาที
-            } else {
-                console.log("Document ID input element or assignments link not found.");
-            }
+          if (query !== "") {
+            searchInCollection("Student", query, searchResults);
+            searchInCollection("Teacher", query, searchResults);
+          }
         });
 
-        // Function to search email or username in both Teacher and Student collections
-        document
-            .getElementById("searchInput")
-            .addEventListener("input", function(event) {
-                var query = event.target.value.toLowerCase();
-                var resultsContainer = document.getElementById("searchResults");
+      function searchInCollection(collectionName, query, searchResults) {
+        db.collection(collectionName)
+          .get()
+          .then((querySnapshot) => {
+            let found = false;
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (data && data.Email) {
+                if (
+                  data.Email.toLowerCase().startsWith(query) ||
+                  (data.Username &&
+                    data.Username.toLowerCase().startsWith(query))
+                ) {
+                  found = true;
+                  const resultItem = document.createElement("div");
+                  resultItem.classList.add("result-item");
 
-                if (query.length > 0) {
-                    resultsContainer.innerHTML = "";
-                    let allResults = new Set();
+                  const name = document.createElement("p");
+                  name.textContent = data.Username
+                    ? data.Username
+                    : "No Username";
+                  const emailSpan = document.createElement("span");
+                  emailSpan.textContent = data.Email;
 
-                    // ค้นหาจากคอลเล็กชัน Student
-                    db.collection("Student")
-                        .orderBy("Username")
-                        .startAt(query)
-                        .endAt(query + "\uf8ff")
-                        .get()
-                        .then(function(querySnapshot) {
-                            querySnapshot.forEach(function(doc) {
-                                var userData = doc.data();
-                                allResults.add(
-                                    userData.Username + " (" + userData.Email + ")"
-                                );
-                            });
+                  resultItem.appendChild(name);
+                  resultItem.appendChild(emailSpan);
 
-                            // ค้นหาอีเมล
-                            return db
-                                .collection("Student")
-                                .orderBy("Email")
-                                .startAt(query)
-                                .endAt(query + "\uf8ff")
-                                .get();
-                        })
-                        .then(function(querySnapshot) {
-                            querySnapshot.forEach(function(doc) {
-                                var userData = doc.data();
-                                allResults.add(
-                                    userData.Username + " (" + userData.Email + ")"
-                                );
-                            });
+                  resultItem.addEventListener("click", function () {
+                    console.log("Item clicked:", data.Email);
+                    openChatWithUser(data.Email);
+                    document.getElementById("searchInput").value = "";
+                    searchResults.innerHTML = "";
+                    document.getElementById("chatUserName").textContent = `${
+                      data.Username || data.Email
+                    }`;
 
-                            // ค้นหาจากคอลเล็กชัน Teacher
-                            return db
-                                .collection("Teacher")
-                                .orderBy("Username")
-                                .startAt(query)
-                                .endAt(query + "\uf8ff")
-                                .get();
-                        })
-                        .then(function(querySnapshot) {
-                            querySnapshot.forEach(function(doc) {
-                                var userData = doc.data();
-                                allResults.add(
-                                    userData.Username + " (" + userData.Email + ")"
-                                );
-                            });
+                    currentChatUser = data.Email;
 
-                            // ค้นหาอีเมลจาก Teacher
-                            return db
-                                .collection("Teacher")
-                                .orderBy("Email")
-                                .startAt(query)
-                                .endAt(query + "\uf8ff")
-                                .get();
-                        })
-                        .then(function(querySnapshot) {
-                            querySnapshot.forEach(function(doc) {
-                                var userData = doc.data();
-                                allResults.add(
-                                    userData.Username + " (" + userData.Email + ")"
-                                );
-                            });
+                    const noMessages = document.getElementById("noMessages");
+                    if (noMessages) {
+                      noMessages.style.display = "flex";
+                    } else {
+                      console.error("Element with ID 'noMessages' not found.");
+                    }
+                  });
 
-                            // แสดงผลลัพธ์
-                            allResults.forEach(function(resultItem) {
-                                var div = document.createElement("div");
-                                div.className = "result-item";
-                                div.textContent = resultItem;
-                                resultsContainer.appendChild(div);
-                            });
-                        })
-                        .catch(function(error) {
-                            console.log("Error getting documents: ", error);
-                        });
-                } else {
-                    resultsContainer.innerHTML = "";
+                  searchResults.appendChild(resultItem);
                 }
+              }
             });
 
-        // ดึงพารามิเตอร์ email และ classroom จาก URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get("email");
-        const classroomName = urlParams.get("classroom");
+            if (!found) {
+              const noResultItem = document.createElement("div");
+              noResultItem.classList.add("result-item");
+              noResultItem.textContent = `No results found in ${collectionName}.`;
+              searchResults.appendChild(noResultItem);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              `Error getting documents from ${collectionName} collection: `,
+              error
+            );
+          });
+      }
 
-        let userRole = ""; // เก็บ role ของผู้ใช้
-        let username = ""; // เก็บชื่อผู้ใช้
+      // ดึงพารามิเตอร์ email และ classroom จาก URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get("email");
+      const classroomName = urlParams.get("classroom");
+
+      let userRole = ""; // เก็บ role ของผู้ใช้
+      let username = ""; // เก็บชื่อผู้ใช้
+
+      if (email) {
+        document.getElementById("user-email").textContent = email;
+
+        document
+          .querySelectorAll(".menu-items a, .main-sidebar a")
+          .forEach((link) => {
+            const url = new URL(link.href);
+            url.searchParams.set("email", email);
+            if (classroomName) {
+              url.searchParams.set("classroom", classroomName);
+            }
+            link.href = url.toString();
+          });
+      }
+      if (classroomName) {
+        document.getElementById("courseName").innerHTML =
+          '<i class="fas fa-users"></i> ' + classroomName;
+      } else {
+        document.getElementById("courseName").innerHTML =
+          '<i class="fas fa-users"></i> No classroom';
+      }
+
+      console.log("Classroom:", classroomName);
+      console.log("Email:", email);
+
+      async function fetchUserData(email) {
+        let userRole = "";
+        let username = "";
 
         if (email) {
-            document.getElementById("user-email").textContent = email;
+          document.getElementById("user-email").textContent = email;
 
-            document
-                .querySelectorAll(".menu-items a, .main-sidebar a")
-                .forEach((link) => {
-                    const url = new URL(link.href);
-                    url.searchParams.set("email", email);
-                    if (classroomName) {
-                        url.searchParams.set("classroom", classroomName);
-                    }
-                    link.href = url.toString();
-                });
-        }
-        if (classroomName) {
-            document.getElementById("courseName").innerHTML =
-                '<i class="fas fa-users"></i> ' + classroomName;
+          // Check Teacher collection
+          let querySnapshot = await db
+            .collection("Teacher")
+            .where("Email", "==", email)
+            .get();
+          if (!querySnapshot.empty) {
+            const data = querySnapshot.docs[0].data();
+            userRole = "Teacher";
+            username = data.Username;
+          } else {
+            // Check Student collection
+            querySnapshot = await db
+              .collection("Student")
+              .where("Email", "==", email)
+              .get();
+            if (!querySnapshot.empty) {
+              const data = querySnapshot.docs[0].data();
+              userRole = "Student";
+              username = data.Username;
+            }
+          }
+
+          // เก็บข้อมูล Username และ Role ใน window object เพื่อใช้งานต่อ
+          window.userRole = userRole;
+          window.username = username;
+          window.email = email;
         } else {
-            document.getElementById("courseName").innerHTML =
-                '<i class="fas fa-users"></i> No classroom';
+          console.error("Email is missing in URL parameters.");
+          alert("Email is missing. Please check your URL.");
         }
+      }
 
-        console.log("Classroom:", classroomName);
-        console.log("Email:", email);
+      // เรียกฟังก์ชันนี้เมื่อโหลดหน้าเสร็จ
+      fetchUserData(email);
 
-        async function fetchUserData(email) {
-            let userRole = "";
-            let username = "";
+      // Function to fetch posts and display them based on type
+      function fetchPosts() {
+        const postContainer = document.getElementById("postContainer");
+        postContainer.innerHTML = ""; // Clear previous posts
 
-            if (email) {
-                document.getElementById("user-email").textContent = email;
+        db.collection("Post")
+          .where("ClassroomName", "==", classroomName)
+          .orderBy("Timestamp", "asc")
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const postDiv = document.createElement("div");
+              postDiv.classList.add("post");
 
-                // Check Teacher collection
-                let querySnapshot = await db
-                    .collection("Teacher")
-                    .where("Email", "==", email)
-                    .get();
-                if (!querySnapshot.empty) {
-                    const data = querySnapshot.docs[0].data();
-                    userRole = "Teacher";
-                    username = data.Username;
+              const postHeader = document.createElement("div");
+              postHeader.classList.add("post-header");
+              const postAuthor = document.createElement("h3");
+              postAuthor.textContent = data.Username || "Unknown";
+              postHeader.appendChild(postAuthor);
+              const postDate = document.createElement("span");
+              postDate.classList.add("post-date");
+
+              postDate.textContent = new Date(
+                data.Timestamp.toDate()
+              ).toLocaleString();
+              const threeDots = document.createElement("div");
+              threeDots.classList.add("three-dots-menu");
+              threeDots.innerHTML = `<i class="fas fa-ellipsis-h"></i>`;
+              postHeader.appendChild(threeDots);
+
+              const menuDropdown = document.createElement("div");
+              menuDropdown.classList.add("menu-dropdown");
+
+              const deleteOption = document.createElement("a");
+              deleteOption.textContent = "Delete";
+
+              // ตรวจสอบว่าอีเมลตรงกับผู้โพสต์หรือไม่
+              if (data.Email === email) {
+                deleteOption.onclick = () => deletePost(doc.id);
+              } else {
+                deleteOption.classList.add("disabled");
+              }
+              menuDropdown.appendChild(deleteOption);
+              postHeader.appendChild(menuDropdown);
+              threeDots.onclick = () => {
+                menuDropdown.style.display =
+                  menuDropdown.style.display === "block" ? "none" : "block";
+              };
+              document.addEventListener("click", (event) => {
+                if (!threeDots.contains(event.target)) {
+                  menuDropdown.style.display = "none";
+                }
+              });
+
+              const postContent = document.createElement("div");
+              postContent.classList.add("post-content");
+
+              // Check if there's a message
+              if (data.Message) {
+                const postText = document.createElement("p");
+                postText.textContent = data.Message; // Add the post text
+                postContent.appendChild(postText);
+              }
+
+              // Check content type and display appropriately
+              if (data.PostType === "รูปภาพ") {
+                const img = document.createElement("img");
+                img.src = data.Content;
+                img.style.maxWidth = "50%";
+                img.style.borderRadius = "10px";
+                postContent.appendChild(img);
+              }
+
+              if (data.PostType === "ไฟล์") {
+                const fileLink = document.createElement("a");
+                fileLink.href = data.Content;
+                fileLink.target = "_blank"; // Open in new tab
+                fileLink.textContent = "ดาวน์โหลดไฟล์";
+                fileLink.classList.add("file-link");
+                postContent.appendChild(fileLink);
+              }
+
+              if (data.PostType === "ลิงก์") {
+                if (data.Content.includes("youtube.com/watch")) {
+                  const videoId = data.Content.split("v=")[1];
+                  const iframe = document.createElement("iframe");
+                  iframe.width = "560";
+                  iframe.height = "315";
+                  iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                  iframe.frameBorder = "0";
+                  iframe.allow =
+                    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                  iframe.allowFullscreen = true;
+                  iframe.classList.add("youtube-iframe");
+
+                  postContent.appendChild(iframe);
                 } else {
-                    // Check Student collection
-                    querySnapshot = await db
-                        .collection("Student")
-                        .where("Email", "==", email)
-                        .get();
-                    if (!querySnapshot.empty) {
-                        const data = querySnapshot.docs[0].data();
-                        userRole = "Student";
-                        username = data.Username;
-                    }
+                  const link = document.createElement("a");
+                  link.href = data.Content;
+                  link.target = "_blank";
+                  link.textContent = data.Content;
+                  link.classList.add("external-link");
+
+                  postContent.appendChild(link);
                 }
+              }
 
-                // เก็บข้อมูล Username และ Role ใน window object เพื่อใช้งานต่อ
-                window.userRole = userRole;
-                window.username = username;
-            }
-        }
+              // Create "Show Comments" button
+              const showCommentsButton = document.createElement("button");
+              showCommentsButton.textContent = "Comment";
+              showCommentsButton.classList.add("comment-comment");
+              showCommentsButton.onclick = () => {
+                const commentDisplay =
+                  postDiv.querySelector(".comment-display");
+                const isVisible = commentDisplay.style.display === "block"; // Check if comments are currently visible
 
-        // เรียกฟังก์ชันนี้เมื่อโหลดหน้าเสร็จ
-        fetchUserData(email);
-
-        // Function to fetch posts and display them based on type
-        function fetchPosts() {
-            const postContainer = document.getElementById("postContainer");
-            postContainer.innerHTML = ""; // Clear previous posts
-
-            db.collection("Post")
-                .where("ClassroomName", "==", classroomName)
-                .orderBy("Timestamp", "asc")
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const postDiv = document.createElement("div");
-                        postDiv.classList.add("post");
-
-                        const postHeader = document.createElement("div");
-                        postHeader.classList.add("post-header");
-                        const postAuthor = document.createElement("h3");
-                        postAuthor.textContent = data.Username;
-                        const postDate = document.createElement("span");
-                        postDate.classList.add("post-date");
-                        postDate.textContent = new Date(
-                            data.Timestamp.toDate()
-                        ).toLocaleString();
-
-                        const postContent = document.createElement("div");
-                        postContent.classList.add("post-content");
-
-                        // ตรวจสอบว่ามีข้อความหรือไม่
-                        if (data.Message) {
-                            const postText = document.createElement("p");
-                            postText.textContent = data.Message; // เพิ่มข้อความ
-                            postContent.appendChild(postText);
-                        }
-
-                        // ตรวจสอบประเภทของเนื้อหาและแสดงผล
-                        if (data.PostType === "รูปภาพ") {
-                            // โพสต์รูปภาพ
-                            const img = document.createElement("img");
-                            img.src = data.Content;
-                            img.style.maxWidth = "100%";
-                            img.style.borderRadius = "10px";
-                            postContent.appendChild(img);
-                        }
-
-                        if (data.PostType === "ไฟล์") {
-                            // โพสต์ไฟล์
-                            const fileLink = document.createElement("a");
-                            fileLink.href = data.Content;
-                            fileLink.target = "_blank"; // เปิดในแท็บใหม่
-                            fileLink.textContent = "ดาวน์โหลดไฟล์";
-                            fileLink.classList.add("file-link");
-                            postContent.appendChild(fileLink);
-                        }
-
-                        if (data.PostType === "ลิงก์") {
-                            // โพสต์ลิงก์
-                            if (data.Content.includes("youtube.com/watch")) {
-                                const videoId = data.Content.split("v=")[1];
-                                const iframe = document.createElement("iframe");
-                                iframe.width = "560";
-                                iframe.height = "315";
-                                iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                                iframe.frameBorder = "0";
-                                iframe.allow =
-                                    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                                iframe.allowFullscreen = true;
-
-                                // เพิ่มคลาสสำหรับ iframe
-                                iframe.classList.add("youtube-iframe");
-
-                                postContent.appendChild(iframe);
-                            } else {
-                                const link = document.createElement("a");
-                                link.href = data.Content;
-                                link.target = "_blank"; // เปิดในแท็บใหม่
-                                link.textContent = data.Content;
-
-                                // เพิ่มคลาสสำหรับลิงก์
-                                link.classList.add("external-link");
-
-                                postContent.appendChild(link);
-                            }
-                        }
-
-                        postHeader.appendChild(postAuthor);
-                        postHeader.appendChild(postDate);
-                        postDiv.appendChild(postHeader);
-                        postDiv.appendChild(postContent);
-
-                        postContainer.appendChild(postDiv);
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error fetching posts: ", error);
-                });
-        }
-
-        fetchPosts();
-
-        // Function to submit a post and send notifications
-        async function submitPost() {
-            console.log("Submitting post...");
-
-            const message = document.getElementById("postMessage").value.trim();
-            if (message === "") {
-                alert("Message is required.");
-                return;
-            }
-            console.log("Message:", message); // แสดงข้อความที่โพสต์
-
-            const postType = determinePostType(message);
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-            const classroomName = urlParams.get("classroom");
-            const email = urlParams.get("email");
-
-            console.log("Classroom:", classroomName);
-            console.log("Email:", email);
-
-            if (!classroomName || !email) {
-                alert("Classroom or Email is missing!");
-                return;
-            }
-
-            try {
-                // บันทึกข้อมูลโพสต์ลง Firestore
-                await db.collection("Post").add({
-                    ClassroomName: classroomName, // ชื่อห้องเรียนที่ดึงจาก URL
-                    Username: window.username, // ชื่อผู้ใช้ที่ได้จาก fetchUserData
-                    Email: email, // อีเมลที่ดึงจาก URL
-                    PostType: postType,
-                    Content: message,
-                    Timestamp: timestamp,
-                });
-
-                // สร้างการแจ้งเตือนให้สมาชิกในห้องเรียนทุกคน
-                const subjectDoc = await db
-                    .collection("Subjects")
-                    .doc(classroomName)
-                    .get();
-                const subjectData = subjectDoc.data();
-
-                if (subjectData && subjectData.Members) {
-                    const members = subjectData.Members;
-
-                    for (const memberEmail of members) {
-                        if (memberEmail !== email) {
-                            // เพิ่มเงื่อนไขไม่ให้แจ้งเตือนตัวเอง
-                            // เพิ่มการแจ้งเตือนให้สมาชิก
-                            await db.collection("Notifications").add({
-                                To: memberEmail,
-                                Message: `${window.username} ได้โพสต์ ${postType} ในห้องเรียน ${classroomName}`,
-                                Type: "Post",
-                                ClassroomName: classroomName,
-                                PostType: postType,
-                                CreatedAt: timestamp,
-                                isRead: false,
-                            });
-                        }
-                    }
-                }
-
-                alert("Post created successfully and notifications sent!");
-                closeModal(); // ปิด modal เมื่อโพสต์สำเร็จ
-                setTimeout(() => {
-                    window.location.reload(); // รีเฟรชหน้าเว็บหลังจาก modal ถูกปิด
-                }, 300); // หน่วงเวลาเล็กน้อยเพื่อให้ modal ปิดก่อน
-            } catch (error) {
-                console.error(
-                    "Error creating post or sending notifications: ",
-                    error
-                );
-            }
-        }
-
-        // Function to determine post type based on content
-        function determinePostType(content) {
-            if (content.includes("http")) {
-                return "ลิงก์";
-            } else if (content.endsWith(".jpg") || content.endsWith(".png")) {
-                return "รูปภาพ";
-            } else {
-                return "ข้อความ";
-            }
-        }
-
-        function determinePostType(content) {
-            // ตรวจสอบประเภทของโพส
-            if (content.includes("http")) {
-                return "ลิงก์";
-            } else if (content.endsWith(".jpg") || content.endsWith(".png")) {
-                return "รูปภาพ";
-            } else {
-                return "ข้อความ";
-            }
-        }
-
-        // Function to open modal
-        function openModal() {
-            document.getElementById("postModal").style.display = "flex";
-        }
-
-        // Function to close modal
-        function closeModal() {
-            document.getElementById("postModal").style.display = "none";
-        }
-
-        let attachedFileURL = "";
-        let attachedFileType = "";
-
-        // ฟังก์ชันสำหรับการแนบและอัปโหลดไฟล์ไปยัง Firebase Storage
-        function attachFile() {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = "*"; // รับไฟล์ทุกประเภท
-            input.onchange = (e) => {
-                const file = e.target.files[0]; // รับไฟล์ที่เลือกจากผู้ใช้
-
-                if (file) {
-                    // ตรวจสอบขนาดไฟล์ไม่เกิน 5GB (5 * 1024 * 1024 * 1024 ไบต์)
-                    if (file.size > 5 * 1024 * 1024 * 1024) {
-                        alert("ขนาดไฟล์เกิน 5GB");
-                        return;
-                    }
-
-                    // สร้างตัวชี้อ้างอิงไปยัง Firebase Storage
-                    const storageRef = firebase.storage().ref("uploads/" + file.name);
-
-                    // อัปโหลดไฟล์ไปยัง Firebase Storage
-                    const uploadTask = storageRef.put(file);
-
-                    // ฟังก์ชันการติดตามสถานะการอัปโหลด
-                    uploadTask.on(
-                        "state_changed",
-                        (snapshot) => {
-                            // สามารถแสดงความคืบหน้าของการอัปโหลดได้ที่นี่
-                            const progress =
-                                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log("Upload is " + progress + "% done");
-                        },
-                        (error) => {
-                            console.error("เกิดข้อผิดพลาดในการอัปโหลดไฟล์: ", error);
-                        },
-                        () => {
-                            // เมื่ออัปโหลดเสร็จสมบูรณ์ ให้ดึง URL ของไฟล์
-                            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                                console.log("ไฟล์สามารถเข้าถึงได้ที่", downloadURL);
-
-                                // แสดงชื่อไฟล์และขนาดไฟล์ใน UI
-                                const fileContainer =
-                                    document.getElementById("fileContainer");
-                                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2); // คำนวณขนาดไฟล์เป็น MB
-                                fileContainer.innerHTML = `<a href="${downloadURL}" target="_blank">${file.name}</a> (${fileSizeMB} MB)`;
-                                fileContainer.style.display = "block"; // แสดงกล่อง fileContainer
-
-                                // เก็บ URL ของไฟล์และประเภทของไฟล์ไว้ใช้งานภายหลัง
-                                attachedFileURL = downloadURL;
-                                attachedFileType = "ไฟล์";
-                            });
-                        }
-                    );
-                }
-            };
-            input.click();
-        }
-
-        function attachImage() {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = "image/*"; // รับเฉพาะไฟล์รูปภาพ
-            input.onchange = (e) => {
-                const file = e.target.files[0]; // รับไฟล์ที่ผู้ใช้อัปโหลด
-
-                // ตรวจสอบขนาดไฟล์ ถ้าเกิน 5MB จะไม่ทำการอัปโหลด
-                if (file.size > 5 * 1024 * 1024) {
-                    alert("ขนาดไฟล์รูปภาพเกิน 5MB กรุณาเลือกไฟล์ที่มีขนาดเล็กกว่า 5MB");
-                    return;
-                }
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const img = document.createElement("img");
-                        img.src = event.target.result;
-                        img.style.maxWidth = "100%";
-                        img.style.borderRadius = "10px";
-
-                        const imageContainer = document.getElementById("imageContainer");
-                        imageContainer.innerHTML = "";
-                        imageContainer.appendChild(img);
-                    };
-
-                    reader.readAsDataURL(file);
-
-                    const storageRef = firebase.storage().ref("images/" + file.name);
-                    const uploadTask = storageRef.put(file);
-
-                    uploadTask.on(
-                        "state_changed",
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log("Upload is " + progress + "% done");
-                        },
-                        (error) => {
-                            console.error("Error during upload: ", error);
-                            alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ: " + error.message);
-                        },
-                        () => {
-                            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                                console.log("File available at", downloadURL);
-
-                                attachedFileURL = downloadURL;
-                                attachedFileType = "รูปภาพ";
-
-                                const fileContainer = document.getElementById("fileContainer");
-                                fileContainer.innerHTML = `<a href="${downloadURL}" target="_blank">${file.name}</a>`;
-                                fileContainer.style.display = "block";
-                            });
-                        }
-                    );
-                }
-            };
-            input.click();
-        }
-
-        function attachLink() {
-            const input = document.createElement("input");
-            input.type = "text";
-            input.placeholder = "วางลิงก์ที่นี่";
-            input.style.width = "100%";
-            input.style.padding = "5px";
-
-            const modalContent = document.querySelector(".modal-content");
-            modalContent.appendChild(input); // เพิ่ม input ลงใน modal
-
-            input.onchange = (e) => {
-                const link = e.target.value.trim();
-                const videoContainer = document.getElementById("fileContainer");
-
-                // ตรวจสอบว่าลิงก์เป็น YouTube หรือไม่
-                if (link.includes("youtube.com/watch")) {
-                    const videoId = link.split("v=")[1]; // ดึง video ID
-                    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-
-                    const iframe = document.createElement("iframe");
-                    iframe.width = "560";
-                    iframe.height = "315";
-                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                    iframe.frameBorder = "0";
-                    iframe.allow =
-                        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                    iframe.allowFullscreen = true;
-
-                    videoContainer.innerHTML = ""; // ล้างเนื้อหาก่อนหน้า
-                    videoContainer.appendChild(iframe);
-
-                    // ถ้าการฝังล้มเหลว ให้แสดงภาพตัวอย่างแทน
-                    iframe.onerror = () => {
-                        videoContainer.innerHTML = `<a href="${link}" target="_blank"><img src="${thumbnailUrl}" alt="YouTube Thumbnail" style="max-width:100%; border-radius: 10px;" /><p>ดูบน YouTube</p></a>`;
-                    };
+                if (isVisible) {
+                  commentDisplay.style.display = "none"; // Hide comments
+                  showCommentsButton.textContent = "Show comment";
                 } else {
-                    // ถ้าลิงก์ไม่ใช่ YouTube ให้แสดงลิงก์ธรรมดา
-                    const linkTag = document.createElement("a");
-                    linkTag.href = link;
-                    linkTag.target = "_blank";
-                    linkTag.textContent = link;
-                    videoContainer.innerHTML = ""; // ล้างเนื้อหาก่อนหน้า
-                    videoContainer.appendChild(linkTag);
+                  if (commentDisplay.innerHTML === "") {
+                    fetchComments(doc.id, commentDisplay); // Load comments
+                  }
+                  commentDisplay.style.display = "block"; // Show comments
+                  showCommentsButton.textContent = "Hide comment";
                 }
+              };
 
-                videoContainer.style.display = "block"; // แสดง container
-                attachedFileURL = link;
-                attachedFileType = "ลิงก์";
-            };
+              const commentSection = document.createElement("div");
+              commentSection.classList.add("comment-section");
+              commentSection.setAttribute("data-postid", doc.id);
 
-            input.click();
+              const commentInput = document.createElement("input");
+              commentInput.type = "text";
+              commentInput.classList.add("comment-input");
+              commentInput.placeholder = "Add a comment...";
+
+              const commentImagePreview = document.createElement("div");
+              commentImagePreview.id = `commentImagePreview_${doc.id}`;
+              commentImagePreview.style.display = "none";
+              commentImagePreview.classList.add("comment-image-preview");
+
+              const commentButton = document.createElement("button");
+              commentButton.classList.add("comment-button");
+              commentButton.textContent = "Comment";
+              commentButton.onclick = () => {
+                submitComment(doc.id, commentInput.value);
+              };
+
+              const attachmentIcons = document.createElement("div");
+              attachmentIcons.classList.add("attachment-icons");
+              attachmentIcons.innerHTML = `
+                    <i class="fas fa-paperclip" onclick="attachFileForComment('${doc.id}')"></i>
+                    <i class="fas fa-link" onclick="attachLinkForComment('${doc.id}')"></i>
+                    <i class="fas fa-image" onclick="attachImageForComment('${doc.id}')"></i>
+                `;
+
+              commentSection.appendChild(commentImagePreview);
+              commentSection.appendChild(commentInput);
+              commentSection.appendChild(commentButton);
+              commentSection.appendChild(attachmentIcons);
+
+              // Add comments display area
+              const commentDisplay = document.createElement("div");
+              commentDisplay.classList.add("comment-display");
+              commentDisplay.style.display = "none"; // Comments will be displayed when the button is clicked
+
+              postDiv.appendChild(postHeader);
+              postDiv.appendChild(postContent);
+              postDiv.appendChild(showCommentsButton); // Add the "Show Comments" button
+              postDiv.appendChild(commentDisplay); // Add comments display area
+              postDiv.appendChild(commentSection);
+
+              postContainer.appendChild(postDiv);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching posts: ", error);
+          });
+      }
+
+      function fetchComments(postId, commentDisplay) {
+        commentDisplay.innerHTML = ""; // Clear previous comments
+
+        db.collection("Comments")
+          .where("PostId", "==", postId)
+          .orderBy("Timestamp", "asc")
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const commentDiv = document.createElement("div");
+              commentDiv.classList.add("reply");
+
+              const commentAuthor = document.createElement("p");
+              commentAuthor.classList.add("reply-author");
+              commentAuthor.textContent = data.Username || "Anonymous";
+              const commentText = document.createElement("p");
+              commentText.textContent = data.CommentText;
+              commentDiv.appendChild(commentText);
+
+              commentDiv.appendChild(commentAuthor);
+              commentDiv.appendChild(commentText);
+
+              // ตรวจสอบว่ามีไฟล์ที่แนบในคอมเมนต์หรือไม่
+              if (data.FileType) {
+                if (data.FileType === "รูปภาพ") {
+                  const img = document.createElement("img");
+                  img.src = data.FileURL;
+                  img.style.maxWidth = "200px";
+                  img.style.borderRadius = "8px";
+                  commentDiv.appendChild(img);
+                } else if (data.FileType === "ไฟล์") {
+                  const fileLink = document.createElement("a");
+                  fileLink.href = data.FileURL;
+                  fileLink.target = "_blank"; // Open in new tab
+                  fileLink.textContent = "ดาวน์โหลดไฟล์ที่แนบ";
+                  fileLink.classList.add("file-link");
+                  commentDiv.appendChild(fileLink);
+                } else if (data.FileType === "ลิงก์") {
+                  const link = document.createElement("a");
+                  link.href = data.FileURL;
+                  link.target = "_blank";
+                  link.textContent = data.FileURL;
+                  link.classList.add("external-link");
+                  commentDiv.appendChild(link);
+                }
+              }
+
+              commentDisplay.appendChild(commentDiv);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching comments: ", error);
+          });
+      }
+
+      fetchPosts();
+
+      // Function to submit a post and send notifications
+      async function submitPost() {
+        console.log("Submitting post...");
+
+        const message = document.getElementById("postMessage").value.trim();
+
+        // ตรวจสอบว่ามีข้อความหรือไฟล์แนบอย่างน้อยหนึ่งอย่าง
+        if (message === "" && attachedFileURL === "") {
+          alert("Message or attachment is required.");
+          return;
         }
 
-        async function submitPost() {
-            console.log("Submitting post...");
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const classroomName = urlParams.get("classroom");
+        const email = urlParams.get("email");
 
-            const message = document.getElementById("postMessage").value.trim();
+        if (!classroomName || !email) {
+          alert("Classroom or Email is missing!");
+          return;
+        }
 
-            // เช็กว่าแนบไฟล์หรือภาพมาไหม ถ้าไม่มีทั้งข้อความและไฟล์แนบให้แสดงข้อความแจ้งเตือน
-            if (message === "" && attachedFileURL === "") {
-                alert("Message or attachment is required.");
-                return;
-            }
+        // ตรวจสอบว่าไฟล์ภาพถูกอัพโหลดเสร็จแล้วหรือยัง
+        if (attachedFileType === "รูปภาพ" && attachedFileURL === "") {
+          alert("Please wait for the image to upload.");
+          return;
+        }
 
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-            const classroomName = urlParams.get("classroom");
-            const email = urlParams.get("email");
+        // กำหนดประเภทของโพสต์และเนื้อหาที่จะบันทึก
+        let postType = attachedFileType ? attachedFileType : "ข้อความ";
+        let content = attachedFileURL ? attachedFileURL : message;
 
-            if (!classroomName || !email) {
-                alert("Classroom or Email is missing!");
-                return;
-            }
+        try {
+          // บันทึกข้อมูลโพสต์ลง Firestore
+          const postRef = await db.collection("Post").add({
+            ClassroomName: classroomName,
+            Username: window.username,
+            Email: email,
+            PostType: postType,
+            Content: content,
+            Message: message,
+            Timestamp: timestamp,
+          });
+          const postID = postRef.id;
+          await postRef.update({
+            postID: postRef.id,
+          });
 
-            // เช็กว่ามีการอัพโหลดรูปภาพเสร็จแล้วหรือไม่
-            if (attachedFileType === "รูปภาพ" && attachedFileURL === "") {
-                alert("Please wait for the image to upload.");
-                return;
-            }
+          console.log("Post created with ID:", postRef.id);
 
-            // กำหนดประเภทของโพสต์และเนื้อหาที่จะบันทึก
-            let postType = attachedFileType ? attachedFileType : "ข้อความ";
-            let content = attachedFileURL ? attachedFileURL : message;
+          // สร้างการแจ้งเตือนให้สมาชิกในห้องเรียนทุกคน
+          const subjectDoc = await db
+            .collection("Subjects")
+            .where("ClassroomName", "==", classroomName)
+            .get();
 
-            try {
-                // บันทึกข้อมูลโพสต์ลง Firestore
-                const postRef = await db.collection("Post").add({
+          if (!subjectDoc.empty) {
+            const subjectData = subjectDoc.docs[0].data();
+
+            if (subjectData && subjectData.Members) {
+              const members = subjectData.Members;
+
+              // สร้างการแจ้งเตือนให้สมาชิกยกเว้นผู้โพสต์เอง
+              const notificationPromises = members.map((memberEmail) => {
+                if (memberEmail !== email) {
+                  // ไม่ต้องแจ้งเตือนตัวเอง
+                  return db.collection("Notifications").add({
+                    To: memberEmail,
+                    Message: `${window.username} ได้โพสต์ ${postType} ในห้องเรียน ${classroomName}`,
+                    Type: "Post",
                     ClassroomName: classroomName,
-                    Username: window.username,
-                    Email: email,
-                    PostType: postType,
-                    Content: content, // บันทึก URL ของภาพหรือไฟล์ลงไปที่นี่
-                    Message: message,
-                    Timestamp: timestamp,
-                });
-
-                console.log("Post created with ID:", postRef.id);
-
-                // สร้างการแจ้งเตือนให้สมาชิกในห้องเรียนทุกคน
-                const subjectDoc = await db.collection("Subjects").where("ClassroomName", "==", classroomName).get();
-
-                if (!subjectDoc.empty) {
-                    const subjectData = subjectDoc.docs[0].data();
-
-                    if (subjectData && subjectData.Members) {
-                        const members = subjectData.Members;
-
-                        const notificationPromises = members.map((memberEmail) => {
-                            if (memberEmail !== email) { // ไม่ต้องแจ้งเตือนตัวเอง
-                                return db.collection("Notifications").add({
-                                    To: memberEmail,
-                                    Message: `${window.username} ได้โพสต์ ${postType} ในห้องเรียน ${classroomName}`,
-                                    Type: "Post",
-                                    ClassroomName: classroomName,
-                                    CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                    isRead: false,
-                                });
-                            }
-                            return null; // ไม่สร้าง notification สำหรับผู้โพสต์เอง
-                        });
-
-                        // รอให้การสร้างแจ้งเตือนทั้งหมดเสร็จสิ้น
-                        await Promise.all(notificationPromises);
-                        console.log("Notifications created for all members except the poster.");
-                    } else {
-                        console.error("No members found in the classroom:", classroomName);
-                    }
-                } else {
-                    console.error("Subject document not found for classroom:", classroomName);
+                    PostID: postRef.id,
+                    Content: postType === "รูปภาพ" ? content : "",
+                    CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    isRead: false,
+                  });
                 }
+                return null; // ไม่สร้าง notification สำหรับผู้โพสต์เอง
+              });
 
-                alert("Post created successfully and notifications sent!");
-                closeModal();
-                attachedFileURL = ""; // เคลียร์ตัวแปรสำหรับไฟล์ที่แนบมาหลังจากโพสต์เสร็จสิ้น
-                attachedFileType = "";
-                document.getElementById("postMessage").value = "";
-                document.getElementById("imageContainer").innerHTML = "";
-
-                // รีเฟรชหน้าเว็บหลังจากที่โพสต์เสร็จสิ้น
-                setTimeout(() => {
-                    window.location.reload();
-                }, 300);
-            } catch (error) {
-                console.error("Error creating post or sending notifications: ", error);
+              // รอให้การสร้างแจ้งเตือนทั้งหมดเสร็จสิ้น
+              await Promise.all(notificationPromises);
+              console.log(
+                "Notifications created for all members except the poster."
+              );
+            } else {
+              console.error(
+                "No members found in the classroom:",
+                classroomName
+              );
             }
-        }
+          } else {
+            console.error(
+              "Subject document not found for classroom:",
+              classroomName
+            );
+          }
 
-        // Function สำหรับการอัพเดต badge ของการแจ้งเตือนแบบเรียลไทม์
-        function updateNotificationBadge(email) {
-            db.collection("Notifications")
-                .where("To", "==", email)
-                .where("isRead", "==", false)
-                .onSnapshot((snapshot) => {
-                    const unreadCount = snapshot.size;
-                    const notificationBadge = document.getElementById("notificationBadge");
-                    if (unreadCount > 0) {
-                        notificationBadge.style.display = "block";
-                        notificationBadge.textContent = unreadCount;
-                    } else {
-                        notificationBadge.style.display = "none";
-                    }
+          alert("Post created successfully and notifications sent!");
+
+          // เคลียร์ข้อมูลหลังจากโพสต์เสร็จ
+          closeModal();
+          attachedFileURL = ""; // เคลียร์ URL ไฟล์ที่แนบมาหลังจากโพสต์เสร็จสิ้น
+          attachedFileType = "";
+          document.getElementById("postMessage").value = "";
+          document.getElementById("imageContainer").innerHTML = "";
+
+          // รีเฟรชหน้าเว็บหลังจากที่โพสต์เสร็จสิ้น
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        } catch (error) {
+          console.error("Error creating post or sending notifications:", error);
+        }
+      }
+
+      function determinePostType(content) {
+        // ตรวจสอบประเภทของโพส
+        if (content.includes("http")) {
+          return "ลิงก์";
+        } else if (content.endsWith(".jpg") || content.endsWith(".png")) {
+          return "รูปภาพ";
+        } else {
+          return "ข้อความ";
+        }
+      }
+
+      // Function to open modal
+      function openModal() {
+        document.getElementById("postModal").style.display = "flex";
+      }
+
+      // Function to close modal
+      function closeModal() {
+        document.getElementById("postModal").style.display = "none";
+      }
+
+      let attachedFileURL = "";
+      let attachedFileType = "";
+
+      // ฟังก์ชันสำหรับการแนบและอัปโหลดไฟล์ไปยัง Firebase Storage
+      function attachFile() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "*"; // รับไฟล์ทุกประเภท
+        input.onchange = (e) => {
+          const file = e.target.files[0]; // รับไฟล์ที่เลือกจากผู้ใช้
+
+          if (file) {
+            // ตรวจสอบขนาดไฟล์ไม่เกิน 5GB (5 * 1024 * 1024 * 1024 ไบต์)
+            if (file.size > 5 * 1024 * 1024 * 1024) {
+              alert("ขนาดไฟล์เกิน 5GB");
+              return;
+            }
+
+            // สร้างตัวชี้อ้างอิงไปยัง Firebase Storage
+            const storageRef = firebase.storage().ref("uploads/" + file.name);
+
+            // อัปโหลดไฟล์ไปยัง Firebase Storage
+            const uploadTask = storageRef.put(file);
+
+            // ฟังก์ชันการติดตามสถานะการอัปโหลด
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                // สามารถแสดงความคืบหน้าของการอัปโหลดได้ที่นี่
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+              },
+              (error) => {
+                console.error("เกิดข้อผิดพลาดในการอัปโหลดไฟล์: ", error);
+              },
+              () => {
+                // เมื่ออัปโหลดเสร็จสมบูรณ์ ให้ดึง URL ของไฟล์
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                  console.log("ไฟล์สามารถเข้าถึงได้ที่", downloadURL);
+
+                  // แสดงชื่อไฟล์และขนาดไฟล์ใน UI
+                  const fileContainer =
+                    document.getElementById("fileContainer");
+                  const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2); // คำนวณขนาดไฟล์เป็น MB
+                  fileContainer.innerHTML = `<a href="${downloadURL}" target="_blank">${file.name}</a> (${fileSizeMB} MB)`;
+                  fileContainer.style.display = "block"; // แสดงกล่อง fileContainer
+
+                  // เก็บ URL ของไฟล์และประเภทของไฟล์ไว้ใช้งานภายหลัง
+                  attachedFileURL = downloadURL;
+                  attachedFileType = "ไฟล์";
                 });
-        }
+              }
+            );
+          }
+        };
+        input.click();
+      }
 
-        // เรียกใช้ฟังก์ชันเมื่อหน้าเพจโหลดเสร็จ
-        updateNotificationBadge(email);
+      function attachImage() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*"; // รับเฉพาะไฟล์รูปภาพ
+        input.onchange = (e) => {
+          const file = e.target.files[0]; // รับไฟล์ที่ผู้ใช้อัปโหลด
 
-        function fetchDocumentId(classroomName) {
-            db.collection("Subjects")
-                .where("ClassroomName", "==", classroomName)
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        // Display the Document ID in the input field
-                        document.getElementById("documentId").value = doc.id;
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error fetching document ID: ", error);
+          // ตรวจสอบขนาดไฟล์ ถ้าเกิน 5MB จะไม่ทำการอัปโหลด
+          if (file.size > 5 * 1024 * 1024) {
+            alert("ขนาดไฟล์รูปภาพเกิน 5MB กรุณาเลือกไฟล์ที่มีขนาดเล็กกว่า 5MB");
+            return;
+          }
+
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              const img = document.createElement("img");
+              img.src = event.target.result;
+              img.style.maxWidth = "50%";
+              img.style.borderRadius = "10px";
+
+              const imageContainer = document.getElementById("imageContainer");
+              imageContainer.innerHTML = "";
+              imageContainer.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+
+            const storageRef = firebase.storage().ref("images/" + file.name);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+              },
+              (error) => {
+                console.error("Error during upload: ", error);
+                alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ: " + error.message);
+              },
+              () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                  console.log("File available at", downloadURL);
+
+                  attachedFileURL = downloadURL;
+                  attachedFileType = "รูปภาพ";
+
+                  const fileContainer =
+                    document.getElementById("fileContainer");
+                  fileContainer.innerHTML = `<a href="${downloadURL}" target="_blank">${file.name}</a>`;
+                  fileContainer.style.display = "block";
                 });
+              }
+            );
+          }
+        };
+        input.click();
+      }
+
+      function attachLink() {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "วางลิงก์ที่นี่";
+        input.style.width = "100%";
+        input.style.padding = "5px";
+
+        const modalContent = document.querySelector(".modal-content");
+        modalContent.appendChild(input); // เพิ่ม input ลงใน modal
+
+        input.onchange = (e) => {
+          const link = e.target.value.trim();
+          const videoContainer = document.getElementById("fileContainer");
+
+          // ตรวจสอบว่าลิงก์เป็น YouTube หรือไม่
+          if (link.includes("youtube.com/watch")) {
+            const videoId = link.split("v=")[1]; // ดึง video ID
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+            const iframe = document.createElement("iframe");
+            iframe.width = "560";
+            iframe.height = "315";
+            iframe.src = `https://www.youtube.com/embed/${videoId}`;
+            iframe.frameBorder = "0";
+            iframe.allow =
+              "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+
+            videoContainer.innerHTML = ""; // ล้างเนื้อหาก่อนหน้า
+            videoContainer.appendChild(iframe);
+
+            // ถ้าการฝังล้มเหลว ให้แสดงภาพตัวอย่างแทน
+            iframe.onerror = () => {
+              videoContainer.innerHTML = `<a href="${link}" target="_blank"><img src="${thumbnailUrl}" alt="YouTube Thumbnail" style="max-width:100%; border-radius: 10px;" /><p>ดูบน YouTube</p></a>`;
+            };
+          } else {
+            // ถ้าลิงก์ไม่ใช่ YouTube ให้แสดงลิงก์ธรรมดา
+            const linkTag = document.createElement("a");
+            linkTag.href = link;
+            linkTag.target = "_blank";
+            linkTag.textContent = link;
+            videoContainer.innerHTML = ""; // ล้างเนื้อหาก่อนหน้า
+            videoContainer.appendChild(linkTag);
+          }
+
+          videoContainer.style.display = "block"; // แสดง container
+          attachedFileURL = link;
+          attachedFileType = "ลิงก์";
+        };
+
+        input.click();
+      }
+
+      async function submitPost() {
+        console.log("Submitting post...");
+
+        const message = document.getElementById("postMessage").value.trim();
+
+        // ตรวจสอบว่ามีข้อความหรือไฟล์แนบอย่างน้อยหนึ่งอย่าง
+        if (message === "" && attachedFileURL === "") {
+          alert("Message or attachment is required.");
+          return;
         }
 
-        // Call this function after the page has loaded and classroomName is available
-        fetchDocumentId(classroomName);
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const classroomName = urlParams.get("classroom");
+        const email = urlParams.get("email");
 
-        // Function to copy the Document ID
-        function copyDocumentId() {
-            const documentIdInput = document.getElementById("documentId");
-            documentIdInput.select();
-            document.execCommand("copy");
-            alert("Document ID copied: " + documentIdInput.value);
+        if (!classroomName || !email) {
+          alert("Classroom or Email is missing!");
+          return;
         }
+
+        // ตรวจสอบว่าไฟล์ภาพถูกอัพโหลดเสร็จแล้วหรือยัง
+        if (attachedFileType === "รูปภาพ" && attachedFileURL === "") {
+          alert("Please wait for the image to upload.");
+          return;
+        }
+
+        // กำหนดประเภทของโพสต์และเนื้อหาที่จะบันทึก
+        let postType = attachedFileType ? attachedFileType : "ข้อความ";
+        let content = attachedFileURL ? attachedFileURL : message;
+
+        try {
+          // บันทึกข้อมูลโพสต์ลง Firestore
+          const postRef = await db.collection("Post").add({
+            ClassroomName: classroomName,
+            Username: window.username,
+            Email: email,
+            PostType: postType,
+            Content: content, // บันทึก URL ของภาพหรือไฟล์ลงไปที่นี่
+            Message: message,
+            Timestamp: timestamp,
+          });
+          const postID = postRef.id;
+          await postRef.update({
+            postID: postRef.id,
+          });
+
+          console.log("Post created with ID:", postRef.id);
+
+          // สร้างการแจ้งเตือนให้สมาชิกในห้องเรียนทุกคน
+          const subjectDoc = await db
+            .collection("Subjects")
+            .where("ClassroomName", "==", classroomName)
+            .get();
+
+          if (!subjectDoc.empty) {
+            const subjectData = subjectDoc.docs[0].data();
+
+            if (subjectData && subjectData.Members) {
+              const members = subjectData.Members;
+              const createdBy = subjectData.CreatedBy.Email;
+
+              // สร้างการแจ้งเตือนให้สมาชิกทุกคน ยกเว้นผู้โพสต์เอง
+              const notificationPromises = members.map((memberEmail) => {
+                if (memberEmail !== email) {
+                  // ไม่ต้องแจ้งเตือนตัวเอง
+                  return db.collection("Notifications").add({
+                    To: memberEmail,
+                    Message: `${window.username} ได้โพสต์ ${postType} ในห้องเรียน ${classroomName}`,
+                    Type: "Post",
+                    ClassroomName: classroomName,
+                    PostID: postRef.id, // บันทึก postID เพื่อการเชื่อมโยง
+                    PostContent: content, // บันทึกลิงก์ของภาพหรือไฟล์ลงใน Notifications
+                    CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    isRead: false,
+                  });
+                }
+                return null; // ไม่สร้าง notification สำหรับผู้โพสต์เอง
+              });
+
+              // ถ้าผู้สร้างห้องไม่ใช่ผู้โพสต์เอง ก็ส่งแจ้งเตือนไปยังผู้สร้างห้องด้วย
+              if (createdBy !== email) {
+                notificationPromises.push(
+                  db.collection("Notifications").add({
+                    To: createdBy,
+                    Message: `${window.username} ได้โพสต์ ${postType} ในห้องเรียน ${classroomName}`,
+                    Type: "Post",
+                    ClassroomName: classroomName,
+                    PostID: postRef.id,
+                    PostContent: content,
+                    CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    isRead: false,
+                  })
+                );
+              }
+
+              // รอให้การสร้างแจ้งเตือนทั้งหมดเสร็จสิ้น
+              await Promise.all(notificationPromises);
+              console.log(
+                "Notifications created for all members except the poster."
+              );
+            } else {
+              console.error(
+                "No members found in the classroom:",
+                classroomName
+              );
+            }
+          } else {
+            console.error(
+              "Subject document not found for classroom:",
+              classroomName
+            );
+          }
+
+          alert("Post created successfully and notifications sent!");
+
+          // เคลียร์ข้อมูลหลังจากโพสต์เสร็จ
+          closeModal();
+          attachedFileURL = ""; // เคลียร์ URL ไฟล์ที่แนบมาหลังจากโพสต์เสร็จสิ้น
+          attachedFileType = "";
+          document.getElementById("postMessage").value = "";
+          document.getElementById("imageContainer").innerHTML = "";
+
+          // รีเฟรชหน้าเว็บหลังจากที่โพสต์เสร็จสิ้น
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        } catch (error) {
+          console.error("Error creating post or sending notifications:", error);
+        }
+      }
+
+      let attachedCommentFileURLs = {};
+      let attachedCommentFileTypes = {};
+
+      function attachFileForComment(postId) {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "*"; // รับไฟล์ทุกประเภท
+        input.onchange = (e) => {
+          const file = e.target.files[0]; // รับไฟล์ที่เลือกจากผู้ใช้
+
+          if (file) {
+            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2); // คำนวณขนาดไฟล์เป็น MB
+
+            // ตรวจสอบว่ามีส่วนของคอมเมนต์ที่จะแสดงไฟล์หรือไม่
+            const commentSection = document.querySelector(
+              `.comment-section[data-postid="${postId}"]`
+            );
+            if (!commentSection) {
+              console.error(`ไม่พบ comment section สำหรับโพสต์ ${postId}`);
+              return;
+            }
+
+            // สร้าง container สำหรับแสดงตัวอย่างไฟล์ที่แนบ
+            const fileContainer = document.createElement("div");
+            fileContainer.className = "file-preview";
+            fileContainer.innerHTML = `
+               <p><strong>${file.name}</strong> (${fileSizeMB} MB)</p>
+                <button onclick="removeFilePreview(this, '${postId}')">X</button>
+            `;
+
+            commentSection.appendChild(fileContainer); // เพิ่มตัวอย่างไฟล์ใน comment section ที่ถูกต้อง
+
+            const storageRef = firebase.storage().ref("uploads/" + file.name);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log(`Upload is ${progress}% done`);
+              },
+              (error) => {
+                console.error("เกิดข้อผิดพลาดในการอัปโหลดไฟล์: ", error);
+              },
+              () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                  console.log("ไฟล์สามารถเข้าถึงได้ที่:", downloadURL);
+
+                  // เก็บ URL ของไฟล์ไว้สำหรับโพสต์นั้น ๆ
+                  attachedCommentFileURLs[postId] = downloadURL;
+                  attachedCommentFileTypes[postId] = "ไฟล์";
+                });
+              }
+            );
+          }
+        };
+        input.click();
+      }
+
+      function removeFilePreview(button, postId) {
+        button.parentElement.remove();
+        attachedCommentFileURLs[postId] = "";
+        attachedCommentFileTypes[postId] = "";
+      }
+
+      function attachImageForComment(postId) {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*"; // รับเฉพาะไฟล์รูปภาพ
+        input.onchange = (e) => {
+          const file = e.target.files[0]; // รับไฟล์ที่ผู้ใช้อัปโหลด
+
+          // ตรวจสอบขนาดไฟล์ ถ้าเกิน 5MB จะไม่ทำการอัปโหลด
+          if (file.size > 5 * 1024 * 1024) {
+            alert("ขนาดไฟล์รูปภาพเกิน 5MB กรุณาเลือกไฟล์ที่มีขนาดเล็กกว่า 5MB");
+            return;
+          }
+
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              const img = document.createElement("img");
+              img.src = event.target.result;
+              img.style.maxWidth = "200px";
+              img.style.borderRadius = "10px";
+              img.style.marginTop = "0px"; // เพิ่ม margin เพื่อแยกจากช่องคอมเม้นต์
+
+              // เลือก container ที่จะแสดง preview ของรูป
+              const previewContainer = document.getElementById(
+                `commentImagePreview_${postId}`
+              );
+              previewContainer.innerHTML = ""; // ล้างภาพก่อนหน้า
+              previewContainer.style.display = "flex"; // แสดง preview เป็น flexbox
+              previewContainer.appendChild(img); // เพิ่มภาพใหม่
+            };
+
+            reader.readAsDataURL(file);
+
+            const storageRef = firebase.storage().ref("images/" + file.name);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+              },
+              (error) => {
+                console.error("Error during upload: ", error);
+                alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ: " + error.message);
+              },
+              () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                  // เก็บ URL ของไฟล์ที่อัปโหลดไว้
+                  attachedCommentFileURLs[postId] = downloadURL;
+                  attachedCommentFileTypes[postId] = "รูปภาพ";
+                });
+              }
+            );
+          }
+        };
+        input.click();
+      }
+
+      function removeFilePreview(button) {
+        button.parentElement.remove();
+        attachedCommentFileURLs[postId] = ""; // เคลียร์ URL ของไฟล์สำหรับโพสต์นั้น ๆ
+        attachedCommentFileTypes[postId] = ""; // เคลียร์ประเภทไฟล์สำหรับโพสต์นั้น ๆ
+      }
+
+      function attachLinkForComment(postId) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "วางลิงก์ที่นี่";
+        input.style.width = "100%";
+        input.style.padding = "5px";
+
+        // ค้นหา section ที่จะใส่ลิงก์เข้าไป
+        const commentSection = document.querySelector(
+          `.comment-section[data-postid="${postId}"]`
+        );
+        commentSection.appendChild(input); // เพิ่ม input ลงในส่วนคอมเมนต์
+
+        input.onchange = (e) => {
+          const link = e.target.value.trim(); // รับค่าลิงก์จาก input
+          if (link === "") {
+            alert("กรุณากรอกลิงก์");
+            return;
+          }
+
+          // สร้าง container สำหรับแสดงตัวอย่างลิงก์ที่แนบ
+          const linkContainer = document.createElement("div");
+          linkContainer.className = "file-preview"; // ใช้ class file-preview ในการจัดสไตล์
+          linkContainer.innerHTML = `
+                    <p><strong><a href="${link}" target="_blank">${link}</a></strong></p>
+                    <button onclick="removeFilePreview(this, '${postId}')">Remove</button>
+                `;
+
+          // เพิ่มตัวอย่างลิงก์ในกล่องคอมเมนต์
+          commentSection.appendChild(linkContainer);
+
+          // เก็บลิงก์ไว้สำหรับการส่งคอมเมนต์
+          attachedCommentFileURLs[postId] = link;
+          attachedCommentFileTypes[postId] = "ลิงก์";
+
+          // ลบ input ออกจาก DOM หลังจากเพิ่มลิงก์แล้ว
+          input.remove();
+        };
+      }
+
+      // ฟังก์ชันสำหรับการส่งคอมเมนต์
+      async function submitComment(postId, commentText) {
+        if (commentText === "" && attachedCommentFileURLs[postId] === "") {
+          alert("Message or attachment is required.");
+          return;
+        }
+
+        const commentData = {
+          PostId: postId,
+          Username: window.username,
+          Email: window.email,
+          CommentText: commentText.trim(), // ลบช่องว่างด้านหน้าและด้านหลังข้อความ
+          Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          FileType: attachedCommentFileTypes[postId] || "", // ตั้งค่าเป็นค่าว่างถ้าไม่มีไฟล์แนบ
+          FileURL: attachedCommentFileURLs[postId] || "", // ตั้งค่าเป็นค่าว่างถ้าไม่มีไฟล์แนบ
+        };
+
+        try {
+          // บันทึกคอมเม้นต์ลง Firestore
+          await db.collection("Comments").add(commentData);
+
+          // เคลียร์ข้อมูลหลังส่งคอมเม้นต์สำเร็จ
+          attachedCommentFileURLs[postId] = "";
+          attachedCommentFileTypes[postId] = "";
+          document.querySelector(
+            `.comment-section[data-postid="${postId}"] .comment-input`
+          ).value = "";
+          document.getElementById(`commentImagePreview_${postId}`).innerHTML =
+            "";
+          const filePreviews = document.querySelectorAll(
+            `.comment-section[data-postid="${postId}"] .file-preview`
+          );
+          filePreviews.forEach((preview) => preview.remove());
+
+          // สร้างการแจ้งเตือนให้สมาชิกในห้องเรียนทุกคน
+          const subjectDoc = await db
+            .collection("Subjects")
+            .doc(classroomName)
+            .get();
+          const subjectData = subjectDoc.data();
+
+          if (subjectData && subjectData.Members) {
+            const members = subjectData.Members;
+            for (const memberEmail of members) {
+              if (memberEmail !== window.email) {
+                await db.collection("Notifications").add({
+                  To: memberEmail,
+                  Message: `${window.username} ได้คอมเม้นต์ในโพสต์ในห้องเรียน ${classroomName}`,
+                  Type: "Comment",
+                  ClassroomName: classroomName,
+                  PostID: postRef.id,
+                  CreatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  isRead: false,
+                });
+              }
+            }
+          }
+
+          // แจ้งเตือนสำเร็จแล้วค่อยรีเฟรชหน้า
+          alert("Comment submitted successfully and notifications sent!");
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } catch (error) {
+          console.error(
+            "Error submitting comment or sending notifications:",
+            error
+          );
+        }
+      }
+
+      // Function สำหรับการอัพเดต badge ของการแจ้งเตือนแบบเรียลไทม์
+      function updateNotificationBadge(email) {
+        db.collection("Notifications")
+          .where("To", "==", email)
+          .where("isRead", "==", false)
+          .onSnapshot((snapshot) => {
+            const unreadCount = snapshot.size;
+            const notificationBadge =
+              document.getElementById("notificationBadge");
+            if (unreadCount > 0) {
+              notificationBadge.style.display = "block";
+              notificationBadge.textContent = unreadCount;
+            } else {
+              notificationBadge.style.display = "none";
+            }
+          });
+      }
+
+      // เรียกใช้ฟังก์ชันเมื่อหน้าเพจโหลดเสร็จ
+      updateNotificationBadge(email);
+
+      function fetchDocumentId(classroomName) {
+        db.collection("Subjects")
+          .where("ClassroomName", "==", classroomName)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              // Display the Document ID in the input field
+              document.getElementById("documentId").value = doc.id;
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching document ID: ", error);
+          });
+      }
+
+      // Call this function after the page has loaded and classroomName is available
+      fetchDocumentId(classroomName);
+
+      // Function to copy the Document ID
+      function copyDocumentId() {
+        const documentIdInput = document.getElementById("documentId");
+        documentIdInput.select(); // เลือกข้อความในกล่อง input
+        document.execCommand("copy"); // คัดลอกข้อความที่เลือก
+        alert("Document ID copied: " + documentIdInput.value); // แจ้งเตือนว่ามีการคัดลอก
+      }
+
+      function filterPosts(postType) {
+        const postContainer = document.getElementById("postContainer");
+        postContainer.innerHTML = ""; // Clear previous posts
+
+        db.collection("Post")
+          .where("ClassroomName", "==", classroomName)
+          .where("PostType", "==", postType) // Filter posts by type
+          .orderBy("Timestamp", "asc")
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const postDiv = document.createElement("div");
+              postDiv.classList.add("post");
+
+              const postHeader = document.createElement("div");
+              postHeader.classList.add("post-header");
+              const postAuthor = document.createElement("h3");
+              postAuthor.textContent = data.Username || "Unknown";
+              postHeader.appendChild(postAuthor);
+              const postDate = document.createElement("span");
+              postDate.classList.add("post-date");
+              postDate.textContent = new Date(
+                data.Timestamp.toDate()
+              ).toLocaleString();
+
+              const postContent = document.createElement("div");
+              postContent.classList.add("post-content");
+
+              // Check content type and display appropriately
+              if (data.PostType === "ไฟล์") {
+                const fileLink = document.createElement("a");
+                fileLink.href = data.Content;
+                fileLink.target = "_blank"; // Open in new tab
+                fileLink.textContent = "ดาวน์โหลดไฟล์";
+                fileLink.classList.add("file-link");
+                postContent.appendChild(fileLink);
+              }
+
+              postDiv.appendChild(postHeader);
+              postDiv.appendChild(postContent);
+              postContainer.appendChild(postDiv);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching posts: ", error);
+          });
+      }
+
+      function filterPostsByFileType() {
+        const postContainer = document.getElementById("postContainer");
+        postContainer.innerHTML = ""; // ล้างโพสต์ก่อนหน้า
+
+        db.collection("Post")
+          .where("ClassroomName", "==", classroomName)
+          .where("PostType", "==", "ไฟล์") // กรองเฉพาะโพสต์ที่มี PostType เป็น "ไฟล์"
+          .orderBy("Timestamp", "asc")
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const postDiv = document.createElement("div");
+              postDiv.classList.add("post");
+
+              const postHeader = document.createElement("div");
+              postHeader.classList.add("post-header");
+              const postAuthor = document.createElement("h3");
+              postAuthor.textContent = data.Username || "Unknown";
+              postHeader.appendChild(postAuthor);
+              const postDate = document.createElement("span");
+              postDate.classList.add("post-date");
+              postDate.textContent = new Date(
+                data.Timestamp.toDate()
+              ).toLocaleString();
+
+              const postContent = document.createElement("div");
+              postContent.classList.add("post-content");
+
+              // แสดงลิงก์ไฟล์
+              if (data.PostType === "ไฟล์") {
+                const fileLink = document.createElement("a");
+                fileLink.href = data.Content;
+                fileLink.target = "_blank"; // เปิดในแท็บใหม่
+                fileLink.textContent = "ดาวน์โหลดไฟล์";
+                fileLink.classList.add("file-link");
+                postContent.appendChild(fileLink);
+              }
+
+              postDiv.appendChild(postHeader);
+              postDiv.appendChild(postContent);
+              postContainer.appendChild(postDiv);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching posts: ", error);
+          });
+      }
+
+      function deletePost(postId) {
+        if (confirm("คุณแน่ใจหรือว่าต้องการลบโพสต์นี้?")) {
+          db.collection("Post")
+            .doc(postId)
+            .delete()
+            .then(() => {
+              alert("ลบโพสต์สำเร็จ!");
+              window.location.reload(); // รีเฟรชหน้าเพจหลังลบโพสต์สำเร็จ
+            })
+            .catch((error) => {
+              console.error("Error removing post: ", error);
+            });
+        }
+      }
     </script>
-</body>
-
+  </body>
 </html>

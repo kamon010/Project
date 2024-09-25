@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notifications</title>
@@ -9,369 +8,374 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inconsolata:wght@200..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
     <style>
-        body {
-            font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
-            background-color: #2f2f2f;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        
-        .topbar {
-            background-color: #2e2e2e;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0px 2px 4px rgba(177, 177, 177, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-        
-        .topbar .search-bar {
-            flex-grow: 1;
-            display: flex;
-            justify-content: flex-start;
-            position: relative;
-            padding-left: 480px;
-        }
-        
-        .topbar .search-bar input {
-            width: 400px;
-            padding: 5px 10px 5px 35px;
-            border-radius: 20px;
-            border: 1px solid #717171;
-            background-color: #333;
-            color: #fff;
-            font-size: 16px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .topbar .search-bar .fas {
-            position: absolute;
-            left: 490px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #fff;
-            z-index: 2;
-        }
-        
-        .topbar .user-section {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        
-        #user-email {
-            color: white;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        
-        .user-icon {
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .user-icon i {
-            font-size: 30px;
-            color: white;
-        }
-        
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 50px;
-            background-color: #fff;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
-            z-index: 1000;
-        }
-        
-        .dropdown-menu a {
-            display: block;
-            padding: 10px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .sidebar {
-            width: 100px;
-            background-color: #333;
-            color: white;
-            height: 100vh;
-            padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            z-index: 1;
-        }
-        
-        .menu-items {
-            margin-top: 40px;
-        }
-        
-        .sidebar a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 12px;
-            text-align: center;
-        }
-        
-        .sidebar a:hover {
-            background-color: #5f5f5f;
-            border-radius: 4px;
-            width: 80%;
-            text-align: center;
-        }
-        
-        .sidebar i {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .notification-container {
-            display: flex;
-            flex-direction: row;
-            height: 100%;
-            margin-left: 120px;
-            background-color: #2f2f2f;
-        }
-        
-        .notification-list {
-            width: 300px;
-            padding: 20px;
-            border-right: 1px solid #444;
-            overflow-y: auto;
-        }
-        
-        .notification-details {
-            flex-grow: 1;
-            width: 65%;
-            padding: 20px;
-            background-color: #333;
-            color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
-            font-size: 18px;
-            margin: 10px;
-            height: fit-content;
-            overflow-y: visible;
-            display: none;
-            /* ซ่อนกล่องไว้ตอนแรก */
-        }
-        
-        .view-details-btn {
-            background-color: #626362;
-            color: white;
-            padding: 5px 10px;
-            border: 2px solid rgb(121, 121, 121);
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-        }
-        
-        .view-details-btn:hover {
-            background-color: #555555;
-            border-color: #6b6b6b;
-        }
-        
-        .view-details-btn:hover {
-            background-color: #404040;
-            /* เปลี่ยนสีเมื่อ hover */
-        }
-        
-        .notification-header {
-            background-color: #444;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            margin: 10px;
-            margin-left: 0;
-            padding: 15px;
-        }
-        
-        .notification-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin: 0 0 5px 0;
-        }
-        
-        .due-date {
-            font-size: 16px;
-            margin-top: 20;
-            /* ขนาดฟอนต์สำหรับ due date */
-            color: #aaa;
-            /* สีที่จางลงเพื่อเน้น title มากกว่า */
-            margin: 0;
-        }
-        
-        .notification-body p {
-            display: inline;
-            /* ให้ข้อความและวันที่อยู่ในบรรทัดเดียวกัน */
-        }
-        
-        .created-at {
-            font-size: 18px;
-            /* ปรับขนาดตัวอักษรให้เล็กลง */
-            color: #aaa;
-            /* เปลี่ยนสีเพื่อให้เด่นน้อยกว่าข้อความหลัก */
-            margin-left: 10px;
-            /* ระยะห่างจากข้อความหลัก */
-        }
-        
-        .notification-item {
-            background-color: #444;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .notification-item.unread {
-            font-weight: bold;
-            background-color: #333;
-        }
-        
-        .notification-item.read {
-            font-weight: normal;
-            background-color: #555;
-        }
-        
-        .notification-item p {
-            margin: 0;
-        }
-        
-        .notification-item .timestamp {
-            font-size: 12px;
-            color: #aaa;
-        }
-        
-        .no-notifications {
-            text-align: center;
-            font-size: 18px;
-            color: #ccc;
-            margin-top: 20px;
-        }
-        
-        #searchResults {
-            background-color: #4d4d4d;
-            color: white;
-            position: absolute;
-            z-index: 1000;
-            width: 400px;
-            border-radius: 5px;
-            max-height: 200px;
-            overflow-y: auto;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            top: 38px;
-        }
-        
-        #searchResults .result-item {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #555;
-            display: flex;
-            flex-direction: column;
-            font-size: 14px;
-        }
-        
-        #searchResults .result-item:hover {
-            background-color: #555;
-        }
-        
-        #searchResults .result-item p {
-            margin: 0;
-            color: #fff;
-        }
-        
-        #searchResults .result-item span {
-            color: #727272;
-        }
-        
-        .notification-buttons {
-            display: flex;
-            justify-content: left;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .notification-buttons button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .notification-buttons .accept {
-            background-color: #4caf50;
-            color: white;
-        }
-        
-        .notification-buttons .accept:hover {
-            background-color: #45a049;
-        }
-        
-        .notification-buttons .refuse {
-            background-color: #f44336;
-            color: white;
-        }
-        
-        .notification-buttons .refuse:hover {
-            background-color: #e53935;
-        }
-    </style>
-</head>
+      body {
+        font-family: "Comfortaa", "Inconsolata", "Jost", "Signika", sans-serif;
+        background-color: #2f2f2f;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-<body>
+      .topbar {
+        background-color: #2e2e2e;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px 2px 4px rgba(177, 177, 177, 0.1);
+        position: relative;
+        z-index: 2;
+      }
+
+      .topbar .search-bar {
+        flex-grow: 1;
+        display: flex;
+        justify-content: flex-start;
+        position: relative;
+        padding-left: 480px;
+      }
+
+      .topbar .search-bar input {
+        width: 400px;
+        padding: 5px 10px 5px 35px;
+        border-radius: 20px;
+        border: 1px solid #717171;
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .topbar .search-bar .fas {
+        position: absolute;
+        left: 490px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #fff;
+        z-index: 2;
+      }
+
+      .topbar .user-section {
+        display: flex;
+        align-items: center;
+        position: relative;
+      }
+
+      #user-email {
+        color: white;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+
+      .user-icon {
+        cursor: pointer;
+        position: relative;
+      }
+
+      .user-icon i {
+        font-size: 30px;
+        color: white;
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 50px;
+        background-color: #fff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+        z-index: 1000;
+      }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .dropdown-menu a:hover {
+        background-color: #f0f0f0;
+      }
+
+      .sidebar {
+        width: 100px;
+        background-color: #333;
+        color: white;
+        height: 100vh;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        z-index: 1;
+      }
+
+      .menu-items {
+        margin-top: 40px;
+      }
+
+      .sidebar a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        padding: 10px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .sidebar a:hover {
+        background-color: #5f5f5f;
+        border-radius: 4px;
+        width: 80%;
+        text-align: center;
+      }
+
+      .sidebar i {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .notification-container {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        margin-left: 120px;
+        background-color: #2f2f2f;
+      }
+
+      .notification-list {
+        width: 300px;
+        padding: 20px;
+        border-right: 1px solid #444;
+        overflow-y: auto;
+      }
+
+      .notification-details {
+        flex-grow: 1;
+        width: 65%;
+        padding: 20px;
+        background-color: #333;
+        color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+        font-size: 18px;
+        margin: 10px;
+        height: fit-content;
+        overflow-y: visible;
+        display: none;
+        /* ซ่อนกล่องไว้ตอนแรก */
+      }
+
+      .view-details-btn {
+        background-color: #626362;
+        color: white;
+        padding: 5px 10px;
+        border: 2px solid rgb(121, 121, 121);
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+      }
+
+      .view-details-btn:hover {
+        background-color: #555555;
+        border-color: #6b6b6b;
+      }
+
+      .view-details-btn:hover {
+        background-color: #404040;
+        /* เปลี่ยนสีเมื่อ hover */
+      }
+
+      .notification-header {
+        background-color: #444;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        margin: 10px;
+        margin-left: 0;
+        padding: 15px;
+      }
+
+      .notification-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0 0 5px 0;
+      }
+
+      .due-date {
+        font-size: 16px;
+        margin-top: 20;
+        /* ขนาดฟอนต์สำหรับ due date */
+        color: #aaa;
+        /* สีที่จางลงเพื่อเน้น title มากกว่า */
+        margin: 0;
+      }
+
+      .notification-body p {
+        display: inline;
+        /* ให้ข้อความและวันที่อยู่ในบรรทัดเดียวกัน */
+      }
+
+      .created-at {
+        font-size: 18px;
+        /* ปรับขนาดตัวอักษรให้เล็กลง */
+        color: #aaa;
+        /* เปลี่ยนสีเพื่อให้เด่นน้อยกว่าข้อความหลัก */
+        margin-left: 10px;
+        /* ระยะห่างจากข้อความหลัก */
+      }
+
+      .notification-item {
+        background-color: #444;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .notification-item.unread {
+        font-weight: bold;
+        background-color: #333;
+      }
+
+      .notification-item.read {
+        font-weight: normal;
+        background-color: #555;
+      }
+
+      .notification-item p {
+        margin: 0;
+      }
+
+      .notification-item .timestamp {
+        font-size: 12px;
+        color: #aaa;
+      }
+
+      .no-notifications {
+        text-align: center;
+        font-size: 18px;
+        color: #ccc;
+        margin-top: 20px;
+      }
+
+      #searchResults {
+        background-color: #4d4d4d;
+        color: white;
+        position: absolute;
+        z-index: 1000;
+        width: 400px;
+        border-radius: 5px;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        top: 38px;
+      }
+
+      #searchResults .result-item {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #555;
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+      }
+
+      #searchResults .result-item:hover {
+        background-color: #555;
+      }
+
+      #searchResults .result-item p {
+        margin: 0;
+        color: #fff;
+      }
+
+      #searchResults .result-item span {
+        color: #727272;
+      }
+
+      .notification-buttons {
+        display: flex;
+        justify-content: left;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .notification-buttons button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .notification-buttons .accept {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .notification-buttons .accept:hover {
+        background-color: #45a049;
+      }
+
+      .notification-buttons .refuse {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .notification-buttons .refuse:hover {
+        background-color: #e53935;
+      }
+    </style>
+  </head>
+
+  <body>
     <div class="topbar">
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
-            <div id="searchResults"></div>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="ค้นหา (Cmd+E)" id="searchInput" />
+        <div id="searchResults"></div>
+      </div>
+      <div class="user-section">
+        <div id="user-email"></div>
+        <div class="user-icon" id="userIcon">
+          <i class="fas fa-user-circle"></i>
         </div>
-        <div class="user-section">
-            <div id="user-email"></div>
-            <div class="user-icon" id="userIcon">
-                <i class="fas fa-user-circle"></i>
-            </div>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="#">Profile</a>
-                <a href="#">Log out</a>
-            </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="#">Profile</a>
+          <a href="#">Log out</a>
         </div>
+      </div>
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="menu-items">
-            <a href="studenthead.html?email={{email}}"><i class="fa fa-chalkboard-teacher"></i><span>Classroom</span></a
+      <div class="menu-items">
+        <a href="studenthead.html?email={{email}}"
+          ><i class="fa fa-chalkboard-teacher"></i><span>Classroom</span></a
         >
         <a href="Chat.html?email={{email}}"
           ><i class="fa fa-comments"></i><span>Chat</span></a
@@ -581,182 +585,6 @@
           );
       }
 
-      function handleJoinRequest(notificationId, isAccepted) {
-        db.collection("Notifications")
-          .doc(notificationId)
-          .get()
-          .then((doc) => {
-            const data = doc.data();
-            if (!data || !data.JoinRequestId) {
-              console.error(
-                "Invalid notification data or missing JoinRequestId."
-              );
-              alert("Error: Invalid notification data.");
-              return;
-            }
-
-            const joinRequestId = data.JoinRequestId;
-
-            db.collection("JoinRequests")
-              .doc(joinRequestId)
-              .get()
-              .then((joinDoc) => {
-                if (!joinDoc.exists) {
-                  console.error(
-                    "Join request document does not exist:",
-                    joinRequestId
-                  );
-                  alert("Error: The join request does not exist.");
-                  return;
-                }
-
-                const requesterEmail = joinDoc.data().RequesterEmail;
-                const ownerEmail = data.To;
-
-                // Update the JoinRequests collection based on the user's choice
-                db.collection("JoinRequests")
-                  .doc(joinRequestId)
-                  .update({
-                    Status: isAccepted ? "Accepted" : "Refused",
-                  })
-                  .then(() => {
-                    if (isAccepted) {
-                      // ถ้ายอมรับ เพิ่มผู้ใช้ในห้องเรียน
-                      db.collection("Subjects")
-                        .doc(joinDoc.data().SubjectID)
-                        .update({
-                          Members:
-                            firebase.firestore.FieldValue.arrayUnion(
-                              requesterEmail
-                            ),
-                        })
-                        .then(() => {
-                          // ตรวจสอบการแจ้งเตือนที่ซ้ำกันก่อนเพิ่ม
-                          db.collection("Notifications")
-                            .where("To", "==", requesterEmail)
-                            .where("Type", "==", "Info")
-                            .where(
-                              "Message",
-                              "==",
-                              `ยินดีด้วย!!คุณได้รับอนุญาตให้เข้าร่วมห้องเรียนแล้วจาก ${ownerEmail} 🎊🎉🎀`
-                            )
-                            .get()
-                            .then((querySnapshot) => {
-                              if (querySnapshot.empty) {
-                                db.collection("Notifications")
-                                  .add({
-                                    To: requesterEmail,
-                                    Message: `ได้รับอนุญาตจาก ${ownerEmail} 🎊🎉🎀`,
-                                    CreatedAt:
-                                      firebase.firestore.FieldValue.serverTimestamp(),
-                                    Type: "Info",
-                                    isRead: false,
-                                  })
-                                  .then(() => {
-                                    alert(
-                                      "Join request accepted and the user has been added to the classroom."
-                                    );
-                                    document.getElementById(
-                                      "notificationDetails"
-                                    ).innerHTML += `
-                                      <p>คุณได้อนุญาตให้ ${requesterEmail} เข้าร่วมห้องเรียนแล้ว!! 🎊🎀🎉</p>
-                                    `;
-                                    const buttonsContainer =
-                                      document.querySelector(
-                                        ".notification-buttons"
-                                      );
-                                    if (buttonsContainer) {
-                                      buttonsContainer.style.display = "none";
-                                    }
-                                  })
-                                  .catch((error) => {
-                                    console.error(
-                                      "Error adding notification to requester: ",
-                                      error
-                                    );
-                                    alert(
-                                      "An error occurred while notifying the requester. Please try again."
-                                    );
-                                  });
-                              } else {
-                                console.log(
-                                  "Notification already exists for this action."
-                                );
-                              }
-                            })
-                            .catch((error) => {
-                              console.error(
-                                "Error checking existing notification: ",
-                                error
-                              );
-                            });
-                        })
-                        .catch((error) => {
-                          console.error(
-                            "Error adding user to classroom: ",
-                            error
-                          );
-                          alert(
-                            "An error occurred while adding the user to the classroom. Please check the console for details."
-                          );
-                        });
-                    } else {
-                      // กรณีปฏิเสธ
-                      db.collection("Notifications")
-                        .add({
-                          To: requesterEmail,
-                          Message: `คุณถูกปฏิเสธจาก ${ownerEmail} !!🥺😔`,
-                          CreatedAt:
-                            firebase.firestore.FieldValue.serverTimestamp(),
-                          Type: "Info",
-                          isRead: false,
-                        })
-                        .then(() => {
-                          alert(
-                            "Join request refused and notification sent to the requester."
-                          );
-                        })
-                        .catch((error) => {
-                          console.error(
-                            "Error adding refusal notification: ",
-                            error
-                          );
-                          alert(
-                            "An error occurred while notifying the requester. Please try again."
-                          );
-                        });
-                    }
-
-                    // ทำเครื่องหมายว่าแจ้งเตือนนี้ได้อ่านแล้ว
-                    db.collection("Notifications")
-                      .doc(notificationId)
-                      .update({
-                        isRead: true,
-                      })
-                      .catch((error) => {
-                        console.error(
-                          "Error marking notification as read: ",
-                          error
-                        );
-                      });
-                  })
-                  .catch((error) => {
-                    console.error("Error updating join request: ", error);
-                    alert(
-                      "An error occurred while processing the request. Please check the console for details."
-                    );
-                  });
-              })
-              .catch((error) => {
-                console.error("Error fetching join request document: ", error);
-                alert("Error: Unable to fetch the join request document.");
-              });
-          })
-          .catch((error) => {
-            console.error("Error fetching notification: ", error);
-          });
-      }
-
       function goToAssignmentDetail(documentId) {
         const email = new URLSearchParams(window.location.search).get("email");
         window.location.href = `AssignmentDetail.html?assignmentId=${documentId}&email=${email}`;
@@ -812,14 +640,107 @@
                      data.AssignmentID
                    }')">ดูรายละเอียดงาน</button>
                 `;
-          } else {
-            // แสดงเฉพาะข้อความถ้าไม่ใช่ Assignment
+          } else if (data && data.Type === "JoinRequest") {
+            // โหลด JoinRequest ตาม JoinRequestId ที่แจ้งเตือนมี
+            db.collection("JoinRequests")
+              .doc(data.JoinRequestId)
+              .get()
+              .then((joinDoc) => {
+                if (!joinDoc.exists) {
+                  console.error(
+                    "Join request document does not exist:",
+                    data.JoinRequestId
+                  );
+                  return;
+                }
+
+                const joinData = joinDoc.data();
+                const notificationButtons = document.querySelector(
+                  ".notification-buttons"
+                );
+
+                // ตรวจสอบสถานะของคำขอเข้าร่วม
+                if (joinData.Status === "Accepted") {
+                  notificationDetails.innerHTML = `
+                    <div class="notification-header">
+                        <h2 class="notification-title"> ${data.Message}</h2>
+                        <p class="created-at">${new Date(
+                          data.CreatedAt.seconds * 1000
+                        ).toLocaleString("th-TH")} น.</p>
+                    </div>
+                    <div class="notification-body">
+                        <p>You have approved the classroom join request.</p>
+                    </div>
+                  `;
+                  if (notificationButtons) {
+                    notificationButtons.classList.add("hidden");
+                  }
+                } else if (joinData.Status === "Refused") {
+                  notificationDetails.innerHTML = `
+                    <div class="notification-header">
+                        <h2 class="notification-title"> ${data.Message}</h2>
+                        <p class="created-at">${new Date(
+                          data.CreatedAt.seconds * 1000
+                        ).toLocaleString("th-TH")} น.</p>
+                    </div>
+                    <div class="notification-body">
+                        <p>You have declined your classroom entry request.</p>
+                    </div>
+                  `;
+                  if (notificationButtons) {
+                    notificationButtons.classList.add("hidden");
+                  }
+                } else {
+                  // ถ้าสถานะยังไม่มี (pending) ให้แสดงปุ่ม
+                  notificationDetails.innerHTML = `
+                    <div class="notification-header">
+                        <h2 class="notification-title"> ${data.Message}</h2>
+                        <p class="created-at">${new Date(
+                          data.CreatedAt.seconds * 1000
+                        ).toLocaleString("th-TH")} น.</p>
+                    </div>
+                    <div class="notification-body">
+                        <p>Do you want to allow this user to join your classroom?</p>
+                        <div class="notification-buttons">
+                            <button class="accept" onclick="handleJoinRequest('${docId}', true)">Accept</button>
+                            <button class="refuse" onclick="handleJoinRequest('${docId}', false)">Refuse</button>
+                        </div>
+                    </div>
+                  `;
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching join request: ", error);
+              });
+          } else if (data && data.Type === "Post") {
+            // ถ้าเป็นประเภท Post
             notificationDetails.innerHTML = `
-                  <h2>${data.Message}</h2>
-                  <p>${new Date(data.CreatedAt.seconds * 1000).toLocaleString(
-                    "th-TH"
-                  )}</p>
-                `;
+              <div class="notification-body">
+                <p>${data.Message} <span class="created-at">${new Date(
+              data.CreatedAt.seconds * 400
+            ).toLocaleString("th-TH")} น.</span></p>
+              </div>
+            `;
+
+            // ตรวจสอบว่ามีภาพหรือไม่
+            if (data.PostContent) {
+              notificationDetails.innerHTML += `
+                <div class="notification-image">
+                  <img src="${data.PostContent}" alt="Post Image" style="max-width: 40%; border-radius: 10px; margin-top: 10px;" />
+                </div>
+              `;
+            } else {
+              // แสดงการแจ้งเตือนทั่วไปที่ไม่ใช่ Assignment
+              notificationDetails.innerHTML = `
+                  <div class="notification-header">
+                      <h2 class="notification-title">รายละเอียดการแจ้งเตือน</h2>
+                      <div class="notification-body">
+                          <p>${Message}</p>
+                          <p class="created-at">${CreatedAt}</p>
+                      </div>
+                  </div>
+              `;
+            }
           }
 
           // การทำเครื่องหมายว่าอ่านแล้ว
@@ -843,6 +764,173 @@
         } else {
           window.location.href = `AssignmentDetail.html?assignmentId=${data.AssignmentID}`;
         }
+      }
+
+      function handleJoinRequest(notificationId, isAccepted) {
+        db.collection("Notifications")
+          .doc(notificationId)
+          .get()
+          .then((doc) => {
+            const data = doc.data();
+            if (!data || !data.JoinRequestId) {
+              console.error(
+                "Invalid notification data or missing JoinRequestId."
+              );
+              alert("Error: Invalid notification data.");
+              return;
+            }
+
+            const joinRequestId = data.JoinRequestId;
+
+            db.collection("JoinRequests")
+              .doc(joinRequestId)
+              .get()
+              .then((joinDoc) => {
+                if (!joinDoc.exists) {
+                  console.error(
+                    "Join request document does not exist:",
+                    joinRequestId
+                  );
+                  alert("Error: The join request does not exist.");
+                  return;
+                }
+
+                const requesterEmail = joinDoc.data().RequesterEmail;
+                const ownerEmail = data.To;
+
+                // Update the JoinRequests collection based on the user's choice
+                db.collection("JoinRequests")
+                  .doc(joinRequestId)
+                  .update({
+                    Status: isAccepted ? "Accepted" : "Refused",
+                  })
+                  .then(() => {
+                    if (isAccepted) {
+                      // ถ้ายอมรับ เพิ่มผู้ใช้ในห้องเรียน
+                      db.collection("Subjects")
+                        .doc(joinDoc.data().SubjectID)
+                        .update({
+                          Members:
+                            firebase.firestore.FieldValue.arrayUnion(
+                              requesterEmail
+                            ),
+                        })
+                        .then(() => {
+                          // บันทึกการแจ้งเตือนว่าผู้ใช้ได้เข้าร่วมห้องเรียนแล้ว
+                          db.collection("Notifications")
+                            .add({
+                              To: requesterEmail,
+                              Message: `${ownerEmail} has accepted your join request. You have been accepted into the classroom.`,
+                              CreatedAt:
+                                firebase.firestore.FieldValue.serverTimestamp(),
+                              Type: "Joined",
+                              JoinRequestId: joinRequestId,
+                              isRead: false,
+                            })
+                            .then(() => {
+                              location.reload(); // รีเฟรชหน้าเว็บหลังจากตอบรับเสร็จ
+                            })
+                            .catch((error) => {
+                              console.error(
+                                "Error adding notification for acceptance: ",
+                                error
+                              );
+                            });
+                        })
+                        .catch((error) => {
+                          console.error(
+                            "Error adding user to classroom: ",
+                            error
+                          );
+                        });
+                    } else {
+                      // ถ้าปฏิเสธ บันทึกการแจ้งเตือนว่าผู้ใช้ถูกปฏิเสธการเข้าร่วม
+                      db.collection("Notifications")
+                        .add({
+                          To: requesterEmail,
+                          Message: `${ownerEmail} has denied your join request. You have been denied entry into the classroom.`,
+                          CreatedAt:
+                            firebase.firestore.FieldValue.serverTimestamp(),
+                          Type: "JoinRequest",
+                          JoinRequestId: joinRequestId,
+                          isRead: false,
+                        })
+                        .then(() => {
+                          location.reload(); // รีเฟรชหน้าเว็บหลังจากปฏิเสธเสร็จ
+                        })
+                        .catch((error) => {
+                          console.error(
+                            "Error adding notification for refusal: ",
+                            error
+                          );
+                        });
+                    }
+
+                    // ตรวจสอบสถานะและซ่อนปุ่มเมื่อผู้ใช้ได้ตอบรับ/ปฏิเสธแล้ว
+                    db.collection("JoinRequests")
+                      .doc(joinRequestId)
+                      .get()
+                      .then((updatedJoinDoc) => {
+                        const updatedJoinData = updatedJoinDoc.data();
+                        if (updatedJoinData.Status === "Accepted") {
+                          const notificationButtons = document.querySelector(
+                            ".notification-buttons"
+                          );
+                          if (notificationButtons) {
+                            notificationButtons.classList.add("hidden");
+                          }
+                          const notificationDetails = document.getElementById(
+                            "notificationDetails"
+                          );
+                          notificationDetails.innerHTML += `
+                            <p>You have approved the classroom join request.</p>
+                          `;
+                        } else if (updatedJoinData.Status === "Refused") {
+                          const notificationButtons = document.querySelector(
+                            ".notification-buttons"
+                          );
+                          if (notificationButtons) {
+                            notificationButtons.classList.add("hidden");
+                          }
+                          const notificationDetails = document.getElementById(
+                            "notificationDetails"
+                          );
+                          notificationDetails.innerHTML += `
+                            <p>You have declined your classroom entry request.</p>
+                          `;
+                        }
+                      })
+                      .catch((error) => {
+                        console.error(
+                          "Error fetching updated join request: ",
+                          error
+                        );
+                      });
+
+                    // ทำเครื่องหมายว่าแจ้งเตือนนี้ได้อ่านแล้ว
+                    db.collection("Notifications")
+                      .doc(notificationId)
+                      .update({
+                        isRead: true,
+                      })
+                      .catch((error) => {
+                        console.error(
+                          "Error marking notification as read: ",
+                          error
+                        );
+                      });
+                  })
+                  .catch((error) => {
+                    console.error("Error updating join request: ", error);
+                  });
+              })
+              .catch((error) => {
+                console.error("Error fetching join request document: ", error);
+              });
+          })
+          .catch((error) => {
+            console.error("Error fetching notification: ", error);
+          });
       }
 
       // Load notifications when the page loads
