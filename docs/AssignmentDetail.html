@@ -691,14 +691,26 @@
             if (doc.exists) {
               const data = doc.data();
               console.log("Data retrieved from Firestore:", doc.data());
+
+              // แสดงข้อมูล title
               document.getElementById("assignment-title").textContent =
                 data.title || "No title available";
-              const dueDate = data.dueDate ? data.dueDate : "No due date"; // ใช้ string โดยตรง
-              const dueTime = data.dueTime ? data.dueTime : "No due time"; // ใช้ string โดยตรง
+
+              // แสดง Due Date และ Time
+              const dueDate = data.dueDate ? data.dueDate : "No due date";
+              const dueTime = data.dueTime ? data.dueTime : "No due time";
               document.querySelector(
                 ".due-date"
               ).textContent = `Due ${dueDate} at ${dueTime}`;
-              document.querySelector(".details-section.instructions p");
+
+              // แสดง Instructions
+              const instructionsElement = document.querySelector(
+                ".details-section.instructions p"
+              );
+              instructionsElement.textContent =
+                data.instructions || "No instructions available"; // ดึง instructions จาก Firestore
+
+              // แสดงไฟล์ที่แนบ
               if (data.fileUrl) {
                 displayFile(data.fileUrl);
               }
@@ -708,32 +720,6 @@
           })
           .catch((error) => {
             console.error("Error fetching assignment:", error);
-          });
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const emailFromUrl = urlParams.get("email");
-        if (emailFromUrl) {
-          loadNotificationsCount(emailFromUrl); // เรียกใช้ฟังก์ชันเพื่อนับการแจ้งเตือน
-        }
-      });
-
-      function loadNotificationsCount(userEmail) {
-        db.collection("Notifications")
-          .where("To", "==", userEmail)
-          .where("isRead", "==", false) // เฉพาะการแจ้งเตือนที่ยังไม่ได้อ่าน
-          .onSnapshot((snapshot) => {
-            console.log("Notifications snapshot size:", snapshot.size); // เพิ่ม log เพื่อตรวจสอบว่า snapshot size เท่าไหร่
-            const unreadCount = snapshot.size; // นับจำนวนเอกสารที่ยังไม่ได้อ่าน
-
-            const notificationBadge =
-              document.getElementById("notificationBadge");
-            if (unreadCount > 0) {
-              notificationBadge.style.display = "block";
-              notificationBadge.textContent = unreadCount;
-            } else {
-              notificationBadge.style.display = "none";
-            }
           });
       }
 
@@ -845,9 +831,12 @@
                     ".due-date"
                   ).textContent = `Due ${dueDate} at ${dueTime}`;
 
-                  // แสดงคำสั่งงานหรือ Instructions
-                  document.querySelector(".details-section.instructions p");
-
+                  /// แสดง Instructions
+                  const instructionsElement = document.querySelector(
+                    ".details-section.instructions p"
+                  );
+                  instructionsElement.textContent =
+                    data.instructions || "No instructions available"; // ดึง instructions จาก Firestore
                   // ถ้ามีไฟล์แนบ แสดงไฟล์แนบ
                   if (data.fileUrl) {
                     displayFile(data.fileUrl);
@@ -1591,72 +1580,50 @@
 
         // ตรวจสอบ SubmissionId ใน URL ถ้ามีให้ใช้ SubmissionId นี้ในการตรวจสอบ
         if (submissionIdFromUrl) {
-          console.log("SubmissionId from URL:", submissionIdFromUrl);
-
           try {
-            // ค้นหา Submission จาก SubmissionId
-            const submissionRef = db
-              .collection("Submissions")
-              .doc(submissionIdFromUrl);
-            const submissionDoc = await submissionRef.get();
+            const scoreQuery = await db
+              .collection("Score")
+              .where("SubmissionId", "==", submissionIdFromUrl)
+              .limit(1)
+              .get();
 
-            if (submissionDoc.exists) {
-              const submissionData = submissionDoc.data();
-              const assignmentId = submissionData.assignmentId; // ดึง AssignmentId จากข้อมูล Submission
-              console.log("AssignmentId from Submission:", assignmentId);
+            if (!scoreQuery.empty) {
+              // ถ้ามีเอกสารที่ตรงกัน ให้ดึงข้อมูลจากเอกสารนั้น
+              const scoreDoc = scoreQuery.docs[0];
+              const scoreData = scoreDoc.data();
 
-              // ตรวจสอบ Score โดยใช้ SubmissionId
-              const scoreQuery = await db
-                .collection("Score")
-                .where("SubmissionId", "==", submissionIdFromUrl)
-                .limit(1)
-                .get();
+              console.log("Score data found:", scoreData);
 
-              if (!scoreQuery.empty) {
-                const scoreDoc = scoreQuery.docs[0];
-                const scoreData = scoreDoc.data();
-                console.log("Score data found:", scoreData);
-
-                // แสดงคะแนนที่ได้
-                const scoreElement = document.querySelector(".right-section p");
-                scoreElement.textContent = `Points : ${scoreData.ScoreObtained}/${scoreData.points}`;
-              } else {
-                console.log(
-                  "No matching score document found for SubmissionId:",
-                  submissionIdFromUrl
-                );
-
-                // ถ้าไม่มีข้อมูล Score ให้ดึงข้อมูลจาก Assignment แทน
-                if (assignmentId) {
-                  const assignmentRef = db
-                    .collection("Assignments")
-                    .doc(assignmentId);
-                  const assignmentDoc = await assignmentRef.get();
-
-                  if (assignmentDoc.exists) {
-                    const assignmentData = assignmentDoc.data();
-                    console.log("Assignment data found:", assignmentData);
-
-                    // แสดงคะแนนจาก Assignment
-                    const scoreElement =
-                      document.querySelector(".right-section p");
-                    scoreElement.textContent = `Points : ${assignmentData.points}`;
-                  } else {
-                    console.log(
-                      "No matching assignment document found for AssignmentId:",
-                      assignmentId
-                    );
-                  }
-                }
-              }
+              // แสดงคะแนนในรูปแบบ คะแนนที่ได้/คะแนนเต็ม
+              const scoreElement = document.querySelector(".right-section p");
+              scoreElement.textContent = `Points : ${scoreData.ScoreObtained}/${scoreData.points}`;
             } else {
               console.log(
-                "No matching submission document found for SubmissionId:",
+                "No matching score document found for SubmissionId:",
                 submissionIdFromUrl
               );
+
+              // ถ้าไม่มีข้อมูลใน Score ให้ดึงข้อมูลจาก Assignments มาแสดงแทน
+              const assignmentRef = await db
+                .collection("Assignments")
+                .doc(assignmentId)
+                .get();
+              if (assignmentRef.exists) {
+                const assignmentData = assignmentRef.data();
+                console.log("Assignment data found:", assignmentData);
+
+                // แสดงคะแนนจาก Assignments
+                const scoreElement = document.querySelector(".right-section p");
+                scoreElement.textContent = `Points : ${assignmentData.points}`;
+              } else {
+                console.log(
+                  "No matching assignment document found for assignmentId:",
+                  assignmentId
+                );
+              }
             }
           } catch (error) {
-            console.error("Error fetching submission or score data:", error);
+            console.error("Error fetching score for SubmissionId:", error);
           }
         } else if (email && assignmentId) {
           // ตรวจสอบ email ใน collection Submissions
