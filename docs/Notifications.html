@@ -402,16 +402,10 @@
       <div class="notification-details" id="notificationDetails">
         <div class="notification-header">
           <h2 class="notification-title"></h2>
-          <p class="due-date">Due Date: ${dueDate} ${dueTime}</p>
+          <p class="due-date">Loading...</p>
         </div>
         <div class="notification-body">
-          <p>
-            ${data.Message}
-            <span class="created-at"
-              >${new Date(data.CreatedAt.seconds *
-              1000).toLocaleString("th-TH")}</span
-            >
-          </p>
+          <p><span class="created-at"></span></p>
         </div>
       </div>
     </div>
@@ -585,10 +579,39 @@
           );
       }
 
-      function goToAssignmentDetail(documentId) {
+      function goToAssignmentDetailAs(documentId) {
         const email = new URLSearchParams(window.location.search).get("email");
         window.location.href = `AssignmentDetail.html?assignmentId=${documentId}&email=${email}`;
       }
+      function goToAssignmentDetail(scoreId, email) {
+        if (scoreId) {
+          // ค้นหาใน collection "Score" โดยใช้ ScoreId เพื่อดึง AssignmentId ที่เกี่ยวข้อง
+          db.collection("Score")
+            .doc(scoreId)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                const scoreData = doc.data();
+                const assignmentId = scoreData.assignmentId; // ดึง assignmentId จาก Score
+
+                if (assignmentId) {
+                  // ถ้ามี assignmentId ส่งไปยังหน้า AssignmentDetail พร้อม email
+                  window.location.href = `AssignmentDetail.html?assignmentId=${assignmentId}&email=${email}`;
+                } else {
+                  console.error("Assignment ID not found in Score document.");
+                }
+              } else {
+                console.error("No matching Score document found.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching Score document:", error);
+            });
+        } else {
+          console.error("Score ID not found.");
+        }
+      }
+
       // Load notifications when the page loads
       window.onload = loadNotifications;
 
@@ -604,14 +627,21 @@
             "email"
           );
 
-          // เปลี่ยนเส้นทางไปยังหน้า AssignmentDetail.html โดยส่ง email และ assignmentId
-          window.location.href = `AssignmentDetail.html?SubmissionId=${data.SubmissionId}&email=${email}`;
-        } else {
-          // แสดงรายละเอียดการแจ้งเตือนอื่นๆ ตามปกติ
-          const notificationDetails = document.getElementById(
-            "notificationDetails"
-          );
-          notificationDetails.style.display = "block"; // แสดงกล่องเมื่อคลิกที่รายการแจ้งเตือน
+          // อัปเดตสถานะการแจ้งเตือนเป็นอ่านแล้วก่อนเปลี่ยนหน้า
+          db.collection("Notifications")
+            .doc(docId)
+            .update({
+              isRead: true, // เปลี่ยนสถานะการอ่าน
+            })
+            .then(() => {
+              // เมื่ออัปเดตสำเร็จแล้ว เปลี่ยนเส้นทางไปยังหน้า AssignmentDetail.html
+              window.location.href = `AssignmentDetail.html?SubmissionId=${data.SubmissionId}&email=${email}`;
+            })
+            .catch((error) => {
+              console.error("Error marking notification as read: ", error);
+              // เปลี่ยนหน้าแม้จะมีข้อผิดพลาดในการอัปเดต
+              window.location.href = `AssignmentDetail.html?SubmissionId=${data.SubmissionId}&email=${email}`;
+            });
         }
 
         if (data && data.Message) {
@@ -622,24 +652,42 @@
           if (data.Type === "Assignment") {
             // แสดง Title และ dueDate สำหรับ Assignment
             notificationDetails.innerHTML = `
-                  <div class="notification-body">
-                    <p>${data.Message} <span class="created-at">${new Date(
+              <div class="notification-body">
+                <p>${data.Message} <span class="created-at">${new Date(
               data.CreatedAt.seconds * 1000
             ).toLocaleString("th-TH")} น.</span></p>
-                  </div>
-                  <div class="notification-header">
-                    <h2 class="notification-title">${title}</h2>
-                    <p class="due-date">Due Date : ${new Date(
-                      dueDate
-                    ).toLocaleDateString("th-TH", {
-                      day: "numeric",
-                      month: "numeric",
-                      year: "numeric",
-                    })}</p>
-                   <button class="view-details-btn" onclick="goToAssignmentDetail('${
-                     data.AssignmentID
-                   }')">ดูรายละเอียดงาน</button>
-                `;
+              </div>
+              <div class="notification-header">
+                <h2 class="notification-title">${title}</h2>
+                <p class="due-date">Due Date : ${new Date(
+                  dueDate
+                ).toLocaleDateString("th-TH", {
+                  day: "numeric",
+                  month: "numeric",
+                  year: "numeric",
+                })}</p>
+                <button class="view-details-btn" onclick="goToAssignmentDetailAs('${
+                  data.AssignmentID
+                }')">
+                  ดูรายละเอียดงาน
+                </button>
+            `;
+          } else if (data.Type === "Score") {
+            // แสดงเฉพาะคะแนนสำหรับ Score
+            notificationDetails.innerHTML = `
+              <div class="notification-body">
+                <p>${data.Message} <span class="created-at">${new Date(
+              data.CreatedAt.seconds * 1000
+            ).toLocaleString("th-TH")} น.</span></p>
+              </div>
+              <div class="notification-header">
+                <h2 class="notification-title">Score</h2>
+                
+                <button class="view-details-btn" onclick="goToAssignmentDetail('${
+                  data.ScoreId
+                }', '${email}')">ดูรายละเอียดคะแนน</button>
+
+            `;
           } else if (data && data.Type === "JoinRequest") {
             // โหลด JoinRequest ตาม JoinRequestId ที่แจ้งเตือนมี
             db.collection("JoinRequests")
