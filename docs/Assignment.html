@@ -29,6 +29,15 @@
       html,
       body {
         height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        /* ปิดการเลื่อนของหน้าจอหลัก */
+      }
+
+      html,
+      body {
+        height: 100%;
         min-height: 100%;
         margin: 0;
         padding: 0;
@@ -174,7 +183,6 @@
         width: 400px;
         border-radius: 5px;
         max-height: 200px;
-        overflow-y: auto;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         top: 38px;
       }
@@ -206,7 +214,10 @@
         margin-left: 80px;
         padding: 20px;
         background-color: #2f2f2f;
-        overflow-y: auto;
+        height: 100vh;
+        /* ให้ content เต็มความสูงของหน้าจอ */
+        overflow: hidden;
+        /* ปิดการเลื่อนของคอนเทนเนอร์หลัก */
       }
 
       .tabs {
@@ -217,10 +228,10 @@
       }
 
       .tab {
-        padding: 10px 20px;
         color: #bbb;
         cursor: pointer;
         margin-right: 10px;
+        padding: 10px 20px;
       }
 
       .tab.active {
@@ -229,9 +240,12 @@
       }
 
       .assignment-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
+        flex-grow: 1;
+        overflow-y: auto;
+        /* เปิดการเลื่อนในคอนเทนเนอร์ .assignment-container */
+        max-height: calc(100vh - 180px);
+        /* ลดพื้นที่ 100px จากความสูงหน้าจอ */
+        padding: 10px;
       }
 
       .assignment-card {
@@ -304,7 +318,6 @@
         height: 100%;
         background: rgba(0, 0, 0, 0.5);
         z-index: 1000;
-        overflow-y: auto;
         /* เพิ่ม overflow เพื่อให้เลื่อนเนื้อหาได้ */
       }
 
@@ -318,7 +331,6 @@
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         max-height: 90vh;
         /* เพิ่มขีดจำกัดความสูง */
-        overflow-y: auto;
         /* ให้โมดอลสามารถเลื่อนเนื้อหาได้เมื่อมีข้อมูลเยอะ */
       }
 
@@ -523,6 +535,311 @@
         font-size: 12px;
         display: none;
       }
+      /* Container สำหรับรายการ Submission */
+
+      .submission-list {
+        display: flex;
+        flex-direction: column;
+      }
+      /* การ์ดแสดง Submission */
+
+      .submission-card {
+        background-color: #3b3b3b;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 1 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 10px 0px 0px 10px;
+        /* เพิ่มระยะห่าง ซ้าย ขวา บน ล่าง */
+      }
+
+      .submission-card p {
+        font-size: 14px;
+        color: #ffffff;
+        margin: 0;
+      }
+
+      .submission-card .submission-info {
+        font-size: 14px;
+        color: #ffffff;
+      }
+      /* Formatting for submission and grade sections */
+
+      .submission-card .grade-info {
+        font-weight: bold;
+        color: #34a853;
+      }
+
+      .submission-card .feedback-info {
+        font-size: 13px;
+        color: #666;
+      }
+      /* Date and time formatting */
+
+      .submission-card .date-format {
+        font-weight: bold;
+        color: #1a73e8;
+      }
+
+      .submission-card .time-format {
+        font-size: 12px;
+        color: #757575;
+      }
+      /* Layout adjustments */
+
+      .submission-container {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .submission-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f1f3f4;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #202124;
+      }
+
+      .submission-header .icon {
+        font-size: 20px;
+        color: #5f6368;
+      }
+      /* Styling for the reload button */
+
+      .reload-button {
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .reload-button:hover {
+        background-color: #1669bb;
+      }
+      /* Styling for the notification tab */
+
+      .notification-tab {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .notification-tab p {
+        font-size: 14px;
+        color: #333;
+        margin: 0;
+      }
+      /* Active tab styling */
+
+      .active-tab {
+        background-color: #e6f4ea;
+        color: #34a853;
+        border-left: 4px solid #34a853;
+        padding-left: 10px;
+      }
+      /* Tab layout */
+
+      .tab-layout {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 20px;
+        background-color: #fff;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab-item {
+        font-size: 16px;
+        color: #333;
+        margin-right: 20px;
+        text-transform: capitalize;
+        cursor: pointer;
+      }
+
+      .tab-item:hover {
+        color: #1a73e8;
+      }
+
+      .tab-item.active {
+        color: #1a73e8;
+        font-weight: bold;
+        border-bottom: 2px solid #1a73e8;
+      }
+      /* ข้อมูลฝั่งซ้าย (รายละเอียดการส่ง) */
+
+      .submission-content {
+        display: flex;
+        padding: 10px;
+        /* ลด padding เพื่อลดขนาดกล่อง */
+        width: 100%;
+        /* ลดขนาดความกว้างของกล่องลงเหลือ 80% ของพื้นที่ */
+        max-width: 5000px;
+        /* กำหนดความกว้างสูงสุดของกล่อง */
+        background-color: #3b3b3b;
+        /* เพิ่มสีพื้นหลังสำหรับความชัดเจน */
+        border-radius: 10px;
+        /* โค้งมุมเล็กน้อย */
+      }
+
+      .submission-left {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        /* ขยับไปทางขวาด้วยการเพิ่มระยะห่างจากขอบซ้าย */
+      }
+
+      .submission-info {
+        display: flex;
+        flex-direction: column;
+        margin: 8px 0;
+        /* เพิ่มระยะห่างบน-ล่างระหว่างข้อความ */
+        line-height: 2;
+        /* ปรับความสูงบรรทัดเพื่อเพิ่มระยะห่าง */
+      }
+
+      .submission-title {
+        font-size: 16px;
+        color: #ffffff;
+      }
+
+      .submission-date {
+        font-size: 12px;
+        color: #cccccc;
+      }
+
+      .submission-course {
+        font-size: 12px;
+        color: #b0b0b0;
+      }
+
+      .submission-right {
+        margin-left: auto;
+        margin-right: 0;
+        /* ทำให้ชิดขอบขวา */
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        /* จัดเรียงเนื้อหาด้านในไปทางขวา */
+      }
+
+      .submission-status {
+        font-size: 14px;
+        color: #4caf50;
+        background-color: #e8f5e9;
+        padding: 8px 8px;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+
+      .turned-in {
+        color: #4caf50;
+      }
+      /* ตัวแปรเฉพาะสำหรับการแสดงผล Upcoming */
+
+      :root {
+        --upcoming-bg-color: #333;
+        --upcoming-card-bg: #444;
+        --upcoming-text-color: #fff;
+        --upcoming-due-date-color: #ffffff;
+        --upcoming-subject-color: #bbb;
+        --upcoming-border-radius: 10px;
+        --upcoming-card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      /* Container สำหรับ Upcoming assignments */
+      /* ปรับขนาดการ์ดงาน */
+
+      .upcoming-container {
+        margin-left: 20px;
+        /* ปรับค่า margin-left ให้พอดี */
+        border-radius: 10px;
+      }
+
+      .upcoming-card {
+        background-color: var(--upcoming-card-bg);
+        color: var(--upcoming-text-color);
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: var(--upcoming-border-radius);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--upcoming-card-shadow);
+      }
+
+      .upcoming-card h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .upcoming-card .due-date {
+        color: var(--upcoming-due-date-color);
+        font-size: 14px;
+        margin-top: 12px;
+      }
+
+      .upcoming-card .subject-info {
+        color: var(--upcoming-subject-color);
+        font-size: 14px;
+        margin-top: 5px;
+      }
+      /* ไอคอนด้านซ้าย */
+
+      .upcoming-card-icon {
+        background-color: #5a9;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+      /* Layout สำหรับวันที่และเวลาส่ง */
+
+      .upcoming-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .upcoming-header .date-info {
+        color: var(--upcoming-due-date-color);
+        font-weight: bold;
+      }
+
+      .upcoming-body {
+        display: flex;
+        align-items: center;
+      }
+
+      .upcoming-icon {
+        margin-right: 15px;
+      }
+
+      .upcoming-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .upcoming-subject {
+        color: var(--upcoming-subject-color);
+      }
     </style>
   </head>
 
@@ -549,6 +866,7 @@
       <div class="tabs" id="tabsContainer"></div>
       <button id="createButton" class="create-button">Create</button>
       <div class="assignment-container" id="assignmentContainer"></div>
+      <div class="upcoming-container"></div>
     </div>
 
     <!-- โมดอลสำหรับการสร้าง Assignment ใหม่ -->
@@ -592,6 +910,11 @@
           <input type="time" id="dueTime" />
         </div>
       </div>
+    </div>
+
+    <!-- กล่องข้อมูลที่ต้องการซ่อน -->
+    <div id="infoBox" style="display: none">
+      <p></p>
     </div>
 
     <!-- Sidebar -->
@@ -796,9 +1119,9 @@
 
         if (role === "creator") {
           tabsContainer.innerHTML = `
-      <div class="tab active" id="assignmentTab">Assignment</div>
-      <div class="tab" id="returnAssignmentTab">Return Assignment</div>
-    `;
+            <div class="tab active" id="assignmentTab">Assignment</div>
+            <div class="tab" id="returnAssignmentTab">Return Assignment</div>
+          `;
 
           // แสดงปุ่ม Create เฉพาะเมื่อมี Document ID
           if (documentId) {
@@ -808,10 +1131,10 @@
           }
         } else {
           tabsContainer.innerHTML = `
-      <div class="tab active" id="upcomingTab">Upcoming</div>
-      <div class="tab" id="pastDueTab">Past due</div>
-      <div class="tab" id="completedTab">Completed</div>
-    `;
+            <div class="tab active" id="upcomingTab">Upcoming</div>
+            <div class="tab" id="pastDueTab">Past due</div>
+            <div class="tab" id="completedTab">Completed</div>
+          `;
           createButton.style.display = "none"; // Hide the create button for non-creators
         }
       }
@@ -850,6 +1173,7 @@
           document.getElementById("createModal").style.display = "none";
         }
       });
+
       document.addEventListener("DOMContentLoaded", function () {
         // ฟังก์ชันในการดึงพารามิเตอร์จาก URL
         function getQueryParameter(parameterName) {
@@ -860,6 +1184,7 @@
         // ดึงค่าต่างๆ จาก URL
         const classroomName = getQueryParameter("classroom");
         const email = getQueryParameter("email");
+        const assignmentId = getQueryParameter("assignmentId"); // ดึง assignmentId หากมีการแก้ไข
 
         console.log("Classroom Name:", classroomName);
         console.log("Email:", email);
@@ -881,13 +1206,19 @@
 
                   // แสดงปุ่ม Create ถ้า email ตรงกับ email ของผู้สร้าง
                   if (email === createdByEmail) {
-                    createButton.style.display = "inline-block"; // Show the create button
+                    createButton.style.display = "inline-block"; // แสดงปุ่ม Create
 
-                    // บันทึก assignment เมื่อคลิกปุ่ม Assign
+                    // บันทึกหรือแก้ไข assignment เมื่อคลิกปุ่ม Assign
                     document
                       .querySelector(".assign-btn")
                       .addEventListener("click", function () {
-                        saveAssignment(classroomDocumentId); // ส่ง classroomDocumentId ไปยังฟังก์ชัน saveAssignment
+                        if (assignmentId) {
+                          // ถ้ามี assignmentId ให้เรียกฟังก์ชันแก้ไข
+                          updateAssignment(classroomDocumentId, assignmentId);
+                        } else {
+                          // ถ้าไม่มี assignmentId ให้สร้าง assignment ใหม่
+                          saveAssignment(classroomDocumentId);
+                        }
                       });
                   } else {
                     console.log(
@@ -905,143 +1236,60 @@
         }
       });
 
-      document
-        .getElementById("createButton")
-        .addEventListener("click", function () {
-          const infoBox = document.getElementById("infoBox");
-
-          // สลับการแสดงผลกล่องข้อมูล
-          if (
-            infoBox.style.display === "none" ||
-            infoBox.style.display === ""
-          ) {
-            infoBox.style.display = "block"; // แสดงกล่องข้อมูล
-          } else {
-            infoBox.style.display = "none"; // ซ่อนกล่องข้อมูล
-          }
-        });
-
-      // Function to handle assignment submission
-      function saveAssignment(DocumentID) {
-        // Get form values
-        var title = document.getElementById("title").value;
-        var instructions = document.getElementById("instructions").value;
-        var points = document.getElementById("points").value;
-        var assignTo = document.getElementById("assignTo").value;
-        var dueDate = document.getElementById("dueDate").value;
-        var dueTime = document.getElementById("dueTime").value;
-        var fileInput = document.getElementById("resources").files[0];
+      // ฟังก์ชันสำหรับบันทึก assignment ใหม่ลง Firestore
+      function saveAssignment(classroomDocumentId) {
+        const title = document.getElementById("title").value;
+        const instructions = document.getElementById("instructions").value;
+        const points = document.getElementById("points").value;
+        const assignTo = document.getElementById("assignTo").value;
+        const dueDate = document.getElementById("dueDate").value;
+        const dueTime = document.getElementById("dueTime").value;
+        const fileInput = document.getElementById("resources").files[0];
 
         if (!title) {
-          alert("Please fill the required title field.");
+          alert("กรุณากรอกชื่อของงาน");
           return;
         }
 
-        // If file is selected, upload to Firebase Storage first
+        const assignmentData = {
+          title: title,
+          instructions: instructions,
+          points: points,
+          assignTo: assignTo,
+          dueDate: dueDate,
+          dueTime: dueTime,
+          fileUrl: "",
+          createdBy: document.getElementById("user-email").textContent,
+          CreatedAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          DocumentID: classroomDocumentId, // บันทึก DocumentID ที่เกี่ยวข้องกับ assignment นี้
+        };
+
+        // อัปโหลดไฟล์ถ้ามี
         if (fileInput) {
-          var storageRef = firebase
+          const storageRef = firebase
             .storage()
             .ref("assignments/" + fileInput.name);
-          var uploadTask = storageRef.put(fileInput);
+          const uploadTask = storageRef.put(fileInput);
 
           uploadTask.on(
             "state_changed",
-            function (snapshot) {
-              // Progress handling (optional)
-            },
+            function (snapshot) {},
             function (error) {
-              console.error("File upload error: ", error);
+              console.error("File upload error:", error);
               alert("Error uploading file. Please try again.");
             },
             function () {
-              // File upload complete, get download URL and save to Firestore
               uploadTask.snapshot.ref
                 .getDownloadURL()
                 .then(function (downloadURL) {
-                  addAssignmentToFirestore(
-                    DocumentID, // ส่ง DocumentID ที่ได้จาก Firestore
-                    title,
-                    instructions,
-                    points,
-                    assignTo,
-                    dueDate,
-                    dueTime,
-                    downloadURL
-                  );
+                  assignmentData.fileUrl = downloadURL; // ใส่ URL ของไฟล์ลงใน assignmentData
+                  addAssignmentToFirestore(assignmentData); // บันทึก assignment ลง Firestore
                 });
             }
           );
         } else {
-          // If no file selected, save directly to Firestore
-          addAssignmentToFirestore(
-            DocumentID, // ส่ง DocumentID ที่ได้จาก Firestore
-            title,
-            instructions,
-            points,
-            assignTo,
-            dueDate,
-            dueTime,
-            ""
-          );
+          addAssignmentToFirestore(assignmentData);
         }
-      }
-
-      // After successfully adding the assignment to Firestore
-      function addAssignmentToFirestore(
-        DocumentID,
-        title,
-        instructions,
-        points,
-        assignTo,
-        dueDate,
-        dueTime,
-        fileUrl
-      ) {
-        db.collection("Assignments")
-          .add({
-            title: title,
-            instructions: instructions,
-            points: points,
-            assignTo: assignTo,
-            dueDate: dueDate,
-            dueTime: dueTime,
-            fileUrl: fileUrl,
-            createdBy: document.getElementById("user-email").textContent,
-            CreatedAt: firebase.firestore.Timestamp.fromDate(new Date()),
-            DocumentID: DocumentID, // บันทึก DocumentID
-          })
-          .then(function (docRef) {
-            console.log("Assignment added with ID: ", docRef.id);
-
-            // Now notify the members of the class
-            notifyMembersForAssignment(DocumentID, {
-              title: title,
-              instructions: instructions,
-              points: points,
-              assignTo: assignTo,
-              dueDate: dueDate,
-              dueTime: dueTime,
-              fileUrl: fileUrl,
-              createdBy: document.getElementById("user-email").textContent,
-              createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-              DocumentID: DocumentID,
-              AssignmentID: docRef.id, // เพิ่ม AssignmentID จาก docRef.id ที่ได้รับ
-            });
-
-            alert("Assignment saved successfully!");
-
-            // รีเซ็ตฟอร์มหลังจากบันทึกเสร็จ
-            resetForm();
-
-            // ซ่อน Modal หลังจากบันทึกเสร็จ
-            document.getElementById("createModal").style.display = "none";
-
-            // รีเฟรชหน้าเว็บ
-            window.location.reload(); // รีหน้าเว็บหลังจากที่บันทึกสำเร็จ
-          })
-          .catch(function (error) {
-            console.error("Error adding assignment: ", error);
-          });
       }
 
       // Notify all members of the assignment
@@ -1069,7 +1317,9 @@
                     dueTime: assignmentData.dueTime,
                     fileUrl: assignmentData.fileUrl,
                     createdBy: assignmentData.createdBy,
-                    CreatedAt: assignmentData.createdAt,
+                    CreatedAt: firebase.firestore.Timestamp.fromDate(
+                      new Date()
+                    ), // แก้ไขฟิลด์นี้
                     DocumentID: assignmentData.DocumentID,
                     AssignmentID: assignmentData.AssignmentID, // บันทึก AssignmentID ที่ได้มาจาก Firestore
                     isRead: false, // Initially set to unread
@@ -1093,7 +1343,284 @@
           });
       }
 
-      // Function to reset the form fields
+      // ฟังก์ชันสำหรับบันทึก assignment ใหม่ลง Firestore พร้อมแจ้งเตือน
+      function addAssignmentToFirestore(assignmentData) {
+        db.collection("Assignments")
+          .add(assignmentData)
+          .then(function (docRef) {
+            console.log("Assignment added with ID: ", docRef.id);
+
+            // แจ้งเตือนสมาชิกในห้องเรียน
+            notifyMembersForAssignment(assignmentData.DocumentID, {
+              ...assignmentData,
+              AssignmentID: docRef.id, // เพิ่ม AssignmentID ที่สร้างขึ้นใหม่
+            });
+
+            alert("Assignment saved successfully!");
+            resetForm(); // รีเซ็ตฟอร์มหลังจากบันทึกสำเร็จ
+            document.getElementById("createModal").style.display = "none"; // ปิด modal หลังบันทึกเสร็จ
+          })
+          .catch(function (error) {
+            console.error("Error adding assignment: ", error);
+          });
+      }
+
+      // ฟังก์ชันเพื่อแสดง assignments ทั้งหมด
+      function getAssignmentsByUser(userEmail) {
+        db.collection("Assignments")
+          .where("createdBy", "==", userEmail)
+          .get()
+          .then((querySnapshot) => {
+            if (querySnapshot.empty) {
+              console.log("No assignments found for this user.");
+            } else {
+              const assignmentContainer = document.getElementById(
+                "assignmentContainer"
+              );
+              assignmentContainer.innerHTML = ""; // ล้างข้อมูลเก่าก่อน
+
+              querySnapshot.forEach((doc) => {
+                const assignmentData = doc.data();
+                console.log(doc.id, " => ", assignmentData);
+
+                // สร้าง HTML ของ assignment card
+                const assignmentCard = document.createElement("div");
+                assignmentCard.classList.add("assignment-card");
+
+                assignmentCard.innerHTML = `
+            <h3>${assignmentData.title}</h3>
+            <p>กำหนดส่ง: ${assignmentData.dueDate} ${assignmentData.dueTime}</p>
+            <p>Points: ${assignmentData.points}</p>
+            <p>Instructions: ${assignmentData.instructions}</p>
+            <!-- ปุ่มแก้ไข -->
+            <i class="fas fa-edit edit-assignment" data-id="${doc.id}"></i>
+          `;
+
+                // เพิ่ม assignment card ลงใน container
+                assignmentContainer.appendChild(assignmentCard);
+              });
+
+              // หลังจากสร้างปุ่มทั้งหมดแล้ว ผูกเหตุการณ์ให้ปุ่มแก้ไขทำงาน
+              setupEditButtons();
+            }
+          })
+          .catch((error) => {
+            console.log("Error getting assignments: ", error);
+          });
+      }
+
+      // ฟังก์ชันในการผูกเหตุการณ์คลิกให้กับปุ่มแก้ไขทั้งหมด
+      function setupEditButtons() {
+        const editButtons = document.querySelectorAll(".edit-assignment");
+
+        editButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const assignmentId = this.getAttribute("data-id");
+            openEditModal(assignmentId); // เรียกใช้ฟังก์ชันเปิดโมดอลเพื่อแก้ไข assignment
+          });
+        });
+      }
+
+      // ฟังก์ชันเปิดโมดอลแก้ไข assignment
+      function openEditModal(assignmentId) {
+        // ดึงข้อมูลจาก Firestore ตาม assignmentId
+        db.collection("Assignments")
+          .doc(assignmentId)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const data = doc.data();
+
+              // เติมข้อมูลลงในฟอร์มแก้ไข
+              document.getElementById("title").value = data.title;
+              document.getElementById("instructions").value = data.instructions;
+              document.getElementById("points").value = data.points;
+              document.getElementById("dueDate").value = data.dueDate;
+              document.getElementById("dueTime").value = data.dueTime;
+
+              // แสดงโมดอล
+              const modal = document.getElementById("createModal");
+              modal.style.display = "flex";
+              modal.style.justifyContent = "center";
+              modal.style.alignItems = "center";
+
+              // ลบ Event Listener เก่าที่เคยถูกเพิ่มแล้ว
+              const saveBtn = document.querySelector(".save-btn");
+              saveBtn.replaceWith(saveBtn.cloneNode(true)); // รีเซ็ต event listener เดิมทั้งหมด
+              const newSaveBtn = document.querySelector(".save-btn");
+
+              // เพิ่ม Event Listener สำหรับการบันทึกการแก้ไข
+              newSaveBtn.addEventListener("click", function () {
+                const title = document.getElementById("title").value;
+                const instructions =
+                  document.getElementById("instructions").value;
+                const points = document.getElementById("points").value;
+                const dueDate = document.getElementById("dueDate").value;
+                const dueTime = document.getElementById("dueTime").value;
+                const assignTo = document.getElementById("assignTo").value; // เพิ่มการดึง assignTo
+                const fileInput = document.getElementById("resources").files[0]; // ดึงไฟล์ที่แนบมา (ถ้ามี)
+
+                // ตรวจสอบข้อมูลก่อนการบันทึก
+                if (!title || !dueDate || !dueTime) {
+                  alert("กรุณากรอกข้อมูลที่จำเป็น");
+                  return;
+                }
+
+                // ข้อมูลการอัปเดต Assignment ทั้งหมด
+                const updatedAssignmentData = {
+                  title: title,
+                  instructions: instructions,
+                  points: points,
+                  assignTo: assignTo, // เพิ่ม assignTo
+                  dueDate: dueDate,
+                  dueTime: dueTime,
+                  createdBy: document.getElementById("user-email").textContent,
+                  UpdatedAt: firebase.firestore.Timestamp.fromDate(new Date()), // ใส่วันที่อัปเดต
+                  DocumentID: data.DocumentID, // เก็บ DocumentID ของ Assignment เดิม
+                  fileUrl: "", // เริ่มต้น fileUrl ว่าง
+                };
+
+                // อัปโหลดไฟล์ถ้ามี
+                if (fileInput) {
+                  const storageRef = firebase
+                    .storage()
+                    .ref("assignments/" + fileInput.name);
+                  const uploadTask = storageRef.put(fileInput);
+
+                  uploadTask.on(
+                    "state_changed",
+                    function (snapshot) {},
+                    function (error) {
+                      console.error("File upload error:", error);
+                      alert("Error uploading file. Please try again.");
+                    },
+                    function () {
+                      uploadTask.snapshot.ref
+                        .getDownloadURL()
+                        .then(function (downloadURL) {
+                          updatedAssignmentData.fileUrl = downloadURL; // ใส่ URL ของไฟล์ลงใน updatedAssignmentData
+                          updateAssignmentInFirestore(
+                            assignmentId,
+                            updatedAssignmentData
+                          ); // อัปเดต assignment ใน Firestore
+
+                          // อัปเดต Notifications หลังจากอัปเดต Assignment
+                          updateNotificationsForAssignment(data.DocumentID, {
+                            ...updatedAssignmentData,
+                            AssignmentID: assignmentId,
+                          });
+                        });
+                    }
+                  );
+                } else {
+                  // อัปเดต Assignment ทันทีถ้าไม่มีไฟล์
+                  updateAssignmentInFirestore(
+                    assignmentId,
+                    updatedAssignmentData
+                  );
+
+                  // อัปเดต Notifications หลังจากอัปเดต Assignment
+                  updateNotificationsForAssignment(data.DocumentID, {
+                    ...updatedAssignmentData,
+                    AssignmentID: assignmentId,
+                  });
+                }
+              });
+            } else {
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+          });
+      }
+
+      // ฟังก์ชันอัปเดต Assignment ใน Firestore
+      function updateAssignmentInFirestore(
+        assignmentId,
+        updatedAssignmentData
+      ) {
+        db.collection("Assignments")
+          .doc(assignmentId)
+          .update(updatedAssignmentData)
+          .then(() => {
+            console.log(
+              "Assignment updated successfully with ID:",
+              assignmentId
+            );
+            alert("Assignment updated successfully!");
+          })
+          .catch((error) => {
+            console.error("Error updating assignment:", error);
+          });
+      }
+
+      function updateNotificationsForAssignment(DocumentID, assignmentData) {
+        db.collection("Notifications")
+          .where("AssignmentID", "==", assignmentData.AssignmentID)
+          .get()
+          .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+              const promises = []; // ใช้เพื่อเก็บ promises ของการอัปเดตแต่ละครั้ง
+              querySnapshot.forEach((doc) => {
+                // ทำการอัปเดตแจ้งเตือนที่มี AssignmentID ตรงกัน
+                const updatePromise = db
+                  .collection("Notifications")
+                  .doc(doc.id)
+                  .update({
+                    Title: assignmentData.title,
+                    Message: `Assignment has been updated.`,
+                    instructions: assignmentData.instructions,
+                    points: assignmentData.points,
+                    dueDate: assignmentData.dueDate,
+                    dueTime: assignmentData.dueTime,
+                    fileUrl: assignmentData.fileUrl,
+                    UpdatedAt: firebase.firestore.Timestamp.fromDate(
+                      new Date()
+                    ), // อัปเดตวันที่
+                  })
+                  .then(() => {
+                    console.log(
+                      `Notification updated successfully for AssignmentID: ${assignmentData.AssignmentID}`
+                    );
+                  })
+                  .catch((error) => {
+                    console.error("Error updating notification:", error);
+                  });
+
+                // เพิ่ม promise ของการอัปเดตลงใน array
+                promises.push(updatePromise);
+              });
+
+              // รอให้การอัปเดตทั้งหมดเสร็จสิ้น จากนั้นทำการรีเฟรชหน้าเว็บ
+              Promise.all(promises).then(() => {
+                console.log(
+                  "All notifications updated successfully. Reloading page..."
+                );
+                window.location.reload(); // รีเฟรชหน้าเว็บหลังจากที่การอัปเดตเสร็จสมบูรณ์
+              });
+            } else {
+              console.log(
+                "No notifications found for this AssignmentID. No update made."
+              );
+            }
+          })
+          .catch(function (error) {
+            console.error(
+              "Error fetching notifications for AssignmentID:",
+              error
+            );
+          });
+      }
+
+      // ฟังก์ชันกรองค่าที่เป็น undefined ออกจากอ็อบเจ็กต์
+      function removeUndefinedFields(data) {
+        return Object.fromEntries(
+          Object.entries(data).filter(([key, value]) => value !== undefined)
+        );
+      }
+
+      // ฟังก์ชันสำหรับรีเซ็ตฟอร์ม
       function resetForm() {
         document.getElementById("title").value = "";
         document.getElementById("instructions").value = "";
@@ -1101,172 +1628,7 @@
         document.getElementById("assignTo").value = "all";
         document.getElementById("dueDate").value = "";
         document.getElementById("dueTime").value = "";
-        document.getElementById("resources").value = ""; // Reset file input
-      }
-
-      // Function to open the modal and load data when edit icon is clicked
-      document.addEventListener("click", function (event) {
-        if (event.target.classList.contains("edit-assignment")) {
-          const assignmentId = event.target.dataset.id;
-
-          // Fetch assignment data from Firestore
-          db.collection("Assignments")
-            .doc(assignmentId)
-            .get()
-            .then(function (doc) {
-              if (doc.exists) {
-                const data = doc.data();
-
-                // Set form values with existing assignment data
-                document.getElementById("title").value = data.title;
-                document.getElementById("instructions").value =
-                  data.instructions;
-                document.getElementById("points").value = data.points;
-                document.getElementById("assignTo").value = data.assignTo;
-                document.getElementById("dueDate").value = data.dueDate;
-                document.getElementById("dueTime").value = data.dueTime;
-
-                // Open the modal
-                document.getElementById("createModal").style.display = "flex";
-
-                // Save changes on Assign button click
-                document.querySelector(".assign-btn").onclick = function () {
-                  updateAssignment(assignmentId);
-                };
-              }
-            })
-            .catch(function (error) {
-              console.error("Error getting document: ", error);
-            });
-        }
-      });
-
-      // Function to update an existing assignment
-      function updateAssignment(assignmentId) {
-        // Get form values
-        var title = document.getElementById("title").value;
-        var instructions = document.getElementById("instructions").value;
-        var points = document.getElementById("points").value;
-        var assignTo = document.getElementById("assignTo").value;
-        var dueDate = document.getElementById("dueDate").value;
-        var dueTime = document.getElementById("dueTime").value;
-        var fileInput = document.getElementById("resources").files[0];
-
-        // Prepare assignment data for updating
-        var updatedData = {
-          title: title,
-          instructions: instructions,
-          points: points,
-          assignTo: assignTo,
-          dueDate: dueDate,
-          dueTime: dueTime,
-        };
-
-        // If a file is selected, upload it first
-        if (fileInput) {
-          var storageRef = firebase
-            .storage()
-            .ref("assignments/" + fileInput.name);
-          var uploadTask = storageRef.put(fileInput);
-
-          uploadTask.on(
-            "state_changed",
-            function (snapshot) {
-              // Handle progress
-            },
-            function (error) {
-              console.error("File upload error: ", error);
-            },
-            function () {
-              uploadTask.snapshot.ref
-                .getDownloadURL()
-                .then(function (downloadURL) {
-                  updatedData.fileUrl = downloadURL;
-
-                  // Update the assignment in Firestore
-                  db.collection("Assignments")
-                    .doc(assignmentId) // ใช้ assignmentId เพื่ออัปเดตเอกสารเดิม
-                    .update(updatedData)
-                    .then(function () {
-                      alert("Assignment updated successfully!");
-                      window.location.reload(); // Reload the page
-                    })
-                    .catch(function (error) {
-                      console.error("Error updating assignment: ", error);
-                    });
-                });
-            }
-          );
-        } else {
-          // Update the assignment in Firestore without file
-          db.collection("Assignments")
-            .doc(assignmentId) // ใช้ assignmentId เพื่ออัปเดตเอกสารเดิม
-            .update(updatedData)
-            .then(function () {
-              alert("Assignment updated successfully!");
-              window.location.reload(); // Reload the page
-            })
-            .catch(function (error) {
-              console.error("Error updating assignment: ", error);
-            });
-        }
-      }
-
-      // ฟังก์ชันในการดึง Assignment ที่สร้างโดยผู้ใช้ที่มี email ตรงกัน
-      function getAssignmentsByUser(userEmail) {
-        db.collection("Assignments")
-          .where("createdBy", "==", userEmail) // กรองข้อมูลโดยใช้ email
-          .get()
-          .then((querySnapshot) => {
-            // ตรวจสอบว่ามีข้อมูลหรือไม่
-            if (querySnapshot.empty) {
-              console.log("No assignments found for this user.");
-            } else {
-              // ลูปผ่านข้อมูลทั้งหมดที่ตรงกัน
-              querySnapshot.forEach((doc) => {
-                const assignmentData = doc.data();
-                console.log(doc.id, " => ", assignmentData);
-
-                // ตัวอย่างการแสดงผลใน DOM
-                const assignmentContainer = document.getElementById(
-                  "assignmentContainer"
-                );
-                const assignmentCard = document.createElement("div");
-                assignmentCard.classList.add("assignment-card");
-
-                function formatDate(dateString) {
-                  const date = new Date(dateString);
-
-                  // ดึงข้อมูลวัน เดือน และปี
-                  const day = String(date.getDate()).padStart(2, "0"); // แสดงวันเป็น 2 หลัก
-                  const month = String(date.getMonth() + 1).padStart(2, "0"); // เดือนเป็น 2 หลัก (เดือนใน JavaScript นับจาก 0-11)
-                  const year = date.getFullYear(); // ปี
-
-                  return `${day}/${month}/${year}`; // คืนค่ารูปแบบ วด/ดป
-                }
-
-                // วิธีการใช้ฟังก์ชันใน assignment-card
-                assignmentCard.innerHTML = `
-                  <h3>${assignmentData.title}</h3>
-                  <p>กำหนดส่ง : ${formatDate(assignmentData.dueDate)} ${
-                  assignmentData.dueTime
-                } น.</p>
-                  <p>Points: ${assignmentData.points}</p>
-                  <p>Instructions: ${assignmentData.instructions}</p>
-                  
-                  <!-- ปุ่มแก้ไข -->
-                  <i class="fas fa-edit edit-assignment" data-id="${
-                    doc.id
-                  }"></i>
-                `;
-
-                assignmentContainer.appendChild(assignmentCard);
-              });
-            }
-          })
-          .catch((error) => {
-            console.log("Error getting assignments: ", error);
-          });
+        document.getElementById("resources").value = ""; // รีเซ็ตไฟล์ที่อัปโหลด
       }
 
       // การเรียกใช้ฟังก์ชัน โดยส่ง email ของผู้ใช้เป็นพารามิเตอร์
@@ -1278,6 +1640,369 @@
           getAssignmentsByUser(userEmail);
         }
       });
+      document.addEventListener("DOMContentLoaded", function () {
+        const email = new URLSearchParams(window.location.search).get("email"); // ดึง email จาก URL
+        const createButton = document.getElementById("createButton"); // ปุ่ม Create
+        const returnAssignmentTab = document.getElementById(
+          "returnAssignmentTab"
+        );
+        const assignmentTab = document.getElementById("assignmentTab");
+
+        // เมื่อคลิกแท็บ Return Assignment
+        if (returnAssignmentTab) {
+          returnAssignmentTab.addEventListener("click", function () {
+            // ลบคลาส active จากแท็บอื่น
+            assignmentTab.classList.remove("active");
+
+            // เพิ่มคลาส active ให้ Return Assignment
+            returnAssignmentTab.classList.add("active");
+
+            // ซ่อนปุ่ม Create
+            createButton.style.display = "none";
+
+            // เรียกใช้ฟังก์ชัน checkNotificationsForReturnAssignments
+            if (email) {
+              checkNotificationsForReturnAssignments(email);
+            }
+          });
+        }
+
+        // เมื่อคลิกแท็บ Assignment
+        if (assignmentTab) {
+          assignmentTab.addEventListener("click", function () {
+            // ลบคลาส active จากแท็บอื่น
+            returnAssignmentTab.classList.remove("active");
+
+            // เพิ่มคลาส active ให้ Assignment
+            assignmentTab.classList.add("active");
+
+            // แสดงปุ่ม Create เฉพาะในเมนู Assignment
+            createButton.style.display = "inline-block";
+
+            // รีเฟรชหน้า 1 ครั้งเมื่อคลิกที่แท็บ Assignment
+            location.reload();
+          });
+        }
+
+        // ฟังก์ชันที่รันเมื่อคลิกเมนูอื่น (ถ้าต้องการ)
+        const upcomingTab = document.getElementById("upcomingTab");
+        if (upcomingTab) {
+          upcomingTab.addEventListener("click", function () {
+            // ซ่อนปุ่ม Create เมื่ออยู่ในเมนูอื่น
+            createButton.style.display = "none";
+          });
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const email = new URLSearchParams(window.location.search).get("email");
+        const returnAssignmentTab = document.getElementById(
+          "returnAssignmentTab"
+        );
+        const assignmentTab = document.getElementById("assignmentTab");
+
+        // เมื่อคลิกแท็บ Return Assignment
+        if (returnAssignmentTab) {
+          returnAssignmentTab.addEventListener("click", function () {
+            // รีเซ็ตคอนโซลทุกครั้งเมื่อคลิกเมนู Return Assignment
+            console.clear(); // เคลียร์คอนโซลเพื่อรีเซ็ต
+            console.log("Return Assignment Tab Clicked. Console reset.");
+
+            // ลบคลาส active จากแท็บอื่น
+            assignmentTab.classList.remove("active");
+
+            // เพิ่มคลาส active ให้ Return Assignment
+            returnAssignmentTab.classList.add("active");
+          });
+        }
+
+        // เมื่อคลิกแท็บ Assignment
+        if (assignmentTab) {
+          assignmentTab.addEventListener("click", function () {
+            // ลบคลาส active จากแท็บอื่น
+            returnAssignmentTab.classList.remove("active");
+
+            // เพิ่มคลาส active ให้ Assignment
+            assignmentTab.classList.add("active");
+
+            // รีเฟรชหน้า 1 ครั้งเมื่อคลิกที่แท็บ Assignment
+            location.reload();
+          });
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const email = new URLSearchParams(window.location.search).get("email");
+        const currentPage = window.location.pathname.split("/").pop(); // ดึงชื่อหน้าปัจจุบัน
+
+        if (email) {
+          // ถ้าหน้าเป็น Return Assignment ถึงจะเรียกฟังก์ชันดึงข้อมูล
+          if (currentPage === "ReturnAssignment.html") {
+            checkNotificationsForReturnAssignments(email);
+          }
+        }
+      });
+
+      // ฟังก์ชันที่ตรวจสอบ Notifications และเรียกข้อมูล Submissions
+      function checkNotificationsForReturnAssignments(email) {
+        const notificationContainer = document.getElementById(
+          "assignmentContainer"
+        ); // ที่จะแสดงข้อมูลผลลัพธ์
+        notificationContainer.innerHTML = ""; // เคลียร์ก่อนแสดงข้อมูลใหม่
+
+        const submissionIds = new Set(); // ใช้ Set เพื่อเก็บ SubmissionId ที่ไม่ซ้ำกัน
+
+        // ค้นหา Notifications ที่มี 'To' ตรงกับ email ของผู้ใช้
+        db.collection("Notifications")
+          .where("To", "==", email)
+          .get()
+          .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+              querySnapshot.forEach((doc) => {
+                const notificationData = doc.data();
+
+                if (notificationData.SubmissionId) {
+                  // ถ้า SubmissionId ยังไม่เคยถูกดึงมา ให้ดึงข้อมูล
+                  if (!submissionIds.has(notificationData.SubmissionId)) {
+                    submissionIds.add(notificationData.SubmissionId); // เพิ่ม SubmissionId ลงใน Set
+                    getSubmissionData(
+                      notificationData.SubmissionId,
+                      notificationContainer
+                    );
+                  }
+                }
+              });
+            } else {
+              console.log("No notifications found for this user.");
+              notificationContainer.innerHTML =
+                "<p>No return assignments found.</p>";
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting notifications: ", error);
+          });
+      }
+
+      // ฟังก์ชันในการดึงข้อมูลจาก Collection Submissions ตาม SubmissionId
+      function getSubmissionData(submissionId, container) {
+        db.collection("Submissions")
+          .doc(submissionId)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const submissionData = doc.data();
+
+              // แสดงผลลัพธ์ที่ดึงมาในคอนโซล
+              console.log("Submission Data:", submissionData);
+
+              // แปลงเวลาจาก Firestore Timestamp เป็น Date
+              const submittedAtDate = submissionData.submittedAt.toDate(); // แปลง timestamp เป็น Date object
+              const formattedSubmittedAt = formatTime(submittedAtDate); // เรียกฟังก์ชันเพื่อแปลงเป็นรูปแบบเวลา AM/PM
+
+              // ตรวจสอบฟิลด์จริงใน Firebase
+              const assignmentTitle =
+                submissionData.assignmentTitle || "No title";
+              const courseName = submissionData.courseName || "No course";
+
+              // แสดงผลลัพธ์ที่ดึงมาในคอนโซล
+              console.log("Assignment Title:", assignmentTitle);
+              console.log("Submitted At:", formattedSubmittedAt);
+              console.log("Course Name:", courseName);
+
+              // สร้าง submissionCard สำหรับแสดงผลใน DOM
+              const submissionCard = document.createElement("div");
+              submissionCard.classList.add("submission-card");
+
+              // ตรวจสอบ SubmissionId ใน Collection Score
+              db.collection("Score")
+                .where("SubmissionId", "==", submissionId)
+                .get()
+                .then((querySnapshot) => {
+                  let statusColor = "green"; // ตั้งค่าสีเริ่มต้นของปุ่ม
+
+                  // ถ้าไม่พบ SubmissionId ใน Score ให้เปลี่ยนสีเป็นเหลือง
+                  if (querySnapshot.empty) {
+                    statusColor = "yellow";
+                  }
+
+                  submissionCard.innerHTML = `
+              <div class="submission-content">
+                <div class="submission-left">
+                  <div class="submission-info">
+                    <p class="submission-title">${submissionData.submittedBy}</p>
+                    <p class="submission-date">Submitted at ${formattedSubmittedAt}</p>
+                  </div>
+                </div>
+                <div class="submission-right">
+                  <span class="submission-status turned-in" style="background-color:${statusColor};">Turned in</span>
+                </div>
+              </div>
+            `;
+
+                  // เพิ่มเหตุการณ์ click เพื่อพาผู้ใช้ไปยัง AssignmentDetail.html พร้อมส่ง email และ SubmissionId ผ่าน URL
+                  submissionCard.addEventListener("click", () => {
+                    const email = new URLSearchParams(
+                      window.location.search
+                    ).get("email");
+                    window.location.href = `AssignmentDetail.html?email=${email}&SubmissionId=${submissionId}`;
+                  });
+
+                  // เพิ่มข้อมูลลงใน container
+                  container.appendChild(submissionCard);
+                })
+                .catch((error) => {
+                  console.error("Error checking Score collection:", error);
+                });
+            } else {
+              console.log("No submission found with this ID:", submissionId);
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting submission data:", error);
+          });
+      }
+
+      // ฟังก์ชันในการแปลงเวลาให้อยู่ในรูปแบบ AM/PM
+      function formatTime(dateString) {
+        const date = new Date(dateString);
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12;
+        hours = hours ? hours : 12; // hour '0' should be '12'
+        return `${hours}:${minutes} ${ampm}`;
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // ตรวจสอบว่าปุ่ม Upcoming มีอยู่หรือไม่ และเพิ่มการทำงาน
+        const upcomingTab = document.getElementById("upcomingTab");
+        const pastDueTab = document.getElementById("pastDueTab");
+        const completedTab = document.getElementById("completedTab");
+
+        // ถ้าแท็บ Upcoming ถูก active อยู่แล้ว ให้ดึงข้อมูลทันทีเมื่อหน้าโหลด
+        if (upcomingTab && upcomingTab.classList.contains("active")) {
+          loadUpcomingAssignments();
+        }
+
+        // ถ้ามีแท็บ Upcoming ให้เพิ่ม event listener
+        if (upcomingTab) {
+          upcomingTab.addEventListener("click", function () {
+            // ลบคลาส active จากแท็บอื่น
+            pastDueTab.classList.remove("active");
+            completedTab.classList.remove("active");
+
+            // เพิ่มคลาส active ให้ Upcoming
+            upcomingTab.classList.add("active");
+
+            // เรียกฟังก์ชันสำหรับดึงงานที่ยังไม่ถึงกำหนดส่ง
+            loadUpcomingAssignments();
+          });
+        }
+
+        // ฟังก์ชันดึงข้อมูลงานที่ยังไม่ถึงกำหนดส่งและตรวจสอบข้อมูลใน Firestore
+        function loadUpcomingAssignments() {
+          const email = new URLSearchParams(window.location.search).get(
+            "email"
+          );
+
+          if (email) {
+            db.collection("Notifications")
+              .where("To", "==", email)
+              .where("Type", "==", "Assignment")
+              .get()
+              .then((querySnapshot) => {
+                const assignmentContainer = document.getElementById(
+                  "assignmentContainer"
+                );
+                assignmentContainer.innerHTML = ""; // ล้างข้อมูลเก่าก่อน
+
+                querySnapshot.forEach((doc) => {
+                  const notificationData = doc.data();
+                  const title = notificationData.Title || "No title"; // ดึง title จากข้อมูล
+                  const iconText = title.substring(0, 2).toUpperCase(); // ตัด 2 ตัวแรกจาก title และแปลงเป็นตัวพิมพ์ใหญ่
+                  const points = notificationData.points || "No points"; // ดึง points จากข้อมูล
+
+                  // สร้าง card สำหรับแสดงข้อมูล
+                  const assignmentCard = document.createElement("div");
+                  assignmentCard.classList.add("upcoming-card");
+
+                  assignmentCard.innerHTML = `
+                    <div class="upcoming-body">
+                      <div class="upcoming-card-icon">${iconText}</div>
+                      <div>
+                        <h3 class="upcoming-title">${title}</h3>
+                        <p class="due-date">Due at ${notificationData.dueDate} ${notificationData.dueTime} </p>
+                        <p class="subject-info">Points: ${points}</p> <!-- แสดง points -->
+                      </div>
+                    </div>
+                  `;
+
+                  assignmentContainer.appendChild(assignmentCard); // เพิ่ม card ลงใน container
+                });
+              })
+              .catch((error) => {
+                console.error("Error fetching notifications: ", error);
+              });
+          } else {
+            console.error("No email found in URL.");
+          }
+        }
+
+        // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบ วดป
+        function formatDate(dateString) {
+          const date = new Date(dateString);
+          const day = String(date.getDate()).padStart(2, "0"); // แปลงวันเป็น 2 หลัก
+          const month = String(date.getMonth() + 1).padStart(2, "0"); // แปลงเดือนเป็น 2 หลัก (เดือนใน JavaScript นับจาก 0-11)
+          const year = date.getFullYear(); // ดึงปีเป็น 4 หลัก
+          return `${day}/${month}/${year}`; // คืนค่ารูปแบบ วดป
+        }
+
+        // ถ้ามีแท็บ Past due ให้เพิ่ม event listener
+        if (pastDueTab) {
+          pastDueTab.addEventListener("click", function () {
+            // ลบคลาส active จากแท็บอื่น
+            upcomingTab.classList.remove("active");
+            completedTab.classList.remove("active");
+
+            // เพิ่มคลาส active ให้ Past due
+            pastDueTab.classList.add("active");
+
+            // เรียกฟังก์ชันสำหรับดึงงานที่เลยกำหนดแล้ว
+            loadPastDueAssignments();
+          });
+        }
+
+        // ถ้ามีแท็บ Completed ให้เพิ่ม event listener
+        if (completedTab) {
+          completedTab.addEventListener("click", function () {
+            // ลบคลาส active จากแท็บอื่น
+            upcomingTab.classList.remove("active");
+            pastDueTab.classList.remove("active");
+
+            // เพิ่มคลาส active ให้ Completed
+            completedTab.classList.add("active");
+
+            // เรียกฟังก์ชันสำหรับดึงงานที่ทำเสร็จแล้ว
+            loadCompletedAssignments();
+          });
+        }
+      });
+
+      // ตัวอย่างฟังก์ชันที่จะดึงงานตามหมวดหมู่
+      function loadUpcomingAssignments() {
+        console.log("Loading upcoming assignments...");
+        // ดึงข้อมูลจาก Firestore หรือที่เก็บข้อมูลที่เกี่ยวข้อง
+      }
+
+      function loadPastDueAssignments() {
+        console.log("Loading past due assignments...");
+        // ดึงข้อมูลจาก Firestore หรือที่เก็บข้อมูลที่เกี่ยวข้อง
+      }
+
+      function loadCompletedAssignments() {
+        console.log("Loading completed assignments...");
+        // ดึงข้อมูลจาก Firestore หรือที่เก็บข้อมูลที่เกี่ยวข้อง
+      }
     </script>
   </body>
 </html>
