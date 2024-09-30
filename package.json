@@ -1,6 +1,5 @@
 {
   "scripts": {
-    "lint": "eslint docs/js/*.js",
     "lint:html": "htmlhint docs/*.html"
   },
   "devDependencies": {
