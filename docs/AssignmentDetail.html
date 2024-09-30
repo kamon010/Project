@@ -693,7 +693,9 @@
               console.log("Data retrieved from Firestore:", doc.data());
               document.getElementById("assignment-title").textContent =
                 data.title || "No title available";
-              const dueDate = data.dueDate ? data.dueDate : "No due date"; // ใช้ string โดยตรง
+              const dueDate = data.dueDate
+                ? formatDate(data.dueDate)
+                : "No due date"; // เรียกใช้ formatDate เพื่อแปลงวันที่เป็น วดป
               const dueTime = data.dueTime ? data.dueTime : "No due time"; // ใช้ string โดยตรง
               document.querySelector(
                 ".due-date"
@@ -785,8 +787,8 @@
       function formatDate(dueDate) {
         const dateObj = new Date(dueDate);
         const options = {
-          day: "numeric",
-          month: "long",
+          day: "2-digit",
+          month: "2-digit",
           year: "numeric",
         };
         return dateObj.toLocaleDateString("th-TH", options);
@@ -1077,6 +1079,68 @@
           }
         }
       }
+
+      // ฟังก์ชันนี้จะตรวจสอบวันที่กำหนดส่งและปรับสีของปุ่มตามเงื่อนไข
+      function checkDueDateAndUpdateButton(dueDate, dueTime) {
+        const turnInButton = document.querySelector(".undo-btn");
+        const attachButton = document.querySelector(".custom-file-upload"); // ปุ่มแนบไฟล์
+        const fileInput = document.getElementById("file-upload"); // input สำหรับไฟล์
+
+        // แปลงวันที่และเวลาของกำหนดส่งให้อยู่ในรูปแบบที่เหมาะสม
+        const dueDateTime = new Date(`${dueDate}T${dueTime}`);
+        const currentDate = new Date(); // วันที่ปัจจุบัน
+
+        // เปรียบเทียบวันที่กำหนดส่งกับวันที่ปัจจุบัน
+        if (currentDate > dueDateTime) {
+          // ถ้ากำหนดส่งเลยวันที่ปัจจุบันแล้ว ให้เปลี่ยนสีปุ่มเป็นสีเขียวและปิดการใช้งานปุ่ม
+          turnInButton.style.backgroundColor = "#4CAF50"; // สีเขียว
+          turnInButton.disabled = true; // ปิดการใช้งานปุ่ม Turn in หรือ Undo Turn in
+          turnInButton.style.pointerEvents = "none"; // ป้องกันการคลิกที่ปุ่ม
+
+          // ปิดการใช้งานปุ่มแนบไฟล์
+          attachButton.style.pointerEvents = "none"; // ปิดการคลิกปุ่มแนบไฟล์
+          attachButton.style.opacity = "0.5"; // ทำให้ปุ่มดูจางลง
+          fileInput.disabled = true; // ปิดการอัปโหลดไฟล์
+        } else {
+          // ถ้ายังไม่ถึงกำหนดส่ง ใช้สีปุ่มเดิม (สามารถปรับได้ตามความต้องการ)
+          turnInButton.style.backgroundColor = "#4a90e2"; // สีฟ้าเริ่มต้น
+          turnInButton.disabled = false; // เปิดการใช้งานปุ่ม
+          turnInButton.style.pointerEvents = "auto"; // เปิดให้คลิกปุ่มได้
+
+          // เปิดการใช้งานปุ่มแนบไฟล์
+          attachButton.style.pointerEvents = "auto"; // เปิดการคลิกปุ่มแนบไฟล์
+          attachButton.style.opacity = "1"; // ทำให้ปุ่มแสดงผลปกติ
+          fileInput.disabled = false; // เปิดให้สามารถอัปโหลดไฟล์ได้
+        }
+      }
+
+      // เมื่อหน้าเว็บโหลดเสร็จแล้ว ให้เรียกฟังก์ชันเพื่อดึงข้อมูลวันที่กำหนดส่ง
+      document.addEventListener("DOMContentLoaded", function () {
+        // ตรวจสอบว่ามี assignmentId อยู่ใน URL หรือไม่
+        if (assignmentId) {
+          const assignmentRef = db.collection("Assignments").doc(assignmentId);
+
+          assignmentRef
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                const data = doc.data();
+
+                // ดึงวันที่และเวลาของกำหนดส่งจากเอกสาร
+                const dueDate = data.dueDate ? data.dueDate : "No due date";
+                const dueTime = data.dueTime ? data.dueTime : "No due time";
+
+                // เรียกฟังก์ชันเพื่อเปรียบเทียบวันที่และเปลี่ยนสีปุ่มและปิดการใช้งาน
+                checkDueDateAndUpdateButton(dueDate, dueTime);
+              } else {
+                console.error("No matching document found.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching assignment:", error);
+            });
+        }
+      });
 
       // Function to check for duplicate score by SubmissionId
       async function checkDuplicateScore(submissionId) {
