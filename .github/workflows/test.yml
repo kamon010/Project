@@ -74,14 +74,14 @@ jobs:
 
       - name: Save Cypress Videos and Screenshots
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-videos
           path: cypress/videos
 
       - name: Save Cypress Logs
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-logs
           path: cypress/logs
