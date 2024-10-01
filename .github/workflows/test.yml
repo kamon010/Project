@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run JavaScript Linting
-        run: npm run lint
-
       - name: Run HTML Linting
         run: npm run lint:html
+
+      - name: Run Unit Tests
+        run: npm test
