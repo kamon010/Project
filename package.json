@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "lint:html": "htmlhint docs/*.html",
+    "lint:html": "htmllint 'docs/**/*.html'",
     "test": "jest"
   },
   "devDependencies": {
