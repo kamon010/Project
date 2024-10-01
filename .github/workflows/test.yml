@@ -55,21 +55,5 @@ jobs:
         run: npm install
       - name: Install Cypress
         run: npm install cypress --save-dev
-      - name: Start HTTP Server
-        run: npx http-server docs -p 8080 &
-      - name: Wait for server to be ready
-        run: sleep 3
       - name: Run Cypress Tests
-        run: npx cypress run --spec 'cypress/integration/**/*.js'
-      - name: Save Cypress Videos and Screenshots
-        if: always()
-        uses: actions/upload-artifact@v3 # เปลี่ยนจาก @v2 เป็น @v3
-        with:
-          name: cypress-videos
-          path: cypress/videos
-      - name: Save Cypress Logs
-        if: always()
-        uses: actions/upload-artifact@v3 # เปลี่ยนจาก @v2 เป็น @v3
-        with:
-          name: cypress-logs
-          path: cypress/logs
+        run: npx cypress run --spec 'cypress/integration/e2e_test.js'

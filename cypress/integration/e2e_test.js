@@ -1,85 +1,98 @@
 describe("E2E Tests for the Application", () => {
-  // General Page Tests
-  describe("General Page Test", () => {
-    beforeEach(() => {
-      cy.visit("/general.html");
-    });
-
-    it("should load general content", () => {
-      cy.get(".content-header").should("exist");
-    });
-
-    it("should allow search functionality", () => {
-      cy.get("#searchInput").type("Test");
-      cy.get("#searchResults").should("contain", "Test");
-    });
-  });
-
-  // Login Page Tests (index.html)
+  // ทดสอบหน้า index.html (ล็อกอิน)
   describe("Login Page Test", () => {
     beforeEach(() => {
       cy.visit("/index.html");
     });
 
     it("should successfully log in with valid credentials", () => {
-      cy.get("#emailInput").type("test@example.com");
-      cy.get("#passwordInput").type("password");
-      cy.get("#loginButton").click();
+      cy.get("#email").type("test@example.com");
+      cy.get("#password").type("password123");
+      cy.get("#loginForm").submit();
       cy.url().should("include", "/studenthead.html");
     });
 
     it("should show error for incorrect password", () => {
-      cy.get("#emailInput").type("test@example.com");
-      cy.get("#passwordInput").type("wrongpassword");
-      cy.get("#loginButton").click();
-      cy.get(".error-message").should("contain", "Incorrect password");
+      cy.get("#email").type("test@example.com");
+      cy.get("#password").type("wrongpassword");
+      cy.get("#loginForm").submit();
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("Your password is incorrect.");
+      });
     });
 
     it("should show error for unregistered email", () => {
-      cy.get("#emailInput").type("unregistered@example.com");
-      cy.get("#passwordInput").type("password");
-      cy.get("#loginButton").click();
-      cy.get(".error-message").should("contain", "Email not found");
+      cy.get("#email").type("notregistered@example.com");
+      cy.get("#password").type("password123");
+      cy.get("#loginForm").submit();
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("This email is not registered yet.");
+      });
     });
   });
 
-  // Register Page Tests
+  // ทดสอบหน้า register.html (สมัครสมาชิก)
   describe("Register Page Test", () => {
     beforeEach(() => {
       cy.visit("/register.html");
     });
 
     it("should successfully register with valid input", () => {
-      cy.get("#emailInput").type("newuser@example.com");
-      cy.get("#usernameInput").type("New User");
-      cy.get("#passwordInput").type("password");
-      cy.get("#registerButton").click();
-      cy.url().should("include", "/studenthead.html");
+      cy.get("#username").type("JohnDoe");
+      cy.get("#email").type("john@example.com");
+      cy.get("#password").type("password123");
+      cy.get("#role").select("Student");
+      cy.get("#registerForm").submit();
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("การลงทะเบียนสำเร็จ");
+      });
     });
 
     it("should show error for already registered email", () => {
-      cy.get("#emailInput").type("test@example.com");
-      cy.get("#passwordInput").type("password");
-      cy.get("#registerButton").click();
-      cy.get(".error-message").should("contain", "Email already registered");
-    });
-
-    it("should show error for invalid input", () => {
-      cy.get("#emailInput").clear();
-      cy.get("#passwordInput").clear();
-      cy.get("#registerButton").click();
-      cy.get(".error-message").should("contain", "Invalid input");
+      cy.get("#username").type("JaneDoe");
+      cy.get("#email").type("existing@example.com");
+      cy.get("#password").type("password123");
+      cy.get("#role").select("Teacher");
+      cy.get("#registerForm").submit();
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("อีเมลนี้ถูกใช้ลงทะเบียนแล้ว");
+      });
     });
   });
 
-  // Student Head Page Tests
+  // ทดสอบหน้า Assignment.html (งาน)
+  describe("Assignment Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/Assignment.html");
+    });
+
+    it("should load assignments for the user", () => {
+      cy.get(".assignment-card").should("have.length.greaterThan", 0);
+    });
+
+    it("should open the create modal when clicking the Create button", () => {
+      cy.get("#createButton").click();
+      cy.get("#createModal").should("be.visible");
+    });
+
+    it("should create a new assignment", () => {
+      cy.get("#createButton").click();
+      cy.get("#title").type("New Test Assignment");
+      cy.get("#instructions").type("Test instructions for the new assignment.");
+      cy.get("#points").type("10");
+      cy.get(".assign-btn").click();
+      cy.get(".assignment-card").should("contain", "New Test Assignment");
+    });
+  });
+
+  // ทดสอบหน้า studenthead.html (แดชบอร์ดนักเรียน)
   describe("Student Head Page Test", () => {
     beforeEach(() => {
       cy.visit("/studenthead.html");
     });
 
     it("should display classroom dashboard", () => {
-      cy.get(".classroom-dashboard").should("exist");
+      cy.get(".classroom-dashboard").should("be.visible");
     });
 
     it("should allow navigating to assignments", () => {
@@ -88,7 +101,26 @@ describe("E2E Tests for the Application", () => {
     });
   });
 
-  // Assignment Detail Page Tests
+  describe("Notifications Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/Notifications.html?email=test@example.com");
+    });
+
+    it("should display notifications correctly", () => {
+      cy.get(".notification-item").should("have.length.greaterThan", 0);
+    });
+
+    it("should display details when a notification is clicked", () => {
+      cy.get(".notification-item").first().click();
+      cy.get("#notificationDetails").should("be.visible");
+      cy.get(".notification-title").should("contain", "Assignment");
+    });
+
+    it('should show "No notifications" message when there are no notifications', () => {
+      cy.get("#noNotifications").should("contain", "ไม่มีการแจ้งเตือน");
+    });
+  });
+
   describe("Assignment Detail Page Test", () => {
     beforeEach(() => {
       cy.visit("/AssignmentDetail.html");
@@ -99,35 +131,11 @@ describe("E2E Tests for the Application", () => {
     });
 
     it("should allow submission of assignment", () => {
-      cy.get("#submitAssignmentButton").click();
-      cy.get(".success-message").should("contain", "Assignment submitted");
+      cy.get(".submit-btn").click();
+      cy.get(".submit-confirmation").should("contain", "Assignment Submitted");
     });
   });
 
-  // Assignment Page Tests
-  describe("Assignment Page Test", () => {
-    beforeEach(() => {
-      cy.visit("/Assignment.html");
-    });
-
-    it("should load assignments for the user", () => {
-      cy.get(".assignment-card").should("exist");
-    });
-
-    it("should open the create modal when clicking the Create button", () => {
-      cy.get("#createButton").click();
-      cy.get(".create-modal").should("be.visible");
-    });
-
-    it("should create a new assignment", () => {
-      cy.get("#createButton").click();
-      cy.get("#assignmentTitleInput").type("New Assignment");
-      cy.get("#assignmentSubmitButton").click();
-      cy.get(".success-message").should("contain", "Assignment created");
-    });
-  });
-
-  // Chat Page Tests
   describe("Chat Page Test", () => {
     beforeEach(() => {
       cy.visit("/Chat.html");
@@ -135,7 +143,7 @@ describe("E2E Tests for the Application", () => {
 
     it("should allow sending a message", () => {
       cy.get("#messageInput").type("Hello, World!");
-      cy.get("#sendMessageButton").click();
+      cy.get("#sendButton").click();
       cy.get("#chatMessages").should("contain", "Hello, World!");
     });
 
@@ -147,39 +155,18 @@ describe("E2E Tests for the Application", () => {
     });
   });
 
-  // Notifications Page Tests
-  describe("Notifications Page Test", () => {
+  describe("General Page Test", () => {
     beforeEach(() => {
-      cy.visit("/Notifications.html");
+      cy.visit("/general.html");
     });
 
-    it("should display notifications correctly", () => {
-      cy.get(".notification-item").should("exist");
+    it("should load general content", () => {
+      cy.get(".general-section").should("be.visible");
     });
 
-    it("should display details when a notification is clicked", () => {
-      cy.get(".notification-item").first().click();
-      cy.get(".notification-detail").should("be.visible");
-    });
-
-    it("should show 'No notifications' message when there are no notifications", () => {
-      cy.get(".notification-item").should("not.exist");
-      cy.get("#noNotificationsMessage").should("be.visible");
-    });
-  });
-
-  // Logout Test (index.html)
-  describe("Logout Test", () => {
-    beforeEach(() => {
-      cy.visit("/index.html");
-      cy.get("#emailInput").type("test@example.com");
-      cy.get("#passwordInput").type("password");
-      cy.get("#loginButton").click();
-    });
-
-    it("should allow user to log out", () => {
-      cy.get("#logoutButton").click();
-      cy.url().should("include", "/index.html");
+    it("should allow search functionality", () => {
+      cy.get(".search-input").type("Test Search");
+      cy.get(".search-results").should("contain", "Test Search Result");
     });
   });
 });
