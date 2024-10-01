@@ -1,6 +1,15 @@
 describe("E2E Tests for the Application", () => {
   // ทดสอบหน้า index.html (ล็อกอิน)
   describe("Login Page Test", () => {
+    it("should successfully log in with valid credentials", () => {
+      cy.get("#email").type("test@example.com");
+      cy.get("#password").type("password123");
+      cy.get("#loginForm").submit();
+
+      // ตรวจสอบว่าถูกนำไปยังหน้า studenthead.html หลังล็อกอินสำเร็จ
+      cy.url().should("include", "/studenthead.html");
+    });
+
     it("should show error for incorrect password", () => {
       cy.get("#email").type("test@example.com");
       cy.get("#password").type("wrongpassword");
@@ -26,6 +35,10 @@ describe("E2E Tests for the Application", () => {
 
   // ทดสอบหน้า register.html (สมัครสมาชิก)
   describe("Register Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/register.html");
+    });
+
     it("should successfully register with valid input", () => {
       cy.get("#username").type("JohnDoe");
       cy.get("#email").type("john@example.com");
@@ -68,6 +81,10 @@ describe("E2E Tests for the Application", () => {
 
   // ทดสอบหน้า Notifications.html (การแจ้งเตือน)
   describe("Notifications Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/Notifications.html?email=test@example.com");
+    });
+
     it("should display notifications correctly", () => {
       cy.get(".notification-item").should("have.length.greaterThan", 0);
     });
@@ -85,6 +102,10 @@ describe("E2E Tests for the Application", () => {
 
   // ทดสอบหน้า Assignment.html (งาน)
   describe("Assignment Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/Assignment.html");
+    });
+
     it("should load assignments for the user", () => {
       cy.get(".assignment-card").should("have.length.greaterThan", 0);
     });
@@ -106,6 +127,10 @@ describe("E2E Tests for the Application", () => {
 
   // ทดสอบหน้า AssignmentDetail.html (รายละเอียดงาน)
   describe("Assignment Detail Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/AssignmentDetail.html");
+    });
+
     it("should load assignment details", () => {
       cy.get("#assignment-title").should("contain", "Assignment Title");
     });
@@ -118,6 +143,11 @@ describe("E2E Tests for the Application", () => {
 
   // ทดสอบหน้า Chat.html (การสนทนา)
   describe("Chat Page Test", () => {
+    beforeEach(() => {
+      // เปิดหน้า Chat.html ก่อนการทดสอบแต่ละครั้ง
+      cy.visit("/Chat.html");
+    });
+
     it("should allow sending a message", () => {
       // กรอกข้อความในช่องอินพุต
       cy.get("#messageInput").type("Hello, World!");
@@ -140,6 +170,10 @@ describe("E2E Tests for the Application", () => {
 
   // ทดสอบหน้า general.html (ทั่วไป)
   describe("General Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/general.html");
+    });
+
     it("should load general content", () => {
       cy.get(".general-section").should("be.visible");
     });
@@ -152,6 +186,10 @@ describe("E2E Tests for the Application", () => {
 
   // ทดสอบหน้า studenthead.html (แดชบอร์ดนักเรียน)
   describe("Student Head Page Test", () => {
+    beforeEach(() => {
+      cy.visit("/studenthead.html");
+    });
+
     it("should display classroom dashboard", () => {
       cy.get(".classroom-dashboard").should("be.visible");
     });
