@@ -10,6 +10,7 @@ module.exports = defineConfig({
 
 module.exports = {
   e2e: {
-    supportFile: false, // ปิดการใช้งานไฟล์ support
+    baseUrl: "http://localhost:8080", // URL สำหรับทดสอบไฟล์ HTML
+    supportFile: false, // ไม่มีไฟล์ support
   },
 };
