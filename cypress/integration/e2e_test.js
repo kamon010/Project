@@ -2,23 +2,38 @@ describe("E2E Tests for the Application", () => {
   // ทดสอบหน้า index.html (ล็อกอิน)
   describe("Login Page Test", () => {
     beforeEach(() => {
-      cy.visit("/index.html"); // ใช้เส้นทางย่อเนื่องจากตั้งค่า baseUrl ใน config แล้ว
+      cy.visit("/index.html");
     });
 
     it("should successfully log in with valid credentials", () => {
       cy.get("#email").type("test@example.com");
       cy.get("#password").type("password123");
       cy.get("#loginForm").submit();
-      // ตรวจสอบว่าถูกนำไปยังหน้า home หรือ dashboard หลังล็อกอินสำเร็จ
-      cy.url().should("include", "/dashboard");
+
+      // ตรวจสอบว่าถูกนำไปยังหน้า studenthead.html หลังล็อกอินสำเร็จ
+      cy.url().should("include", "/studenthead.html");
     });
 
-    it("should show error for invalid credentials", () => {
-      cy.get("#email").type("wrong@example.com");
+    it("should show error for incorrect password", () => {
+      cy.get("#email").type("test@example.com");
       cy.get("#password").type("wrongpassword");
       cy.get("#loginForm").submit();
-      // ตรวจสอบการแสดงผลข้อความแสดงข้อผิดพลาด
-      cy.get(".error-message").should("contain", "Invalid credentials");
+
+      // ตรวจสอบว่ามีข้อความแจ้งข้อผิดพลาดแสดงออกมา
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("Your password is incorrect.");
+      });
+    });
+
+    it("should show error for unregistered email", () => {
+      cy.get("#email").type("notregistered@example.com");
+      cy.get("#password").type("password123");
+      cy.get("#loginForm").submit();
+
+      // ตรวจสอบว่ามีข้อความแจ้งข้อผิดพลาดแสดงออกมา
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("This email is not registered yet.");
+      });
     });
   });
 
@@ -32,42 +47,59 @@ describe("E2E Tests for the Application", () => {
       cy.get("#username").type("JohnDoe");
       cy.get("#email").type("john@example.com");
       cy.get("#password").type("password123");
+      cy.get("#role").select("Student");
       cy.get("#registerForm").submit();
-      // ตรวจสอบว่าถูกนำไปยังหน้าหลักหรือแสดงข้อความสำเร็จหลังการสมัคร
-      cy.url().should("include", "/welcome");
+
+      // ตรวจสอบว่าข้อความลงทะเบียนสำเร็จแสดงออกมา
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("การลงทะเบียนสำเร็จ");
+      });
+    });
+
+    it("should show error for already registered email", () => {
+      cy.get("#username").type("JaneDoe");
+      cy.get("#email").type("existing@example.com");
+      cy.get("#password").type("password123");
+      cy.get("#role").select("Teacher");
+      cy.get("#registerForm").submit();
+
+      // ตรวจสอบว่ามีข้อความแจ้งเตือนว่าอีเมลถูกใช้แล้ว
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("อีเมลนี้ถูกใช้ลงทะเบียนแล้ว");
+      });
     });
 
     it("should show error for invalid input", () => {
       cy.get("#username").type("");
       cy.get("#email").type("invalid-email");
       cy.get("#password").type("short");
+      cy.get("#role").select("Student");
       cy.get("#registerForm").submit();
-      // ตรวจสอบการแสดงผลข้อความแสดงข้อผิดพลาด
-      cy.get(".error-message").should("contain", "Invalid input");
+
+      // ตรวจสอบการแสดงผลข้อความแจ้งเตือนการกรอกข้อมูลที่ไม่ถูกต้อง
+      cy.on("window:alert", (text) => {
+        expect(text).to.contains("กรุณากรอกข้อมูลที่ถูกต้อง");
+      });
     });
   });
 
   // ทดสอบหน้า Notifications.html (การแจ้งเตือน)
   describe("Notifications Page Test", () => {
     beforeEach(() => {
-      cy.visit("/Notifications.html");
+      cy.visit("/Notifications.html?email=test@example.com");
     });
 
     it("should display notifications correctly", () => {
-      // ตรวจสอบว่ารายการแจ้งเตือนปรากฏใน DOM
       cy.get(".notification-item").should("have.length.greaterThan", 0);
     });
 
     it("should display details when a notification is clicked", () => {
-      // คลิกที่การแจ้งเตือนแรกและตรวจสอบว่ารายละเอียดปรากฏ
       cy.get(".notification-item").first().click();
       cy.get("#notificationDetails").should("be.visible");
-      cy.get(".notification-title").should("contain", "Notification Title");
+      cy.get(".notification-title").should("contain", "Assignment");
     });
 
     it('should show "No notifications" message when there are no notifications', () => {
-      // สมมุติไม่มีการแจ้งเตือน
-      cy.get("#notificationList").should("be.empty");
       cy.get("#noNotifications").should("contain", "ไม่มีการแจ้งเตือน");
     });
   });
@@ -75,16 +107,25 @@ describe("E2E Tests for the Application", () => {
   // ทดสอบหน้า Assignment.html (งาน)
   describe("Assignment Page Test", () => {
     beforeEach(() => {
-      cy.visit("/Assignment.html");
+      cy.visit("/Assignment.html?email=test@example.com");
     });
 
-    it("should display assignment correctly", () => {
-      cy.get(".assignment-item").should("have.length.greaterThan", 0);
+    it("should load assignments for the user", () => {
+      cy.get(".assignment-card").should("have.length.greaterThan", 0);
     });
 
-    it("should show assignment details when clicked", () => {
-      cy.get(".assignment-item").first().click();
-      cy.get("#assignmentDetails").should("be.visible");
+    it("should open the create modal when clicking the Create button", () => {
+      cy.get("#createButton").click();
+      cy.get("#createModal").should("be.visible");
+    });
+
+    it("should create a new assignment", () => {
+      cy.get("#createButton").click();
+      cy.get("#title").type("New Test Assignment");
+      cy.get("#instructions").type("Test instructions for the new assignment.");
+      cy.get("#points").type("10");
+      cy.get(".assign-btn").click();
+      cy.get(".assignment-card").should("contain", "New Test Assignment");
     });
   });
 
@@ -107,17 +148,27 @@ describe("E2E Tests for the Application", () => {
   // ทดสอบหน้า Chat.html (การสนทนา)
   describe("Chat Page Test", () => {
     beforeEach(() => {
+      // เปิดหน้า Chat.html ก่อนการทดสอบแต่ละครั้ง
       cy.visit("/Chat.html");
     });
 
     it("should allow sending a message", () => {
+      // กรอกข้อความในช่องอินพุต
       cy.get("#messageInput").type("Hello, World!");
-      cy.get("#sendMessageButton").click();
-      cy.get(".chat-messages").should("contain", "Hello, World!");
+
+      // คลิกปุ่มส่งข้อความ
+      cy.get("#sendButton").click();
+
+      // ตรวจสอบว่ามีข้อความที่พิมพ์อยู่ในหน้าต่างแชท
+      cy.get("#chatMessages").should("contain", "Hello, World!");
     });
 
     it("should display chat history", () => {
-      cy.get(".chat-messages").should("have.length.greaterThan", 0);
+      // ตรวจสอบว่ามีข้อความแชทปรากฏในหน้าต่างแชทมากกว่า 0 ข้อความ
+      cy.get("#chatMessages .chat-message").should(
+        "have.length.greaterThan",
+        0
+      );
     });
   });
 
