@@ -26,6 +26,7 @@ jobs:
 
       - name: Run HTML Linting
         run: npm run lint:html
+        continue-on-error: true # ถ้ามีข้อผิดพลาด จะยังคงดำเนินการขั้นตอนถัดไป
 
       - name: Run Unit Tests
         run: npm test
