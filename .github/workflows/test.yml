@@ -66,13 +66,13 @@ jobs:
         run: npm install
 
       - name: Serve HTML files
-        run: npx serve docs -l 8080 & # รันเซิร์ฟเวอร์บนพอร์ต 8080 แบบ background
+        run: npx serve docs -l 8080 &
 
       - name: Wait for server to start
-        run: sleep 5 # รอให้เซิร์ฟเวอร์เริ่มทำงาน
+        run: sleep 5
 
       - name: Run Cypress Tests
-        run: npx cypress run
+        run: npx cypress run --spec 'cypress/integration/**/*.js'
 
       - name: Save Cypress Videos and Screenshots
         if: always()
