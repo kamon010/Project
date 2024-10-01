@@ -52,8 +52,7 @@ jobs:
 
   e2e-test:
     runs-on: ubuntu-latest
-    needs: unit-test # รอ job unit-test ทำงานเสร็จ
-    continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
+    needs: unit-test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -66,8 +65,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Cypress
-        run: npm install cypress --save-dev
+      - name: Serve HTML files
+        run: npx serve docs -l 8080 & # รันเซิร์ฟเวอร์บนพอร์ต 8080 แบบ background
+
+      - name: Wait for server to start
+        run: sleep 5 # รอให้เซิร์ฟเวอร์เริ่มทำงาน
 
       - name: Run Cypress Tests
         run: npx cypress run
