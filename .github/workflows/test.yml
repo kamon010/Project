@@ -24,9 +24,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run HTML Linting
-        run: npm run lint:html
+      - name: Install htmllint
+        run: npm install -g htmllint-cli
         continue-on-error: true # ถ้ามีข้อผิดพลาด จะยังคงดำเนินการขั้นตอนถัดไป
+
+      - name: Verify htmllint installation
+        run: htmllint --version
+
+      - name: Display PATH
+        run: echo $PATH
 
       - name: Run Unit Tests
         run: npm test
