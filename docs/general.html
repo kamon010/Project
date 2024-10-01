@@ -158,7 +158,7 @@
       }
 
       .main-sidebar {
-        width: 180px;
+        width: 250px;
         background-color: #333;
         padding: 10px 0;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -224,7 +224,7 @@
       }
 
       #documentId {
-        width: 130px;
+        width: 170px;
         /* กำหนดความกว้างที่ต้องการ */
         padding: 5px;
         /* เพิ่ม padding เพื่อให้มีพื้นที่รอบๆ ข้อความ */
@@ -323,18 +323,18 @@
         color: white;
         position: fixed;
         top: 50px;
-        left: 60%;
+        left: 62.7%;
         /* ใช้ 50% เพื่อให้ขยับไปด้านขวา */
         transform: translateX(-50%);
         /* เลื่อนส่วนนี้กลับมาที่กึ่งกลาง */
-        width: 78%;
+        width: 74%;
         /* กำหนดความกว้างเป็น 80% ของหน้าจอ */
         z-index: 1;
       }
 
       .content-header h2 {
         margin: 0;
-        font-size: 25px;
+        font-size: 28px;
       }
 
       .content-header .header-options {
@@ -354,8 +354,12 @@
       }
 
       .content-body {
-        padding: 20px;
-        margin-top: 100px;
+        padding: 76px;
+        margin-top: 29px;
+        margin-left: 7%;
+        /* ขยับเนื้อหาไปทางขวามากขึ้น */
+        width: 80%;
+        /* ลดขนาดความกว้างของ container */
         overflow-y: auto;
       }
 
@@ -790,8 +794,8 @@
           <i class="fas fa-user-circle"></i>
         </div>
         <div class="dropdown-menu" id="dropdownMenu">
-          <a href="#">Profile</a>
-          <a href="#">Log out</a>
+          <a href="#" id="logoutLink">Log out</a>
+          <script src="logout.js"></script>
         </div>
       </div>
     </div>
@@ -829,7 +833,7 @@
         <i class="fas fa-users"></i>
       </div>
       <div class="document-id-section">
-        <label for="documentId">ID:</label>
+        <label for="documentId"> ID:</label>
         <input
           type="text"
           id="documentId"
@@ -889,7 +893,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <script>
-      // Firebase configuration
       var firebaseConfig = {
         apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
         authDomain: "project-63a86.firebaseapp.com",
@@ -900,13 +903,11 @@
         measurementId: "G-SR4EFC2VFC",
       };
 
-      // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       var db = firebase.firestore();
 
-      console.log("Firebase Loaded:", firebase.apps.length > 0); // ตรวจสอบการโหลด Firebase
+      console.log("Firebase Loaded:", firebase.apps.length > 0);
 
-      // Function to search email or username in both Teacher and Student collections
       document
         .getElementById("searchInput")
         .addEventListener("keyup", (event) => {
@@ -1058,7 +1059,17 @@
         }
       }
 
-      // เรียกฟังก์ชันนี้เมื่อโหลดหน้าเสร็จ
+      const userIcon = document.getElementById("userIcon");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+
+      userIcon.addEventListener("click", () => {
+        dropdownMenu.style.display =
+          dropdownMenu.style.display === "none" ||
+          dropdownMenu.style.display === ""
+            ? "block"
+            : "none";
+      });
+
       fetchUserData(email);
 
       // Function to fetch posts and display them based on type
@@ -2144,6 +2155,18 @@
             });
         }
       }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+          const startPostButton = document.querySelector(".start-post");
+          if (startPostButton) {
+            startPostButton.scrollIntoView({
+              behavior: "smooth",
+              block: "end",
+            });
+          }
+        }, 4000); // หน่วงเวลา 500 มิลลิวินาทีเพื่อให้แน่ใจว่าเนื้อหาทั้งหมดโหลดเสร็จ
+      });
     </script>
   </body>
 </html>
