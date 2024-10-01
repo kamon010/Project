@@ -1,4 +1,4 @@
-name: Test Project
+name: Lint Code
 
 on:
   push:
@@ -33,3 +33,9 @@ jobs:
 
       - name: Run Unit Tests
         run: npm test
+
+      - name: List installed packages
+        run: npm list --depth=0
+
+      - name: Display PATH
+        run: echo $PATH
