@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # ตรวจสอบให้ตรงกับที่คุณใช้ในโปรเจค
+          node-version: "16"
 
       - name: Install dependencies
         run: npm install
@@ -78,4 +78,5 @@ jobs:
         with:
           browser: chrome
           headless: true
+          config-file: ./cypress.json # ระบุเส้นทางของไฟล์คอนฟิกที่สร้างใหม่
         continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
