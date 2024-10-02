@@ -24,9 +24,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify htmllint installation
-        run: npx htmllint --version
-
       - name: Run HTML Linting
         run: npm run lint:html
         continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
