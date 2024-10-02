@@ -69,4 +69,4 @@ jobs:
         with:
           browser: chrome
           headless: true
-        continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
+        continue-on-error: true
