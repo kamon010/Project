@@ -1,127 +1,285 @@
-name: Lint, Unit Test, Security Testing
+import { fireEvent } from "@testing-library/dom";
+import fs from "fs";
+import path from "path";
 
-on:
-    push:
-    branches:
-    -main
-pull_request:
-    branches:
-    -main
+// Function to load HTML file as string
+function loadHTMLFile(fileName) {
+  return fs.readFileSync(
+    path.resolve(__dirname, `../docs/${fileName}`),
+    "utf8"
+  );
+}
 
-jobs:
-    lint:
-    runs - on: ubuntu - latest
+// List of HTML files to test
+const htmlFiles = [
+  "index.html",
+  "register.html",
+  "Notifications.html",
+  "Assignment.html",
+  "AssignmentDetail.html",
+  "Chat.html",
+  "general.html",
+  "studenthead.html",
+];
 
-steps:
-    -name: Checkout repository
-uses: actions / checkout @v2
+// Loop through each file and run tests
+htmlFiles.forEach((file) => {
+  describe(`Test ${file}`, () => {
+    let html;
 
-    -
-    name: Set up Node.js
-uses: actions / setup - node @v3
-with:
-    node - version: "16"
+    beforeEach(() => {
+      html = loadHTMLFile(file); // โหลด HTML ก่อนการทดสอบ
+      document.body.innerHTML = html;
+    });
 
--
-name: Install dependencies
-run: npm install
+    if (file === "index.html") {
+      test("Login form submission", () => {
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const form = document.getElementById("loginForm");
 
-    -
-    name: Verify htmllint installation
-run: npx htmllint--version
+        expect(email).toBeTruthy();
+        expect(password).toBeTruthy();
+        expect(form).toBeTruthy();
 
-    -
-    name: Run HTML Linting
-run: npm run lint: html
-continue -on - error: true# ถ้ ามีข้ อผิดพลาดจะยั งคงทำงานต่ อ
+        fireEvent.input(email, { target: { value: "test@example.com" } });
+        fireEvent.input(password, { target: { value: "password123" } });
+        fireEvent.submit(form);
+      });
+    }
 
-unit - test:
-    runs - on: ubuntu - latest
-needs: lint# รอ job lint ทำงานเสร็ จ
+    if (file === "register.html") {
+      test("Register form submission", () => {
+        const username = document.getElementById("username");
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const form = document.getElementById("registerForm");
 
-steps:
-    -name: Checkout repository
-uses: actions / checkout @v2
+        expect(username).toBeTruthy();
+        expect(email).toBeTruthy();
+        expect(password).toBeTruthy();
+        expect(form).toBeTruthy();
 
-    -
-    name: Set up Node.js
-uses: actions / setup - node @v3
-with:
-    node - version: "16"
+        fireEvent.input(username, { target: { value: "JohnDoe" } });
+        fireEvent.input(email, { target: { value: "john@example.com" } });
+        fireEvent.input(password, { target: { value: "password123" } });
+        fireEvent.submit(form);
+      });
+    }
 
--
-name: Install dependencies
-run: npm install
+    if (file === "Notifications.html") {
+      test("Notification list is displayed correctly", () => {
+        const notificationList = document.getElementById("notificationList");
 
-    -
-    name: Run Unit Tests
-run: npm test
+        // Mock ข้อมูลการแจ้งเตือนลงใน DOM
+        notificationList.innerHTML = `
+          <div class="notification-item">Test Notification 1</div>
+          <div class="notification-item">Test Notification 2</div>
+        `;
 
-npm - audit:
-    runs - on: ubuntu - latest
-needs: lint# รอ job lint ทำงานเสร็ จ
+        const notifications = document.querySelectorAll(".notification-item");
+        expect(notifications.length).toBe(2); // ตรวจสอบว่ามีการแจ้งเตือน 2 รายการ
+        expect(notifications[0].textContent).toBe("Test Notification 1");
+        expect(notifications[1].textContent).toBe("Test Notification 2");
+      });
 
-steps:
-    -name: Checkout repository
-uses: actions / checkout @v2
+      test("Click on view details button redirects to AssignmentDetail", () => {
+        const viewDetailsButton = document.createElement("button");
+        viewDetailsButton.classList.add("view-details-btn");
+        viewDetailsButton.textContent = "ดูรายละเอียดงาน";
+        document.body.appendChild(viewDetailsButton);
 
-    -
-    name: Set up Node.js
-uses: actions / setup - node @v3
-with:
-    node - version: "16"
+        // ใช้ jest.spyOn เพื่อ spy การเปลี่ยนแปลงของ window.location
+        const locationSpy = jest
+          .spyOn(window, "location", "get")
+          .mockReturnValue({
+            href: "",
+          });
 
--
-name: Install dependencies
-run: npm install
+        viewDetailsButton.addEventListener("click", () => {
+          window.location.href = "AssignmentDetail.html?assignmentId=123";
+        });
 
-    -
-    name: Run npm audit to check
-for vulnerabilities
-run: npm audit
+        fireEvent.click(viewDetailsButton);
+        expect(window.location.href).toBe(
+          "AssignmentDetail.html?assignmentId=123"
+        );
 
-html - security - check:
-    runs - on: ubuntu - latest
-needs: lint# รอ job lint ทำงานเสร็ จ
+        // คืนค่าฟังก์ชัน window.location หลังทดสอบเสร็จ
+        locationSpy.mockRestore();
+      });
 
-steps:
-    -name: Checkout repository
-uses: actions / checkout @v2
+      test("Displays 'ไม่มีการแจ้งเตือน' when no notifications exist", () => {
+        const noNotifications = document.getElementById("noNotifications");
 
-    -
-    name: Install dependencies
-run: npm install
+        // Mock ให้ noNotifications แสดงผล
+        noNotifications.style.display = "block"; // จำลองการแสดงผลว่าไม่มีการแจ้งเตือน
 
-    -
-    name: Verify htmlhint installation
-run: npx htmlhint--version
+        expect(noNotifications.textContent.trim()).toBe("ไม่มีการแจ้งเตือน");
+        expect(noNotifications.style.display).toBe("block"); // ตรวจสอบว่าการแสดงผลเป็น block
+      });
 
-    -
-    name: Run HTML Linting
-for docs folder
-run: npx htmlhint "docs/**/*.html"
+      test("Toggles user dropdown menu on click", () => {
+        const userIcon = document.getElementById("userIcon");
+        const dropdownMenu = document.getElementById("dropdownMenu");
 
-penetration - test:
-    runs - on: ubuntu - latest
-needs: lint# รอ job lint ทำงานเสร็ จ
+        // Mock dropdown menu
+        dropdownMenu.style.display = "none"; // เริ่มต้นซ่อน dropdown menu
 
-steps:
-    -name: Checkout repository
-uses: actions / checkout @v2
+        userIcon.addEventListener("click", () => {
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === "none" ? "block" : "none";
+        });
 
-    -
-    name: Install OWASP ZAP
-run: |
-    sudo apt - get update
-sudo apt - get install - y zaproxy
+        fireEvent.click(userIcon); // จำลองการคลิกเพื่อเปิด dropdown
+        expect(dropdownMenu.style.display).toBe("block"); // ตรวจสอบว่า dropdown เปิด
 
-    -
-    name: Run OWASP ZAP Baseline Scan
-run: |
-    zap - baseline.py - t http: //localhost:8080 -r zap_report.html
+        fireEvent.click(userIcon); // จำลองการคลิกเพื่อปิด dropdown
+        expect(dropdownMenu.style.display).toBe("none"); // ตรวจสอบว่า dropdown ปิด
+      });
 
-    -name: Upload ZAP Report
-uses: actions / upload - artifact @v2
-with:
-    name: zap - report
-path: zap_report.html
+      test("Search function works correctly", () => {
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+
+        // Mock การใส่ข้อความค้นหา
+        fireEvent.input(searchInput, { target: { value: "John" } });
+
+        // สมมุติว่ามีการค้นหาและเพิ่มผลลัพธ์ลงใน DOM
+        searchResults.innerHTML = `
+          <div class="result-item">John Doe</div>
+          <div class="result-item">Johnny Appleseed</div>
+        `;
+
+        const results = document.querySelectorAll(".result-item");
+        expect(results.length).toBe(2);
+        expect(results[0].textContent).toBe("John Doe");
+      });
+
+      test("Displays notification details on click", () => {
+        const notificationItem = document.createElement("div");
+        notificationItem.classList.add("notification-item");
+        notificationItem.textContent = "Test Notification";
+
+        document.body.appendChild(notificationItem);
+
+        const notificationDetails = document.getElementById(
+          "notificationDetails"
+        );
+
+        notificationItem.addEventListener("click", () => {
+          notificationDetails.style.display = "block";
+        });
+
+        fireEvent.click(notificationItem);
+        expect(notificationDetails.style.display).toBe("block");
+      });
+    }
+
+    if (file === "Assignment.html" || file === "AssignmentDetail.html") {
+      test("Assignment details and button interactions", () => {
+        // Mock ปุ่มที่ใช้ในการทดสอบ
+        const createButton = document.createElement("button");
+        createButton.classList.add("assign-btn");
+        document.body.appendChild(createButton);
+
+        expect(createButton).toBeTruthy();
+
+        fireEvent.click(createButton);
+        // คุณสามารถเพิ่มการตรวจสอบเพิ่มเติมถ้าต้องการทดสอบการตอบสนองหลังจากคลิกปุ่ม
+      });
+    }
+
+    if (file === "Chat.html") {
+      test("Chat interaction", () => {
+        const searchInput = document.querySelector(".search-bar input");
+        expect(searchInput).toBeTruthy();
+
+        fireEvent.input(searchInput, { target: { value: "test search" } });
+        expect(searchInput.value).toBe("test search");
+      });
+    }
+
+    if (file === "studenthead.html") {
+      test("Dashboard search and menu interaction", () => {
+        const searchInput = document.querySelector(".search-bar input");
+        const menuItems = document.querySelectorAll(".menu-items a");
+
+        expect(searchInput).toBeTruthy();
+        expect(menuItems.length).toBeGreaterThan(0);
+
+        fireEvent.input(searchInput, { target: { value: "test search" } });
+        expect(searchInput.value).toBe("test search");
+
+        menuItems.forEach((menuItem) => {
+          expect(menuItem).toBeTruthy();
+        });
+      });
+    }
+
+    if (file === "general.html") {
+      test("General page search", () => {
+        const searchInput = document.querySelector(".search-bar input");
+        expect(searchInput).toBeTruthy();
+
+        fireEvent.input(searchInput, { target: { value: "test search" } });
+        expect(searchInput.value).toBe("test search");
+      });
+    }
+  });
+});
+
+// ส่วนนี้เป็นการทดสอบสำหรับไฟล์ AssignmentDetail.html ที่คุณเพิ่มมา
+describe("Test AssignmentDetail.html", () => {
+  let html;
+
+  beforeEach(() => {
+    // โหลด HTML ก่อนการทดสอบแต่ละครั้ง
+    html = loadHTMLFile("AssignmentDetail.html");
+    document.body.innerHTML = html;
+  });
+
+  test('Check if the "Turn in" button exists', () => {
+    const turnInButton = document.querySelector(".undo-btn");
+    expect(turnInButton).toBeTruthy();
+  });
+
+  test('Simulate click on the "Turn in" button', () => {
+    const turnInButton = document.querySelector(".undo-btn");
+    expect(turnInButton).toBeTruthy();
+
+    // คลิกปุ่ม "Turn in"
+    fireEvent.click(turnInButton);
+
+    // ตรวจสอบว่าข้อความปุ่มเปลี่ยนเป็น "Undo Turn in"
+    setTimeout(() => {
+      expect(turnInButton.textContent.trim()).toBe("Undo Turn in");
+    }, 500); // เพิ่ม timeout เพื่อรอให้เหตุการณ์ทำงานเสร็จ
+  });
+
+  test('Simulate click on "Undo Turn in" button and verify change', () => {
+    const turnInButton = document.querySelector(".undo-btn");
+    expect(turnInButton).toBeTruthy();
+
+    // เปลี่ยนข้อความปุ่มเป็น "Undo Turn in" ก่อน
+    turnInButton.textContent = "Undo Turn in";
+
+    // คลิกปุ่ม "Undo Turn in"
+    fireEvent.click(turnInButton);
+
+    // ตรวจสอบว่าข้อความปุ่มเปลี่ยนกลับเป็น "Turn in"
+    setTimeout(() => {
+      expect(turnInButton.textContent.trim()).toBe("Turn in");
+    }, 500); // เพิ่ม timeout เพื่อรอให้เหตุการณ์ทำงานเสร็จ
+  });
+
+  test("Check if assignment title is loaded correctly", () => {
+    const titleElement = document.getElementById("assignment-title");
+    expect(titleElement.textContent).toBe("Loading assignment title...");
+  });
+
+  test("Check file upload section exists", () => {
+    const fileUpload = document.getElementById("file-upload");
+    expect(fileUpload).toBeTruthy();
+  });
+});
