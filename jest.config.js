@@ -1,7 +1,6 @@
 module.exports = {
-  verbose: true,
-  testEnvironment: "jsdom",
-  collectCoverage: true,
-  coverageDirectory: "coverage",
-  testMatch: ["**/tests/**/*.test.js"],
+  transform: {
+    "^.+\\.js$": "babel-jest",
+  },
+  testEnvironment: "jsdom", // ใช้ jsdom สำหรับการทดสอบ DOM
 };

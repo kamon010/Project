@@ -3,8 +3,7 @@
     "lint:html": "htmllint 'docs/**/*.html'",
     "test": "jest",
     "test:e2e": "cypress open",
-    "test:e2e:run": "cypress run",
-    "audit": "npm audit"
+    "test:e2e:run": "cypress run"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
