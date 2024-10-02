@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "16" # ตรวจสอบให้ตรงกับที่คุณใช้ในโปรเจค
 
       - name: Install dependencies
         run: npm install
@@ -64,8 +64,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Move existing cypress.json to correct location
-        run: mv ./cypress.json /home/runner/work/Project/Project/cypress.json
+      - name: Create Cypress configuration file
+        run: |
+          echo '{' > ./cypress.json
+          echo '  "baseUrl": "http://localhost:3000",' >> ./cypress.json
+          echo '  "integrationFolder": "cypress/integration",' >> ./cypress.json
+          echo '  "fixturesFolder": "cypress/fixtures",' >> ./cypress.json
+          echo '  "video": false' >> ./cypress.json
+          echo '}' >> ./cypress.json
 
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v2
