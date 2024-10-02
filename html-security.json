@@ -1,9 +1,0 @@
-{
-  "attr-value-double-quotes": true,
-  "doctype-first": true,
-  "tagname-lowercase": true,
-  "id-unique": true,
-  "img-alt-require": true,
-  "attr-no-duplication": true,
-  "script-disabled": true
-}
