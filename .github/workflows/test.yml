@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # ตรวจสอบให้ตรงกับที่คุณใช้ในโปรเจค
+          node-version: "16"
 
       - name: Install dependencies
         run: npm install
@@ -64,9 +64,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Move existing cypress.json to correct location
+        run: mv ./cypress.json /home/runner/work/Project/Project/cypress.json
+
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v2
         with:
           browser: chrome
           headless: true
-        continue-on-error: true
+        continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
