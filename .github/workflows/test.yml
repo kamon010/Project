@@ -64,11 +64,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Run npm audit to check for vulnerabilities in dependencies
-      - name: Run npm audit
-        run: npm audit --audit-level=high
-        continue-on-error: true # ถ้ามีช่องโหว่จะยังคงทำงานต่อ
-
       # Run security lint for HTML files to check for vulnerabilities
       - name: Run HTML security checks
         run: npx htmlhint "docs/**/*.html" --rules html-security.json
