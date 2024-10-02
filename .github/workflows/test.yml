@@ -65,6 +65,7 @@ jobs:
         run: npm install
 
       - name: Create Cypress configuration file
+        working-directory: ./Project # เพิ่ม working-directory เพื่อชี้ไปที่โฟลเดอร์ที่ถูกต้อง
         run: |
           echo '{' > ./cypress.json
           echo '  "baseUrl": "http://localhost:3000",' >> ./cypress.json
@@ -78,5 +79,3 @@ jobs:
         with:
           browser: chrome
           headless: true
-          config-file: cypress.json # ชี้ไปที่ไฟล์คอนฟิกที่เราสร้าง
-
