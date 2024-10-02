@@ -4,8 +4,7 @@
     "test": "jest",
     "test:e2e": "cypress open",
     "test:e2e:run": "cypress run",
-    "audit": "npm audit",
-    "csp-check": "npx csp-evaluator http://localhost:8080"
+    "audit": "npm audit"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
@@ -21,8 +20,7 @@
     "htmllint-cli": "^0.0.6",
     "http-server": "^14.1.1",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "csp-evaluator": "^0.0.9"
+    "jest-environment-jsdom": "^29.7.0"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^6.5.0",
