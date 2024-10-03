@@ -64,6 +64,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Puppeteer Integration Tests
+      - name: Run Integration Tests
         run: node tests/integration.test.js # ระบุเส้นทางไปยังไฟล์ integration.test.js
         continue-on-error: false
