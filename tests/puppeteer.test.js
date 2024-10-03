@@ -6,7 +6,7 @@ const path = require("path");
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  const directoryPath = path.join(__dirname, "docs");
+  const directoryPath = path.join(__dirname, "../docs"); // ระบุเส้นทางไปยังโฟลเดอร์ docs ที่มีไฟล์ HTML
 
   // อ่านไฟล์ HTML ทั้งหมดในโฟลเดอร์ docs
   fs.readdir(directoryPath, async (err, files) => {
@@ -23,7 +23,6 @@ const path = require("path");
 
         // ตัวอย่างการทดสอบการทำงานของฟังก์ชันในไฟล์
         const result = await page.evaluate(() => {
-          // สมมติว่ามีฟังก์ชันชื่อ myFunction ในไฟล์ HTML
           if (typeof myFunction === "function") {
             return myFunction(); // เรียกใช้งานฟังก์ชัน
           }
