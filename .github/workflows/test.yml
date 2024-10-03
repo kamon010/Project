@@ -11,59 +11,44 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18" # ใช้ Node.js เวอร์ชัน 18 เพื่อให้สอดคล้องกับแพ็กเกจ
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run HTML Linting for docs folder
-        run: npx htmlhint "docs/**/*.html"
-        continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
-
-  unit-test:
-    runs-on: ubuntu-latest
-    needs: lint # รอ job lint ทำงานเสร็จ
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18" # ใช้ Node.js เวอร์ชัน 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Unit Tests
-        run: npm test
-        continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
-
-  integration-test:
-    runs-on: ubuntu-latest
-    needs: unit-test # รอ job unit-test ทำงานเสร็จ
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-
       - name: Install dependencies
         run: npm install
+      - name: Run HTML Linting for docs folder
+        run: npx htmlhint "docs/**/*.html"
 
-      - name: Run Integration Tests
-        run: node tests/integration.test.js # ระบุเส้นทางไปยังไฟล์ integration.test.js
-        continue-on-error: false
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install dependencies
+        run: npm install
+      - name: Run Unit Tests
+        run: npm test
+
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: unit-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install dependencies
+        run: npm install
+      - name: Run Puppeteer Integration Tests
+        run: node tests/integration.test.js
