@@ -65,5 +65,5 @@ jobs:
         run: npm install
 
       - name: Run Puppeteer Integration Tests
-        run: node tests/puppeteer.test.js # ระบุเส้นทางที่ถูกต้องสำหรับไฟล์ทดสอบ # รันสคริปต์ Puppeteer เพื่อทดสอบไฟล์ HTML
+        run: node tests/integration.test.js # ระบุเส้นทางไปยังไฟล์ integration.test.js
         continue-on-error: false
