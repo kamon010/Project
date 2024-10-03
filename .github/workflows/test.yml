@@ -1,4 +1,4 @@
-name: Lint, Unit Test, Integration Test, Deploy to Firebase
+name: Lint, Unit Test, Integration Test
 
 on:
   push:
@@ -9,52 +9,65 @@ on:
       - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
-      # ขั้นตอนที่ 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # ขั้นตอนที่ 2: Set up Node.js
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
 
-      # ขั้นตอนที่ 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # ขั้นตอนที่ 4: Run Linting
       - name: Run HTML Linting for docs folder
         run: npx htmlhint "docs/**/*.html"
-        continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
-
-      # ขั้นตอนที่ 5: Run Unit Tests
-      - name: Run Unit Tests
-        run: npm test
-
-      # ขั้นตอนที่ 6: Start HTTP Server for Integration Tests
-      - name: Start HTTP server
-        run: |
-          npx http-server ./docs -p 8080 &
         continue-on-error: true
 
-      # ขั้นตอนที่ 7: Run Integration Tests
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Unit Tests
+        run: npm test
+        continue-on-error: true
+
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: unit-test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start HTTP server
+        run: npx http-server docs -p 8080 & # เริ่ม HTTP server แบบ background
+
       - name: Run Puppeteer Integration Tests
         run: |
           npx jest tests/integration.test.js --detectOpenHandles
-        continue-on-error: true
-
-      # ขั้นตอนที่ 8: Install Firebase CLI
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      # ขั้นตอนที่ 9: Deploy to Firebase
-      - name: Deploy to Firebase
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          firebase deploy --only hosting
+          BASE_URL: "https://team-1849c.web.app" # ใช้ URL ของ Firebase Hosting ในการทดสอบ

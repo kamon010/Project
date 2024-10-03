@@ -5,20 +5,10 @@ describe("Integration Test for HTML Files", () => {
   let page;
 
   beforeAll(async () => {
-    browser = await puppeteer.launch();
-    page = await browser.newPage();
-
-    // Mock WebSocket เพื่อหลีกเลี่ยงปัญหา WebSocket ใน Puppeteer
-    await page.evaluateOnNewDocument(() => {
-      window.WebSocket = function () {
-        return {
-          send: () => {},
-          close: () => {},
-          addEventListener: () => {},
-          removeEventListener: () => {},
-        };
-      };
+    browser = await puppeteer.launch({
+      headless: true, // รันในโหมด headless เพื่อความเร็วในการทดสอบ
     });
+    page = await browser.newPage();
   });
 
   afterAll(async () => {
@@ -28,7 +18,12 @@ describe("Integration Test for HTML Files", () => {
   });
 
   test("should test index.html for function execution", async () => {
-    await page.goto("http://localhost:8080/index.html");
-    // ทดสอบการทำงานในหน้า index.html
+    const baseUrl = process.env.BASE_URL || "http://127.0.0.1:8080"; // กำหนดค่าเริ่มต้นเป็น localhost ถ้าไม่มี BASE_URL
+    await page.goto(`${baseUrl}/index.html`);
+
+    // เขียนการทดสอบตามที่ต้องการ
+    // ตัวอย่าง: ตรวจสอบว่า element บนหน้า index.html ทำงานถูกต้อง
+    const title = await page.title();
+    expect(title).toBe("Expected Page Title");
   });
 });
