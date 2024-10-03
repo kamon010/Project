@@ -6,7 +6,13 @@ describe("Integration Test for HTML Files", () => {
 
   beforeAll(async () => {
     browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-web-security", // ปิดการใช้งาน WebSocket ในบางกรณี
+        "--disable-features=IsolateOrigins,site-per-process", // ลดปัญหาเรื่อง WebSocket
+        "--disable-gpu",
+      ],
       headless: true,
     });
     page = await browser.newPage();
@@ -19,7 +25,7 @@ describe("Integration Test for HTML Files", () => {
   });
 
   test("should test index.html for function execution", async () => {
-    const baseUrl = process.env.BASE_URL || "http://127.0.0.1:8080"; // ใช้ BASE_URL จาก environment
+    const baseUrl = process.env.BASE_URL || "http://127.0.0.1:8080";
     console.log(`Navigating to ${baseUrl}/index.html`);
 
     await page.goto(`${baseUrl}/index.html`);
