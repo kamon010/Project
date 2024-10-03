@@ -1,4 +1,4 @@
-name: Lint, Unit Test, Cypress Test
+name: Lint, Unit Test, Integration Test
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18" # ใช้ Node.js เวอร์ชัน 18 เพื่อให้สอดคล้องกับแพ็กเกจ
 
       - name: Install dependencies
         run: npm install
@@ -39,7 +39,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18" # ใช้ Node.js เวอร์ชัน 18
 
       - name: Install dependencies
         run: npm install
@@ -48,7 +48,7 @@ jobs:
         run: npm test
         continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
 
-  cypress-test:
+  integration-test:
     runs-on: ubuntu-latest
     needs: unit-test # รอ job unit-test ทำงานเสร็จ
 
@@ -59,24 +59,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18"
 
       - name: Install dependencies
         run: npm install
 
-      - name: Create Cypress configuration file
-        run: |
-          echo '{' > ./cypress.json
-          echo '  "baseUrl": "http://localhost:3000",' >> ./cypress.json
-          echo '  "integrationFolder": "cypress/integration",' >> ./cypress.json
-          echo '  "fixturesFolder": "cypress/fixtures",' >> ./cypress.json
-          echo '  "video": false' >> ./cypress.json
-          echo '}' >> ./cypress.json
-
-      - name: Run Cypress Tests
-        uses: cypress-io/github-action@v2
-        with:
-          browser: chrome
-          headless: true
-          config-file: ./cypress.json # ระบุเส้นทางของไฟล์คอนฟิกที่สร้างใหม่
-        continue-on-error: true # ถ้ามีข้อผิดพลาดจะยังคงทำงานต่อ
+      - name: Run Puppeteer Integration Tests
+        run: node puppeteer.test.js # รันสคริปต์ Puppeteer เพื่อทดสอบไฟล์ HTML
+        continue-on-error: false
