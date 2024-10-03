@@ -1,32 +1,35 @@
 const puppeteer = require("puppeteer");
-const path = require("path");
+
+let browser;
+
+beforeAll(async () => {
+  // เปิด browser ก่อนเริ่มการทดสอบทั้งหมด
+  browser = await puppeteer.launch();
+});
+
+afterAll(async () => {
+  // ปิด browser หลังจากการทดสอบทั้งหมดเสร็จสิ้น
+  if (browser) {
+    await browser.close();
+  }
+});
 
 describe("Integration Test for HTML Files", () => {
-  let browser;
-  let page;
-
-  beforeAll(async () => {
-    browser = await puppeteer.launch({
-      headless: true, // Set to false if you want to see the browser while running the test
-    });
-    page = await browser.newPage();
-  });
-
-  afterAll(async () => {
-    await browser.close();
-  });
-
   test("should test index.html for function execution", async () => {
-    const filePath = `file:${path.resolve(__dirname, "../docs/index.html")}`;
-    await page.goto(filePath);
+    const page = await browser.newPage(); // เปิดหน้าต่างใหม่ใน browser
+    await page.goto("http://127.0.0.1:5500/docs/index.html"); // ไปยังหน้า index.html
 
-    // สมมุติว่ามีฟังก์ชันชื่อ testFunction ใน HTML
-    await page.evaluate(() => testFunction());
+    // สมมุติว่ามีฟังก์ชันใน HTML ที่ต้องทดสอบ เช่น document.getElementById หรือคลิกปุ่ม
+    const button = await page.$("button"); // ตรวจสอบว่ามีปุ่มอยู่ในหน้า
+    expect(button).toBeDefined(); // ตรวจสอบว่าปุ่มถูกสร้างขึ้นใน DOM
 
-    // ตรวจสอบผลลัพธ์ในหน้า
-    const result = await page.evaluate(() =>
-      document.body.textContent.includes("Test function is working!")
+    // ทดสอบการคลิกปุ่ม และทดสอบการทำงานหลังการคลิก
+    await button.click();
+    const result = await page.evaluate(
+      () => document.getElementById("result").innerText
     );
-    expect(result).toBe(true);
+    expect(result).toBe("Expected Result"); // เปรียบเทียบค่าที่ได้กับค่าที่คาดหวัง
+
+    await page.close(); // ปิดหน้าต่างหลังจากทดสอบเสร็จ
   });
 });
