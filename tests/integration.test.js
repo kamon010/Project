@@ -7,6 +7,18 @@ describe("Integration Test for HTML Files", () => {
   beforeAll(async () => {
     browser = await puppeteer.launch();
     page = await browser.newPage();
+
+    // Mock WebSocket เพื่อเลี่ยงปัญหาที่เกิดใน Puppeteer
+    await page.evaluateOnNewDocument(() => {
+      window.WebSocket = function () {
+        return {
+          send: () => {},
+          close: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        };
+      };
+    });
   });
 
   afterAll(async () => {
