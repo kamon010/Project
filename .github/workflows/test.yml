@@ -63,9 +63,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Start HTTP server
-        run: npx http-server docs -p 8080 & # เริ่ม HTTP server แบบ background
-
       - name: Run Puppeteer Integration Tests
         run: |
           npx jest tests/integration.test.js --detectOpenHandles

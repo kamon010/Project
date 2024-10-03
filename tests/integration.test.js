@@ -6,6 +6,7 @@ describe("Integration Test for HTML Files", () => {
 
   beforeAll(async () => {
     browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"], // เพิ่มออปชั่นเพื่อลดปัญหาจาก environment
       headless: true, // รันในโหมด headless เพื่อความเร็วในการทดสอบ
     });
     page = await browser.newPage();
@@ -22,7 +23,6 @@ describe("Integration Test for HTML Files", () => {
     await page.goto(`${baseUrl}/index.html`);
 
     // เขียนการทดสอบตามที่ต้องการ
-    // ตัวอย่าง: ตรวจสอบว่า element บนหน้า index.html ทำงานถูกต้อง
     const title = await page.title();
     expect(title).toBe("Expected Page Title");
   });
