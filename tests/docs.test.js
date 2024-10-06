@@ -4,10 +4,7 @@ import path from "path";
 
 // Function to load HTML file as string
 function loadHTMLFile(fileName) {
-  return fs.readFileSync(
-    path.resolve(__dirname, `../docs/${fileName}`),
-    "utf8"
-  );
+  return fs.readFileSync(path.resolve(__dirname, `../docs/${fileName}`));
 }
 
 // List of HTML files to test
