@@ -1,7 +1,8 @@
 {
   "scripts": {
     "lint:html": "htmllint 'docs/**/*.html'",
-    "test": "jest"
+    "test": "jest",
+    "test:integration": "jest tests/integration.test.js"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
