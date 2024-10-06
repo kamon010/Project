@@ -1,3 +1,13 @@
+const { TextEncoder, TextDecoder } = require("util"); // นำเข้า TextEncoder และ TextDecoder
+
+if (typeof global.TextEncoder === "undefined") {
+  global.TextEncoder = TextEncoder;
+}
+
+if (typeof global.TextDecoder === "undefined") {
+  global.TextDecoder = TextDecoder;
+}
+
 const fs = require("fs");
 const path = require("path");
 const { JSDOM } = require("jsdom");
@@ -16,13 +26,6 @@ beforeAll(() => {
   window.alert = jest.fn();
   window.confirm = jest.fn();
 });
-
-// เพิ่ม TextEncoder และ TextDecoder จาก util โดยตรง
-if (typeof global.TextEncoder === "undefined") {
-  const { TextEncoder, TextDecoder } = require("util");
-  global.TextEncoder = TextEncoder;
-  global.TextDecoder = TextDecoder;
-}
 
 // ฟังก์ชันเพื่อโหลดไฟล์ทั้งหมดในโฟลเดอร์ docs
 function getHtmlFilesInDocsFolder() {
