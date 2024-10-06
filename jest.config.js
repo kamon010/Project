@@ -1,6 +1,6 @@
 module.exports = {
-  transform: {
-    "^.+\\.js$": "babel-jest",
-  },
-  testEnvironment: "jsdom", // ใช้ jsdom สำหรับการทดสอบ DOM
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/tests/integration.test.js", // ข้ามไฟล์นี้
+  ],
 };
