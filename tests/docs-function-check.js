@@ -83,6 +83,9 @@ function testFunctionsInHtmlFiles() {
       console.log(
         `Lines: ${func.lines}, Cyclomatic Complexity: ${func.complexity}`
       );
+
+      // กำหนดค่าให้ตัวแปร status อย่างถูกต้อง
+      const status = func.isComplex ? "❌ (Too complex)" : "✔️ (Good)";
       console.log(`Status: ${status}`);
 
       // ทดสอบการทำงานของฟังก์ชันแบบเบื้องต้น
