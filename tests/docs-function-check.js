@@ -3,27 +3,17 @@ const path = require("path");
 const { JSDOM } = require("jsdom");
 const escomplex = require("escomplex");
 
-const firebase = require("firebase/app"); // ใช้ firebase SDK ที่ออกแบบสำหรับ Node.js
-require("firebase/firestore");
-require("firebase/storage");
+// นำเข้า Firebase Admin SDK
+const admin = require("firebase-admin");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
-  authDomain: "project-63a86.firebaseapp.com",
-  projectId: "team-1849c",
+// กำหนดค่า Firebase Admin SDK
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(), // ใช้ค่า default credentials หรือกำหนดค่าใหม่ตามต้องการ
   storageBucket: "team-1849c.appspot.com",
-  messagingSenderId: "448111875731",
-  appId: "1:448111875731:web:6180e0c46cc10593051f66",
-  measurementId: "G-SR4EFC2VFC",
-};
+});
 
-// ตรวจสอบและเริ่มต้น Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
-const db = firebase.firestore();
-const storage = firebase.storage();
+const db = admin.firestore();
+const storage = admin.storage();
 
 // ฟังก์ชันเพื่อโหลดไฟล์ทั้งหมดในโฟลเดอร์ docs
 function getHtmlFilesInDocsFolder() {
@@ -67,27 +57,6 @@ function extractFunctionsFromHtmlFile(filePath) {
   }
 }
 
-// Mock Firebase สำหรับการทดสอบ
-const mockFirebase = {
-  initializeApp: jest.fn(),
-  firestore: jest.fn(() => ({
-    collection: jest.fn(() => ({
-      doc: jest.fn(() => ({
-        get: jest.fn().mockResolvedValue({ data: () => ({}) }),
-        set: jest.fn().mockResolvedValue(),
-      })),
-    })),
-  })),
-  storage: jest.fn(() => ({
-    ref: jest.fn(() => ({
-      getDownloadURL: jest.fn().mockResolvedValue("mock-url"),
-    })),
-  })),
-};
-
-// ใช้ mock Firebase เป็น context
-const mockContext = { firebase: mockFirebase };
-
 // ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML
 function testFunctionsInHtmlFiles() {
   const htmlFiles = getHtmlFilesInDocsFolder();
@@ -113,7 +82,8 @@ function testFunctionsInHtmlFiles() {
       // ทดสอบการทำงานของฟังก์ชัน
       try {
         if (func.name) {
-          // ใช้ mockContext เพื่อทดสอบฟังก์ชัน
+          const mockContext = { admin }; // ใช้ Firebase Admin SDK เป็น context
+
           const functionCode = new Function(
             "context",
             `with(context) { ${func.code} }`
