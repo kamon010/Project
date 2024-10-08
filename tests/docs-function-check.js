@@ -69,16 +69,20 @@ function extractFunctionsFromHtmlFile(filePath) {
 // ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML
 function testFunctionsInHtmlFiles() {
   const htmlFiles = getHtmlFilesInDocsFolder();
+  let totalFunctions = 0;
+  let passedTests = 0;
+  let failedTests = 0;
 
   htmlFiles.forEach((filePath) => {
     const functions = extractFunctionsFromHtmlFile(filePath);
+    totalFunctions += functions.length;
 
     console.log(`File: ${path.basename(filePath)}`);
     console.log(`Number of functions: ${functions.length}`);
 
     functions.forEach((func) => {
       const status = func.isComplex ? "❌ (Too complex)" : "✔️ (Good)";
-      console.log(`Function: ${func.name}`);
+      console.log(`Function: ${func.name || "<anonymous>"}`);
       console.log(
         `Lines: ${func.lines}, Cyclomatic Complexity: ${func.complexity}`
       );
@@ -87,20 +91,10 @@ function testFunctionsInHtmlFiles() {
       // ทดสอบการทำงานของฟังก์ชัน
       try {
         if (func.name) {
-          // Mock สภาพแวดล้อม Firebase ที่จำเป็น
-          const mockFirebase = {
-            firestore: () => ({
-              collection: jest.fn(),
-            }),
-            storage: () => ({
-              ref: jest.fn(),
-            }),
-          };
+          // Mock สภาพแวดล้อมที่จำเป็น
+          const mockContext = {}; // สร้าง context ตามที่ฟังก์ชันต้องการ
 
-          // สร้างบริบท (context) สำหรับโค้ด
-          const mockContext = { firebase: mockFirebase };
-
-          // ใช้ eval เพื่อรันโค้ดในบริบทของ mockContext
+          // ใช้ eval หรือ new Function เพื่อทดสอบการทำงาน
           const functionCode = new Function(
             "context",
             `with(context) { ${func.code} }`
@@ -108,13 +102,16 @@ function testFunctionsInHtmlFiles() {
           functionCode(mockContext);
 
           console.log(`Test: ✔️ Function ${func.name} executed successfully.`);
+          passedTests += 1;
         } else {
           console.log(`Test: ❌ Function ${func.name} is not callable.`);
+          failedTests += 1;
         }
       } catch (error) {
         console.log(
           `Test: ❌ Error when executing function ${func.name} - ${error.message}`
         );
+        failedTests += 1;
       }
 
       console.log("----------------------------");
@@ -122,4 +119,20 @@ function testFunctionsInHtmlFiles() {
 
     console.log("----------------------------");
   });
+
+  // สรุปผลการทดสอบ
+  console.log(`\nTest Summary:`);
+  console.log(`Total functions tested: ${totalFunctions}`);
+  console.log(`Passed tests: ${passedTests}`);
+  console.log(`Failed tests: ${failedTests}`);
+
+  if (failedTests > 0) {
+    console.log(`\n❌ Some tests failed. Please review the errors above.`);
+    process.exit(1); // ออกจากโปรแกรมด้วยรหัส 1 หากมีการทดสอบล้มเหลว
+  } else {
+    console.log(`\n✔️ All tests passed successfully!`);
+    process.exit(0); // ออกจากโปรแกรมด้วยรหัส 0 หากการทดสอบทั้งหมดสำเร็จ
+  }
 }
+
+testFunctionsInHtmlFiles();
