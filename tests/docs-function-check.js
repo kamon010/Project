@@ -66,13 +66,19 @@ function testFunctionsInHtmlFiles() {
       // ทดสอบการทำงานของฟังก์ชัน
       try {
         if (func.name) {
-          // สร้างฟังก์ชันใหม่จากโค้ด
-          const functionCode = new Function(`return ${func.code}`)();
-          if (typeof functionCode === "function") {
-            console.log(`Test: ✔️ Function ${func.name} is callable.`);
-          } else {
-            console.log(`Test: ❌ Function ${func.name} is not callable.`);
-          }
+          // Mock สภาพแวดล้อมที่ฟังก์ชันต้องการ
+          const mockContext = {}; // สร้าง context ตามที่ฟังก์ชันต้องการ
+
+          // ใช้ eval หรือ new Function เพื่อทดสอบการทำงาน
+          const functionCode = new Function(
+            "context",
+            `with(context) { ${func.code} }`
+          );
+          functionCode(mockContext);
+
+          console.log(`Test: ✔️ Function ${func.name} executed successfully.`);
+        } else {
+          console.log(`Test: ❌ Function ${func.name} is not callable.`);
         }
       } catch (error) {
         console.log(

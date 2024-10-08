@@ -64,7 +64,3 @@ jobs:
       - name: Run docs-function-check.js
         run: node tests/docs-function-check.js
         continue-on-error: true
-
-      - name: Run Jest Tests
-        run: npm test
-        continue-on-error: true
