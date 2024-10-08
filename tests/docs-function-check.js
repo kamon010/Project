@@ -3,6 +3,29 @@ const path = require("path");
 const { JSDOM } = require("jsdom");
 const escomplex = require("escomplex");
 
+const firebase = require("firebase/app");
+require("firebase/firestore");
+require("firebase/storage");
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
+  authDomain: "project-63a86.firebaseapp.com",
+  projectId: "team-1849c",
+  storageBucket: "team-1849c.appspot.com",
+  messagingSenderId: "448111875731",
+  appId: "1:448111875731:web:6180e0c46cc10593051f66",
+  measurementId: "G-SR4EFC2VFC",
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+// ที่นี่สามารถใส่โค้ดทดสอบของคุณได้เลย
+
 // ฟังก์ชันเพื่อโหลดไฟล์ทั้งหมดในโฟลเดอร์ docs
 function getHtmlFilesInDocsFolder() {
   const docsFolder = path.resolve(__dirname, "../docs");

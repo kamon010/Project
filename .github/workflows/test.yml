@@ -61,6 +61,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Firebase SDK
+        run: npm install firebase
+        continue-on-error: true
+
       - name: Run docs-function-check.js
         run: node tests/docs-function-check.js
         continue-on-error: true
