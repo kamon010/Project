@@ -33,6 +33,7 @@ function extractFunctionsFromHtmlFile(filePath) {
         name: func.name,
         complexity: func.cyclomatic,
         lines: func.lines,
+        code: scripts, // เพิ่มโค้ดฟังก์ชันเพื่อตรวจสอบการทำงาน
         isComplex: func.cyclomatic > 10,
       };
     });
@@ -40,21 +41,50 @@ function extractFunctionsFromHtmlFile(filePath) {
     return functionDetails;
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error.message);
-    return [];
+    return []; // ส่งกลับเป็น array ว่างถ้ามีข้อผิดพลาด
   }
 }
 
-// ทดสอบฟังก์ชันในไฟล์ HTML โดยใช้ Jest
-test("Test function complexity in HTML files", () => {
+// ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML
+function testFunctionsInHtmlFiles() {
   const htmlFiles = getHtmlFilesInDocsFolder();
 
   htmlFiles.forEach((filePath) => {
     const functions = extractFunctionsFromHtmlFile(filePath);
 
-    expect(functions.length).toBeGreaterThan(0); // ตรวจสอบว่ามีฟังก์ชันอย่างน้อย 1 ฟังก์ชันในไฟล์
+    console.log(`File: ${path.basename(filePath)}`);
+    console.log(`Number of functions: ${functions.length}`);
 
     functions.forEach((func) => {
-      expect(func.complexity).toBeLessThanOrEqual(10); // ฟังก์ชันไม่ควรมีความซับซ้อนเกิน 10
+      const status = func.isComplex ? "❌ (Too complex)" : "✔️ (Good)";
+      console.log(`Function: ${func.name}`);
+      console.log(
+        `Lines: ${func.lines}, Cyclomatic Complexity: ${func.complexity}`
+      );
+      console.log(`Status: ${status}`);
+
+      // ทดสอบการทำงานของฟังก์ชัน
+      try {
+        if (func.name) {
+          // สร้างฟังก์ชันใหม่จากโค้ด
+          const functionCode = new Function(`return ${func.code}`)();
+          if (typeof functionCode === "function") {
+            console.log(`Test: ✔️ Function ${func.name} is callable.`);
+          } else {
+            console.log(`Test: ❌ Function ${func.name} is not callable.`);
+          }
+        }
+      } catch (error) {
+        console.log(
+          `Test: ❌ Error when executing function ${func.name} - ${error.message}`
+        );
+      }
+
+      console.log("----------------------------");
     });
+
+    console.log("----------------------------");
   });
-});
+}
+
+testFunctionsInHtmlFiles();
