@@ -1,8 +1,10 @@
 {
   "scripts": {
-    "lint:html": "htmllint 'docs/**/*.html'",
+    "lint:html": "htmlhint 'docs/**/*.html'",
     "test": "jest",
-    "test:integration": "jest tests/integration/integration.test.js"
+    "test:integration": "jest tests/integration/integration.test.js",
+    "build": "react-scripts build",
+    "start": "node your-app-file.js"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
