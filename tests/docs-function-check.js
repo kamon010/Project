@@ -77,16 +77,18 @@ function testFunctionsInHtmlFiles() {
     console.log(`File: ${path.basename(filePath)}`);
     console.log(`Number of functions: ${functions.length}`);
 
-    functions.forEach((func) => {
-      console.log(`Function: ${func.name || "<anonymous>"}`);
+    functions.forEach((func, index) => {
+      console.log(`\n----------------------------`);
+      console.log(`Function #${index + 1}: ${func.name || "<anonymous>"}`);
       console.log(
         `Lines: ${func.lines}, Cyclomatic Complexity: ${func.complexity}`
       );
+      console.log(`Status: ${status}`);
 
-      // ทดสอบการทำงานของฟังก์ชันแบบเบื้องต้นโดยไม่พึ่งพา Firebase
+      // ทดสอบการทำงานของฟังก์ชันแบบเบื้องต้น
       try {
         if (func.name) {
-          // เรียกใช้ฟังก์ชันแบบเบื้องต้น
+          // สร้างฟังก์ชันเพื่อทดสอบการทำงาน
           const functionCode = new Function(`return ${func.code}`);
           functionCode();
 
@@ -103,7 +105,7 @@ function testFunctionsInHtmlFiles() {
         failedTests += 1;
       }
 
-      console.log("----------------------------");
+      console.log(`----------------------------`);
     });
 
     console.log("----------------------------");
