@@ -61,6 +61,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Jest
+        run: npm install jest
+
       - name: Run docs-function-check.js
         run: node tests/docs-function-check.js
         continue-on-error: true

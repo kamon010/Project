@@ -45,6 +45,24 @@ function extractFunctionsFromHtmlFile(filePath) {
   }
 }
 
+// ฟังก์ชันจำลองธรรมดา (Mock function)
+const mockFirebaseClient = {
+  initializeApp: () => {},
+  firestore: () => ({
+    collection: () => ({
+      doc: () => ({
+        get: async () => ({ data: () => ({}) }),
+        set: async () => {},
+      }),
+    }),
+  }),
+  storage: () => ({
+    ref: () => ({
+      getDownloadURL: async () => "mock-url",
+    }),
+  }),
+};
+
 // ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML แบบเบื้องต้น
 function testFunctionsInHtmlFiles() {
   const htmlFiles = getHtmlFilesInDocsFolder();
