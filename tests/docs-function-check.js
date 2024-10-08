@@ -3,9 +3,9 @@ const path = require("path");
 const { JSDOM } = require("jsdom");
 const escomplex = require("escomplex");
 
-const firebase = require("firebase/app");
-require("firebase/firestore");
-require("firebase/storage");
+const firebase = require("firebase/compat/app"); // ใช้ compat สำหรับการรองรับโค้ดเก่า
+require("firebase/compat/firestore");
+require("firebase/compat/storage");
 
 const firebaseConfig = {
   apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
@@ -23,8 +23,6 @@ if (!firebase.apps.length) {
 
 const db = firebase.firestore();
 const storage = firebase.storage();
-
-// ที่นี่สามารถใส่โค้ดทดสอบของคุณได้เลย
 
 // ฟังก์ชันเพื่อโหลดไฟล์ทั้งหมดในโฟลเดอร์ docs
 function getHtmlFilesInDocsFolder() {
@@ -89,10 +87,20 @@ function testFunctionsInHtmlFiles() {
       // ทดสอบการทำงานของฟังก์ชัน
       try {
         if (func.name) {
-          // Mock สภาพแวดล้อมที่ฟังก์ชันต้องการ
-          const mockContext = {}; // สร้าง context ตามที่ฟังก์ชันต้องการ
+          // Mock สภาพแวดล้อม Firebase ที่จำเป็น
+          const mockFirebase = {
+            firestore: () => ({
+              collection: jest.fn(),
+            }),
+            storage: () => ({
+              ref: jest.fn(),
+            }),
+          };
 
-          // ใช้ eval หรือ new Function เพื่อทดสอบการทำงาน
+          // สร้างบริบท (context) สำหรับโค้ด
+          const mockContext = { firebase: mockFirebase };
+
+          // ใช้ eval เพื่อรันโค้ดในบริบทของ mockContext
           const functionCode = new Function(
             "context",
             `with(context) { ${func.code} }`
@@ -115,5 +123,3 @@ function testFunctionsInHtmlFiles() {
     console.log("----------------------------");
   });
 }
-
-testFunctionsInHtmlFiles();
