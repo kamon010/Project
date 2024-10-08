@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { JSDOM } = require("jsdom");
 const escomplex = require("escomplex");
+const mockFirebase = require("./mockFirebase"); // เพิ่ม mockFirebase ที่นี่
 
 // ฟังก์ชันเพื่อโหลดไฟล์ทั้งหมดในโฟลเดอร์ docs
 function getHtmlFilesInDocsFolder() {
@@ -65,7 +66,7 @@ function testIntegrationAcrossHtmlFiles() {
 
       try {
         // การทดสอบฟังก์ชันแบบต่อเนื่องในบริบทเดียวกัน
-        const mockContext = { console }; // สร้างบริบทจำลอง
+        const mockContext = { console, firebase: mockFirebase }; // เพิ่ม mockFirebase ที่นี่
         const functionCode = new Function(
           "context",
           `with(context) { ${func.code} }`
