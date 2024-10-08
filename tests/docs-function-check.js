@@ -3,9 +3,9 @@ const path = require("path");
 const { JSDOM } = require("jsdom");
 const escomplex = require("escomplex");
 
-const firebase = require("firebase/compat/app"); // ใช้ compat สำหรับการรองรับโค้ดเก่า
-require("firebase/compat/firestore");
-require("firebase/compat/storage");
+const firebase = require("firebase/app"); // ใช้ firebase SDK ที่ออกแบบสำหรับ Node.js
+require("firebase/firestore");
+require("firebase/storage");
 
 const firebaseConfig = {
   apiKey: "AIzaSyC1qX4ttFX42SzVFbg6LqjNJv9rRSepYXw",
@@ -17,6 +17,7 @@ const firebaseConfig = {
   measurementId: "G-SR4EFC2VFC",
 };
 
+// ตรวจสอบและเริ่มต้น Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -66,6 +67,27 @@ function extractFunctionsFromHtmlFile(filePath) {
   }
 }
 
+// Mock Firebase สำหรับการทดสอบ
+const mockFirebase = {
+  initializeApp: jest.fn(),
+  firestore: jest.fn(() => ({
+    collection: jest.fn(() => ({
+      doc: jest.fn(() => ({
+        get: jest.fn().mockResolvedValue({ data: () => ({}) }),
+        set: jest.fn().mockResolvedValue(),
+      })),
+    })),
+  })),
+  storage: jest.fn(() => ({
+    ref: jest.fn(() => ({
+      getDownloadURL: jest.fn().mockResolvedValue("mock-url"),
+    })),
+  })),
+};
+
+// ใช้ mock Firebase เป็น context
+const mockContext = { firebase: mockFirebase };
+
 // ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML
 function testFunctionsInHtmlFiles() {
   const htmlFiles = getHtmlFilesInDocsFolder();
@@ -91,27 +113,7 @@ function testFunctionsInHtmlFiles() {
       // ทดสอบการทำงานของฟังก์ชัน
       try {
         if (func.name) {
-          // สร้าง mock Firebase สำหรับการทดสอบ
-          const mockFirebase = {
-            firestore: () => ({
-              collection: () => ({
-                doc: () => ({
-                  get: () => Promise.resolve({ data: () => ({}) }),
-                  set: () => Promise.resolve(),
-                }),
-              }),
-            }),
-            storage: () => ({
-              ref: () => ({
-                getDownloadURL: () => Promise.resolve("mock-url"),
-              }),
-            }),
-          };
-
-          // สร้างบริบท (context) สำหรับโค้ด
-          const mockContext = { firebase: mockFirebase };
-
-          // ใช้ eval เพื่อรันโค้ดในบริบทของ mockContext
+          // ใช้ mockContext เพื่อทดสอบฟังก์ชัน
           const functionCode = new Function(
             "context",
             `with(context) { ${func.code} }`
