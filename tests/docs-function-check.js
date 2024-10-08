@@ -57,6 +57,27 @@ function extractFunctionsFromHtmlFile(filePath) {
   }
 }
 
+// Mock Firebase Client SDK สำหรับการทดสอบ
+const mockFirebaseClient = {
+  initializeApp: jest.fn(),
+  firestore: jest.fn(() => ({
+    collection: jest.fn(() => ({
+      doc: jest.fn(() => ({
+        get: jest.fn().mockResolvedValue({ data: () => ({}) }),
+        set: jest.fn().mockResolvedValue(),
+      })),
+    })),
+  })),
+  storage: jest.fn(() => ({
+    ref: jest.fn(() => ({
+      getDownloadURL: jest.fn().mockResolvedValue("mock-url"),
+    })),
+  })),
+};
+
+// ใช้ mock Firebase Client เป็น context สำหรับการทดสอบ
+const mockContext = { firebase: mockFirebaseClient };
+
 // ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML
 function testFunctionsInHtmlFiles() {
   const htmlFiles = getHtmlFilesInDocsFolder();
@@ -82,8 +103,6 @@ function testFunctionsInHtmlFiles() {
       // ทดสอบการทำงานของฟังก์ชัน
       try {
         if (func.name) {
-          const mockContext = { admin }; // ใช้ Firebase Admin SDK เป็น context
-
           const functionCode = new Function(
             "context",
             `with(context) { ${func.code} }`
