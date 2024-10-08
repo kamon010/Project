@@ -67,3 +67,7 @@ jobs:
       - name: Run docs-function-check.js
         run: node tests/docs-function-check.js
         continue-on-error: true
+
+      - name: Run single-file-function-check.js
+        run: node tests/single-file-function-check.js
+        continue-on-error: true
