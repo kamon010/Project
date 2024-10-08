@@ -33,39 +33,28 @@ function extractFunctionsFromHtmlFile(filePath) {
         name: func.name,
         complexity: func.cyclomatic,
         lines: func.lines,
-        isComplex: func.cyclomatic > 10, // กำหนดว่าถ้ามากกว่า 10 จะถือว่ามีความซับซ้อนสูง
+        isComplex: func.cyclomatic > 10,
       };
     });
 
     return functionDetails;
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error.message);
-    return []; // ส่งกลับเป็น array ว่างถ้ามีข้อผิดพลาด
+    return [];
   }
 }
 
-// ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML
-function testFunctionsInHtmlFiles() {
+// ทดสอบฟังก์ชันในไฟล์ HTML โดยใช้ Jest
+test("Test function complexity in HTML files", () => {
   const htmlFiles = getHtmlFilesInDocsFolder();
 
   htmlFiles.forEach((filePath) => {
     const functions = extractFunctionsFromHtmlFile(filePath);
 
-    console.log(`File: ${path.basename(filePath)}`);
-    console.log(`Number of functions: ${functions.length}`);
+    expect(functions.length).toBeGreaterThan(0); // ตรวจสอบว่ามีฟังก์ชันอย่างน้อย 1 ฟังก์ชันในไฟล์
 
     functions.forEach((func) => {
-      const status = func.isComplex ? "❌ (Too complex)" : "✔️ (Good)";
-      console.log(`Function: ${func.name}`);
-      console.log(
-        `Lines: ${func.lines}, Cyclomatic Complexity: ${func.complexity}`
-      );
-      console.log(`Status: ${status}`);
-      console.log("----------------------------");
+      expect(func.complexity).toBeLessThanOrEqual(10); // ฟังก์ชันไม่ควรมีความซับซ้อนเกิน 10
     });
-
-    console.log("----------------------------");
   });
-}
-
-testFunctionsInHtmlFiles();
+});
