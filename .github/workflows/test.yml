@@ -1,4 +1,4 @@
-name: Lint, Unit Test, Integration Test
+name: Lint, Unit Test, Function Check, and Integration Test
 
 on:
   push:
@@ -61,7 +61,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run docs-function-check.js
+      - name: Run Function Check
         run: node tests/docs-function-check.js
 
   integration-test:
@@ -79,6 +79,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run integration-function-check.js
+      - name: Run Integration Test
         run: node tests/integration-function-check.js
-        continue-on-error: true
