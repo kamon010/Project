@@ -4,7 +4,7 @@
     "test": "jest",
     "test:integration": "jest tests/integration/integration.test.js",
     "build": "react-scripts build",
-    "start": "node your-app-file.js"
+    "start": "react-scripts start"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
