@@ -91,10 +91,27 @@ function testFunctionsInHtmlFiles() {
       // ทดสอบการทำงานของฟังก์ชัน
       try {
         if (func.name) {
-          // Mock สภาพแวดล้อมที่จำเป็น
-          const mockContext = {}; // สร้าง context ตามที่ฟังก์ชันต้องการ
+          // สร้าง mock Firebase สำหรับการทดสอบ
+          const mockFirebase = {
+            firestore: () => ({
+              collection: () => ({
+                doc: () => ({
+                  get: () => Promise.resolve({ data: () => ({}) }),
+                  set: () => Promise.resolve(),
+                }),
+              }),
+            }),
+            storage: () => ({
+              ref: () => ({
+                getDownloadURL: () => Promise.resolve("mock-url"),
+              }),
+            }),
+          };
 
-          // ใช้ eval หรือ new Function เพื่อทดสอบการทำงาน
+          // สร้างบริบท (context) สำหรับโค้ด
+          const mockContext = { firebase: mockFirebase };
+
+          // ใช้ eval เพื่อรันโค้ดในบริบทของ mockContext
           const functionCode = new Function(
             "context",
             `with(context) { ${func.code} }`
