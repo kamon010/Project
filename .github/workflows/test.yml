@@ -72,14 +72,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
+      - name: Set up SonarQube Scanner
+        uses: sonarsource/sonarqube-scan-action@v1.0.0
 
-      - name: Install HTMLHint
-        run: npm install -g htmlhint
-
-      - name: Run HTML Security Scan
-        run: htmlhint "docs/**/*.html"
-        continue-on-error: true
+      - name: Run SonarQube Scan
+        run: sonar-scanner
+        env:
+          SONAR_HOST_URL: "https://sonarcloud.io"
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
