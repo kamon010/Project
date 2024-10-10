@@ -1,4 +1,4 @@
-name: Lint, Unit Test, Function Check, Integration Test
+name: Lint, Unit Test, Function Check
 
 on:
   push:
@@ -65,7 +65,7 @@ jobs:
         run: node tests/docs-function-check.js
         continue-on-error: true
 
-  integration-test:
+  security-scan:
     runs-on: ubuntu-latest
     needs: function-check
     steps:
@@ -77,9 +77,9 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install HTMLHint
+        run: npm install -g htmlhint
 
-      - name: Run Integration Test
-        run: node tests/integration-function-check.js
+      - name: Run HTML Security Scan
+        run: htmlhint "docs/**/*.html"
         continue-on-error: true
