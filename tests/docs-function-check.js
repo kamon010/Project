@@ -45,26 +45,10 @@ function extractFunctionsFromHtmlFile(filePath) {
   }
 }
 
-// ฟังก์ชันจำลองธรรมดา (Mock function)
-const mockFirebaseClient = {
-  initializeApp: () => {},
-  firestore: () => ({
-    collection: () => ({
-      doc: () => ({
-        get: async () => ({ data: () => ({}) }),
-        set: async () => {},
-      }),
-    }),
-  }),
-  storage: () => ({
-    ref: () => ({
-      getDownloadURL: async () => "mock-url",
-    }),
-  }),
-};
-
 // ฟังก์ชันหลักเพื่อทำการตรวจสอบฟังก์ชันในไฟล์ HTML แบบเบื้องต้น
 function testFunctionsInHtmlFiles() {
+  console.time("Test Execution Time"); // เริ่มจับเวลา
+
   const htmlFiles = getHtmlFilesInDocsFolder();
   let totalFunctions = 0;
   let passedTests = 0;
@@ -119,6 +103,8 @@ function testFunctionsInHtmlFiles() {
   console.log(`Total functions tested: ${totalFunctions}`);
   console.log(`Passed tests: ${passedTests}`);
   console.log(`Failed tests: ${failedTests}`);
+
+  console.timeEnd("Test Execution Time"); // จบการจับเวลา
 
   if (failedTests > 0) {
     console.log(`\n❌ Some tests failed. Please review the errors above.`);
