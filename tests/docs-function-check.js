@@ -55,11 +55,16 @@ function testFunctionsInHtmlFiles() {
   let failedTests = 0;
 
   htmlFiles.forEach((filePath) => {
+    const startTime = new Date().getTime(); // จับเวลาเริ่มต้น
     const functions = extractFunctionsFromHtmlFile(filePath);
+    const endTime = new Date().getTime(); // จับเวลาสิ้นสุด
+    const timeTaken = endTime - startTime; // คำนวณเวลาที่ใช้
+
     totalFunctions += functions.length;
 
     console.log(`File: ${path.basename(filePath)}`);
     console.log(`Number of functions: ${functions.length}`);
+    console.log(`Time taken for ${path.basename(filePath)}: ${timeTaken} ms`);
 
     functions.forEach((func, index) => {
       console.log(`\n----------------------------`);

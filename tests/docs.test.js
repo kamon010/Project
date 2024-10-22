@@ -19,6 +19,9 @@ const htmlFiles = [
   "studenthead.html",
 ];
 
+// Variable to keep track of test start time
+let startTime = 0;
+
 // Loop through each file and run tests
 htmlFiles.forEach((file) => {
   describe(`Test ${file}`, () => {
@@ -27,6 +30,13 @@ htmlFiles.forEach((file) => {
     beforeEach(() => {
       html = loadHTMLFile(file); // โหลด HTML ก่อนการทดสอบ
       document.body.innerHTML = html;
+      startTime = new Date().getTime(); // Start timer
+    });
+
+    afterAll(() => {
+      const endTime = new Date().getTime(); // End timer
+      const timeTaken = (endTime - startTime) / 1000; // Calculate time in seconds
+      console.log(`Time taken for ${file}: ${timeTaken} seconds`);
     });
 
     if (file === "index.html") {
